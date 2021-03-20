@@ -14,7 +14,7 @@ function cb(err, response, html) {
         let teamBatsmen = chSelector(tables[i]).find("tbody").find("tr");
         let hrunsPlayerName = "";
         let hruns = 0;
-        for (let j = 0;j < teamBatsmen.length-1;j+=2) {
+        for (let j = 1;j < teamBatsmen.length-1;j+=2) {
             let eachBatsmen = chSelector(teamBatsmen[j]).find("td");
             // console.log(eachBatsmen);
             let batsmenName = chSelector(eachBatsmen[0]).find("a").text();
