@@ -1,7 +1,6 @@
-const { dir } = require("console");
 let fs = require("fs");
 let path = require("path");
-let util = require("../util");
+let util = require("../util");  //  ../ -> To go one step behind from current folder.  ./ -> For current folder.
 let types = util.types;
 // {
 //     media: ['mp4','mkv','mp3'],
@@ -13,22 +12,22 @@ let types = util.types;
 function organizeFile(dirName){
     // console.log('organize command was called for',dirName);
     if (dirName == undefined){
-        dirName = process.cwd();
+        dirName = process.cwd();   //To get the path from the current working directory (from where we executed command). Returns path.
     }
     console.log(dirName);
     organizeFolder(dirName);
 }
 
 function isFileOrNot(src) {
-    return fs.lstatSync(src).isFile();
+    return fs.lstatSync(src).isFile();    // To check is it a file or not. Returns boolean.
 }
 
 function contentReader(src) {
-    return fs.readdirSync(src);
+    return fs.readdirSync(src);   // Reads all path from the give folder to the last files or folder. Return array of all folder/file names. 
 }
 
 function checkExtension(src) {
-    let ext = src.split(".").pop();
+    let ext = src.split(".").pop();  // Split to get the file extension type.
 
     for (let key in types) {
         for (let i = 0;i < types[key].length;i++){
@@ -42,12 +41,13 @@ function checkExtension(src) {
 
 function sendFile(src, dest, folderName) {
     let folderToMake = path.join(dest,folderName);
-    if (fs.existsSync(folderToMake) == false) {
-        fs.mkdirSync(folderToMake);
+    if (fs.existsSync(folderToMake) == false) {   // To check if such file or folder exists (w.r.t path). Returns boolean.
+        fs.mkdirSync(folderToMake);    // To create a directory or folder.
     }
 
-    let pathToDestFile = path.join(folderToMake, path.basename(src));
-    fs.copyFileSync(src,pathToDestFile);
+    let pathToDestFile = path.join(folderToMake, path.basename(src));   //path.join() -> To join and create a path. 
+    //path.basename() -> To get the name of the file from the given path. Ex: activity\commands\organize.js -> Returns organize.js
+    fs.copyFileSync(src,pathToDestFile);   //Copies file content from src path and pastes to given des path.
 }
 
 function organizeFolder(src) {
@@ -58,11 +58,11 @@ function organizeFolder(src) {
     organize(src,folderToMake);
 }
 
-function organize(src, dest) {
-    let isFile = isFileOrNot(src);
+function organize(src, dest) {      //Recursive function to get the depth folder and files.
+    let isFile = isFileOrNot(src);    
     if (isFile == true) {
         let folderName = checkExtension(src);
-        sendFile(src,dest,folderName);
+        sendFile(src,dest,folderName);   // If it is a file, copy the contentof the file.
     }
     else {
         let dirNames = contentReader(src);
