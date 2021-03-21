@@ -1,20 +1,23 @@
 let request = require("request");
 let cheerio = require("cheerio");
 
-let url = "https://www.espncricinfo.com/series/ipl-2020-21-1210595/delhi-capitals-vs-mumbai-indians-final-1237181/full-scorecard";
+// let url = "https://www.espncricinfo.com/series/ipl-2020-21-1210595/delhi-capitals-vs-mumbai-indians-final-1237181/full-scorecard";
 
-request(url,cb);
+function singlePageExtractor(url) {
+    request(url,cb);
+}
 
 function cb(err, response, html) {
-    let teamBatsmenDetails = [];
 
     let chSelector = cheerio.load(html);
     //Find winningTeam
     let teams = chSelector(".match-info.match-info-MATCH .teams").find(".team");  
     let winnerTeamNum = 0;   //Winning Team index num
+    let winnerName = "";
     for (let i = 0;i < teams.length;i++) {
         if (chSelector(teams[i]).hasClass("team-gray") == false) {
             winnerTeamNum = i;
+            winnerName = chSelector(teams[i]).find("p").text();
         }
     }
 
@@ -24,7 +27,14 @@ function cb(err, response, html) {
     let winnerBatsmenBoxHeading = chSelector(winnerBatsmenBox).find("thead").find("th");   //Headings
     let winnerBatsmenBoxBody = chSelector(winnerBatsmenBox).find("tbody").find("tr");     //Values corresponding to headings 
 
-    //Map according to the heading and values and add individual batsmen details.
+    let teamBatsmenDetails =  winningTeamBatsmenDetails(winnerBatsmenBoxHeading, winnerBatsmenBoxBody, chSelector);
+    console.log(winnerName);
+    console.table(teamBatsmenDetails);   //Takes array of objects as input. Prints content in a tabular (table) format.
+}
+
+//Map according to the heading and values and add individual batsmen details. Returns an array of objects with batsmen details.
+function winningTeamBatsmenDetails(winnerBatsmenBoxHeading, winnerBatsmenBoxBody, chSelector) {
+    let teamBatsmenDetails = [];
     for (let i = 0;i < winnerBatsmenBoxBody.length-1;i+=2) {    
         let eachBatsmen = chSelector(winnerBatsmenBoxBody[i]).find("td");
         let batsmenDetails = {};
@@ -39,5 +49,10 @@ function cb(err, response, html) {
         }
         teamBatsmenDetails.push(batsmenDetails);   //Finally added all batsmen details of the team to the array.
     }
-    // console.log(teamBatsmenDetails);
+
+    return teamBatsmenDetails;
+}
+
+module.exports = {
+    extract: singlePageExtractor
 }
