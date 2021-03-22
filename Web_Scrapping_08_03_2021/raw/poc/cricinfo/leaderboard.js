@@ -16,11 +16,11 @@ function cb(err, response, html) {
     globalCount = matches.length;
     for (let i = 0;i < matches.length;i++) {
         let allAnchorOfMatch = chSelector(matches[i]).find(".match-cta-container .btn.btn-sm.btn-outline-dark.match-cta");
-        let url = chSelector(allAnchorOfMatch[2]).attr("href");
-        let fullUrl = "https://www.espncricinfo.com" + url;
-        // console.log(fullUrl);
-        // extractor.extract(fullUrl);
-        request(fullUrl,cbDetails);
+        let link = chSelector(allAnchorOfMatch[2]).attr("href");
+        let fullLink = "https://www.espncricinfo.com" + link;
+        // console.log(fullLink);
+        // extractor.extract(fullLink);
+        request(fullLink,cbDetails);
     }
 }
 
