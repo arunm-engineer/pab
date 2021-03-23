@@ -12,7 +12,7 @@ function viewfn(dirName, mode){
     }
     else{
         console.log("Wrong mode. Type help for all commands.");
-        console.log(dirName);
+        // console.log(dirName);
     }
 }
 

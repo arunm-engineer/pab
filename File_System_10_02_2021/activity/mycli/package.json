@@ -1,14 +1,15 @@
 {
-  "name": "myutil",
+  "name": "mycli",
   "version": "1.0.0",
-  "description": "\"my script\"",
+  "description": "",
   "main": "mycli.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "bin": {
-    "myutil": "mycli.js"
+    "mycli": "mycli.js"
   }
 }
