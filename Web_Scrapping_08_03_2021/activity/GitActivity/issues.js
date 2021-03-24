@@ -1,30 +1,20 @@
 let request = require("request");
 let cheerio = require("cheerio");
+let issueDetailTool = require("./issueDetails.js");
 
-let url = "https://github.com/Nyr/openvpn-install/issues";
-let issuesArray = [];
+function processIssues(url, filePath) {
+    request(url, cb1);
 
-function issuesExtractor(url) {
-    request(url, cb);
+    function cb1(err, response, html) {
+        let chSelector = cheerio.load(html);
+        let issuesPage = chSelector(".js-selected-navigation-item.UnderlineNav-item.hx_underlinenav-item.no-wrap.js-responsive-underlinenav-item");
+        let issuesPageLink = chSelector(issuesPage[1]).attr("href");
+        let issuesPageFullLink = "https://www.github.com" + issuesPageLink;
+        issueDetailTool.issueDetailExtractor(issuesPageFullLink, filePath);
+    }    
 }
 
-function cb(err, response, html) {
-    let chSelector = cheerio.load(html);
-    let issuesContainer = chSelector(".js-navigation-container.js-active-navigation-container");
-    let allIssues = chSelector(issuesContainer).find(".Box-row.Box-row--focus-gray.p-0.mt-0.js-navigation-item.js-issue-row");
-    
-    for (let i = 0;i < allIssues.length;i++) {
-        let eachIssue = chSelector(allIssues[i]).find(".Link--primary.v-align-middle.no-underline.h4.js-navigation-open.markdown-title");
-        let issueName = chSelector(eachIssue).text();
-        let issueLink = chSelector(eachIssue).attr("href");
-        let issueFullLink = "https://github.com" + issueLink;
-        issuesArray.push({
-            issueName: issueName,
-            issueLink: issueFullLink
-        });
-    }
 
-    console.log(issuesArray);
+module.exports = {
+    processIssues: processIssues
 }
-
-issuesExtractor(url);
