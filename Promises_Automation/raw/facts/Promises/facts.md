@@ -7,7 +7,7 @@
                 rejected -> errr
 *  to consume a promise we have two **Synchronous function** then and catch
 They are used to register cb function on that promise
-* cb functions are passed inside then and catch are async (kindof JS thing)
+* cb functions are passed inside then and catch are **async** (kindof Node thing)
 * promise can only be rejected or resolved once in a lifetime
 * every then and catch also returns a promise
 * the promise returned from that then depends upon the cb function inside that then
