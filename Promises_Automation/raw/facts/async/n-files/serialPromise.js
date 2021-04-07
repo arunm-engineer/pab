@@ -5,8 +5,10 @@ console.log("before");
 let frP = fs.promises.readFile(files[0]);
 for (let i = 1; i < files.length; i++) {
     frP = frP.then(function (data) {
-        console.log("data" + data);
+        console.log("data -> " + data);
         return fs.promises.readFile(files[i]);
     })
 }
- return frp;
+frP.then(function(data) {
+    console.log("data -> " + data);
+})
