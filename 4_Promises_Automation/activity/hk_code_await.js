@@ -38,7 +38,7 @@ let cTab;
 
 async function questionSolver(qName, code, mainPageURL) {
 
-        await cTab.evaluate(matchQuestion, ".challengecard-title", qName);
+        await cTab.evaluate(matchQuestion, ".challengecard-title", qName);   //This evaluate fn will go and execute in the "browser" and that's the reason you get access to the DOM.
         await cTab.waitForSelector(".ui-icon-label.page-label", { visible: true });
         await waitAndClickSelector(".ui-checkbox.theme-m");
         await cTab.waitForSelector(".input.text-area.custominput.auto-width", { visible: true });
