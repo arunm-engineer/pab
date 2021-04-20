@@ -16,6 +16,6 @@ for (let i = 0;i <= 2;i++) {
 pdfDoc.fillColor('black').text("My Sample PDF Document", 20, 300, {
     underline: true,
     link: 'https://www.google.com'
-}).text("  Hello").text("----------Hello again")
+})
 
 pdfDoc.end();
