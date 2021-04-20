@@ -1,4 +1,5 @@
 const PDFDocument = require('pdfkit');
+const help = require('./help.js');
 const fs = require('fs');
 const path = require('path');
 
@@ -23,7 +24,7 @@ function writePDFDocument(QuestionsArr, location, companyName) {
         });
     }
     pdfDoc.end();
-
+    help.commandExecutionResolved();
 }
 
 

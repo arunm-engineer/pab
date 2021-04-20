@@ -5,7 +5,7 @@ let pageLink = 'https://www.geeksforgeeks.org/';
 let gPage;
 let allQuestionDetails;
 
-async function scrapExperiencs(location, companyName) {
+async function scrapExperiences(location, companyName) {
     let browser = await puppeteer.launch({
         headless: false,
         defaultViewport: null,
@@ -24,7 +24,7 @@ async function getToMainPage(location, companyName) {
     await waitAndClick('.header-main__list-item');
     await gPage.evaluate(getToCompanyIEListPage, '.header-main__list-item.selected .mega-dropdown .mega-dropdown__list-item');
     let companyIEExists = await checkCompanyIEExists('.entry-content .sLiClass a', companyName);
-    if (companyIEExists === true) {
+    if (companyIEExists === true) { //If requested company IE exists or not.
         allQuestionDetails = await collectInterviewQuestions('.articles-list .content .head a', '.nextpostslink');
         filter.filterQuestions(allQuestionDetails, location, companyName);
     }
@@ -78,7 +78,7 @@ async function collectInterviewQuestions(postSelector, nextPageSelector) {
 
     while (nextPage !== null) {
 
-        await traverseAllIEInPage(postSelector, QuestionsDetails);
+        await traverseAllIEInPage(postSelector, QuestionsDetails); //To traverse all IE from requested company IE pages
 
         await Promise.all([
             gPage.waitForNavigation({ waitUntil: 'networkidle0' }),
@@ -88,7 +88,7 @@ async function collectInterviewQuestions(postSelector, nextPageSelector) {
         nextPage = await nextPageSelectorExists(nextPageSelector);
     }
 
-    await traverseAllIEInPage(postSelector, QuestionsDetails);  //This is to execute the last page leftover.
+    await traverseAllIEInPage(postSelector, QuestionsDetails);  //This is to traverse IE of the last page leftover.
 
     return QuestionsDetails;
 }
@@ -102,12 +102,12 @@ async function traverseAllIEInPage(postSelector, QuestionsDetails) {
             QuestionsDetails.push(
                 await gPage.evaluate(() => {
 
-                    if (document.querySelector('.editor-buttons-container') !== null) {
+                    if (document.querySelector('.editor-buttons-container') !== null) {  //If it's a diresct question
                         let title = document.querySelector('.a-wrapper .title').innerText;
                         let link = window.location.href; //Gets current page URL in browser
                         return { title, link };
                     }
-                    else {
+                    else {  //Else if it's an IE where we collect all questions
                         let IEQuestionsArr = Array.from(document.querySelectorAll('.a-wrapper .text a'));
                         let IEQuestionDetails = [];
                         let isQuestionFactor = true;
@@ -122,10 +122,11 @@ async function traverseAllIEInPage(postSelector, QuestionsDetails) {
 
                 })
             ),
-            await gPage.goBack({ waitUntil: 'domcontentloaded' })
+            await gPage.goBack({ waitUntil: 'domcontentloaded' })  //waitUntil (option) : domcontentloaded
         ]);
 
     }
+
 }
 
 function getPageAllIELinks(postSelector) {
@@ -144,5 +145,5 @@ async function nextPageSelectorExists(nextPageSelector) {
 }
 
 module.exports = {
-    scrapExperiencs: scrapExperiencs
+    scrapExperiences: scrapExperiences
 }

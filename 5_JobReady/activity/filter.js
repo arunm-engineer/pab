@@ -41,7 +41,7 @@ function fillQuestionsDetails() {
 
 }
 
-function sortQuestions() {
+function sortQuestions() { //Sort Questions respect to importance (Frequency count)
 
     Questions.sort((a, b) => b.frequency > a.frequency ? 1 : -1);
     Questions = Questions.map((element, index) => {

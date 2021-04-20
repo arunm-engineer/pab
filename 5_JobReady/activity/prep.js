@@ -7,11 +7,10 @@ let input = process.argv.slice(2);
 let command = input[0];
 let location = input[1];
 let companyName = input[2];
-console.log(companyName);
 
-switch(command) {            //Example command : prep ie F:\ "Oyo Rooms" 
+switch(command) {           
     case 'ie':
-        scrap.scrapExperiencs(location, companyName);
+        scrap.scrapExperiences(location, companyName);
         break;
     default:
         help.helpWithCommand();
