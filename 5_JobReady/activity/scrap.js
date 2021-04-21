@@ -72,19 +72,19 @@ async function checkCompanyIEExists(selector, companyName) {
 
 async function collectInterviewQuestions(postSelector, nextPageSelector) {
     let QuestionsDetails = [];
-
+    
     await gPage.waitForSelector(postSelector, { visible: true });
     let nextPage = await nextPageSelectorExists(nextPageSelector);
 
     while (nextPage !== null) {
 
         await traverseAllIEInPage(postSelector, QuestionsDetails); //To traverse all IE from requested company IE pages
-
+        
         await Promise.all([
-            gPage.waitForNavigation({ waitUntil: 'networkidle0' }),
-            gPage.click(nextPageSelector)
+            gPage.click(nextPageSelector),
+            gPage.waitForNavigation({ waitUntil: 'domcontentloaded' })
         ]);
-
+        
         nextPage = await nextPageSelectorExists(nextPageSelector);
     }
 
@@ -97,36 +97,33 @@ async function traverseAllIEInPage(postSelector, QuestionsDetails) {
     let allIELinks = await gPage.evaluate(getPageAllIELinks, postSelector);  //Links of all IE in each page 
     for (let i = 0; i < allIELinks.length; i++) {
 
-        await Promise.all([
-            await gPage.goto(allIELinks[i], { waitUntil: 'domcontentloaded' }),
-            QuestionsDetails.push(
-                await gPage.evaluate(() => {
+        await gPage.goto(allIELinks[i], { waitUntil: 'domcontentloaded' });
+        QuestionsDetails.push(
+            await gPage.evaluate(() => {
 
-                    if (document.querySelector('.editor-buttons-container') !== null) {  //If it's a diresct question
-                        let title = document.querySelector('.a-wrapper .title').innerText;
-                        let link = window.location.href; //Gets current page URL in browser
-                        return { title, link };
-                    }
-                    else {  //Else if it's an IE where we collect all questions
-                        let IEQuestionsArr = Array.from(document.querySelectorAll('.a-wrapper .text a'));
-                        let IEQuestionDetails = [];
-                        let isQuestionFactor = true;
-                        IEQuestionsArr.forEach((element) => {
-                            let title = element.innerText.trim();
-                            let link = element.getAttribute('href');
-                            if (title.toLowerCase() === 'DSA Self Paced Course'.toLowerCase()) isQuestionFactor = false;
-                            if (isQuestionFactor === true) IEQuestionDetails.push({ title, link });
-                        });
-                        return IEQuestionDetails;
-                    }
+                if (document.querySelector('.editor-buttons-container') !== null) {  //If it's a diresct question
+                    let title = document.querySelector('.a-wrapper .title').innerText;
+                    let link = window.location.href; //Gets current page URL in browser
+                    return { title, link };
+                }
+                else {  //Else if it's an IE where we collect all questions
+                    let IEQuestionsArr = Array.from(document.querySelectorAll('.a-wrapper .text a'));
+                    let IEQuestionDetails = [];
+                    let isQuestionFactor = true;
+                    IEQuestionsArr.forEach((element) => {
+                        let title = element.innerText.trim();
+                        let link = element.getAttribute('href');
+                        if (title.toLowerCase() === 'DSA Self Paced Course'.toLowerCase()) isQuestionFactor = false;
+                        if (isQuestionFactor === true) IEQuestionDetails.push({ title, link });
+                    });
+                    return IEQuestionDetails;
+                }
 
-                })
-            ),
-            await gPage.goBack({ waitUntil: 'domcontentloaded' })  //waitUntil (option) : domcontentloaded
-        ]);
+            })
+        );
+        await gPage.goBack({ waitUntil: 'domcontentloaded' });  //waitUntil (option) : domcontentloaded
 
     }
-
 }
 
 function getPageAllIELinks(postSelector) {
