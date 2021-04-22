@@ -9,7 +9,7 @@ Good luck!!
 }
 
 function commandExecutionResolved() {
-    console.log(`File generated, check file location.`);
+    console.log(`File generated, check location`);
 }
 
 module.exports = {

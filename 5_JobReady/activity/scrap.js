@@ -6,30 +6,44 @@ let gPage;
 let allQuestionDetails;
 
 async function scrapExperiences(location, companyName) {
-    let browser = await puppeteer.launch({
-        headless: false,
-        defaultViewport: null,
-        args: ['--start-maximized']
-    });
+    try {
 
-    let browserTabs = await browser.pages();
-    gPage = browserTabs[0];
-    await getToMainPage(location, companyName);
+        let browser = await puppeteer.launch({
+            headless: false,
+            defaultViewport: null,
+            args: ['--start-maximized']
+        });
+
+        let browserTabs = await browser.pages();
+        gPage = browserTabs[0];
+        await getToMainPage(location, companyName);
+
+    }
+    catch (err) {
+        console.log(err);
+    }
 
 }
 
 async function getToMainPage(location, companyName) {
-    await gPage.goto(pageLink);
+    try {
 
-    await waitAndClick('.header-main__list-item');
-    await gPage.evaluate(getToCompanyIEListPage, '.header-main__list-item.selected .mega-dropdown .mega-dropdown__list-item');
-    let companyIEExists = await checkCompanyIEExists('.entry-content .sLiClass a', companyName);
-    if (companyIEExists === true) { //If requested company IE exists or not.
-        allQuestionDetails = await collectInterviewQuestions('.articles-list .content .head a', '.nextpostslink');
-        filter.filterQuestions(allQuestionDetails, location, companyName);
+        await gPage.goto(pageLink);
+
+        await waitAndClick('.header-main__list-item');
+        await gPage.evaluate(getToCompanyIEListPage, '.header-main__list-item.selected .mega-dropdown .mega-dropdown__list-item');
+        let companyIEExists = await checkCompanyIEExists('.entry-content .sLiClass a', companyName);
+        if (companyIEExists === true) { //If requested company IE exists or not.
+            allQuestionDetails = await collectInterviewQuestions('.articles-list .content .head a', '.nextpostslink');
+            filter.filterQuestions(allQuestionDetails, location, companyName);
+        }
+        else {
+            help.helpWithCompany();
+        }
+
     }
-    else {
-        help.helpWithCompany();
+    catch (err) {
+        console.log(err);
     }
 
 }
@@ -47,82 +61,106 @@ function getToCompanyIEListPage(selector) {
 }
 
 async function waitAndClick(selector) {
-    await gPage.waitForSelector(selector, { visible: true });
-    await gPage.click(selector);
+    try {
+
+        await gPage.waitForSelector(selector, { visible: true });
+        await gPage.click(selector);
+
+    }
+    catch (err) {
+        console.log(err);
+    }
 }
 
 async function checkCompanyIEExists(selector, companyName) {
-    await gPage.waitForSelector(selector, { visible: true });
-    let companyExistsInSite = await gPage.evaluate(findCompany, selector, companyName);
-    function findCompany(selector, companyToFind) {
-        let allCompanySelectors = document.querySelectorAll(selector);
-        let companyExists = false;
-        allCompanySelectors.forEach((element, idx) => {
-            let companyInPage = element.innerText.split("[")[0].trim().toLowerCase();
-            companyToFind = companyToFind.trim().toLowerCase();
-            if (companyInPage === companyToFind) {
-                element.click();
-                companyExists = true;
-            }
-        });
-        return companyExists;
+    try {
+
+        await gPage.waitForSelector(selector, { visible: true });
+        let companyExistsInSite = await gPage.evaluate(findCompany, selector, companyName);
+        return companyExistsInSite;
+
     }
-    return companyExistsInSite;
+    catch (err) {
+        console.log(err);
+    }
+}
+
+function findCompany(selector, companyToFind) {
+    let allCompanySelectors = document.querySelectorAll(selector);
+    let companyExists = false;
+    allCompanySelectors.forEach((element, idx) => {
+        let companyInPage = element.innerText.split("[")[0].trim().toLowerCase();
+        companyToFind = companyToFind.trim().toLowerCase();
+        if (companyInPage === companyToFind) {
+            element.click();
+            companyExists = true;
+        }
+    });
+    return companyExists;
 }
 
 async function collectInterviewQuestions(postSelector, nextPageSelector) {
-    let QuestionsDetails = [];
-    
-    await gPage.waitForSelector(postSelector, { visible: true });
-    let nextPage = await nextPageSelectorExists(nextPageSelector);
+    try {
 
-    while (nextPage !== null) {
+        let QuestionsDetails = [];
 
-        await traverseAllIEInPage(postSelector, QuestionsDetails); //To traverse all IE from requested company IE pages
-        
-        await Promise.all([
-            gPage.click(nextPageSelector),
-            gPage.waitForNavigation({ waitUntil: 'domcontentloaded' })
-        ]);
-        
-        nextPage = await nextPageSelectorExists(nextPageSelector);
+        await gPage.waitForSelector(postSelector, { visible: true });
+        let nextPage = await nextPageSelectorExists(nextPageSelector);
+        while (nextPage !== null) {
+            await traverseAllIEInPage(postSelector, QuestionsDetails); //To traverse all IE from requested company IE pages
+            await Promise.all([
+                gPage.click(nextPageSelector),
+                gPage.waitForNavigation({ waitUntil: 'domcontentloaded' })
+            ]);
+            nextPage = await nextPageSelectorExists(nextPageSelector);
+        }
+        await traverseAllIEInPage(postSelector, QuestionsDetails);  //This is to traverse IE of the last page leftover.
+
+        return QuestionsDetails;
+
     }
-
-    await traverseAllIEInPage(postSelector, QuestionsDetails);  //This is to traverse IE of the last page leftover.
-
-    return QuestionsDetails;
+    catch (err) {
+        console.log(err);
+    }
 }
 
 async function traverseAllIEInPage(postSelector, QuestionsDetails) {
-    let allIELinks = await gPage.evaluate(getPageAllIELinks, postSelector);  //Links of all IE in each page 
-    for (let i = 0; i < allIELinks.length; i++) {
+    try {
 
-        await gPage.goto(allIELinks[i], { waitUntil: 'domcontentloaded' });
-        QuestionsDetails.push(
-            await gPage.evaluate(() => {
+        let allIELinks = await gPage.evaluate(getPageAllIELinks, postSelector);  //Links of all IE in each page 
+        for (let i = 0; i < allIELinks.length; i++) {
 
-                if (document.querySelector('.editor-buttons-container') !== null) {  //If it's a diresct question
-                    let title = document.querySelector('.a-wrapper .title').innerText;
-                    let link = window.location.href; //Gets current page URL in browser
-                    return { title, link };
-                }
-                else {  //Else if it's an IE where we collect all questions
-                    let IEQuestionsArr = Array.from(document.querySelectorAll('.a-wrapper .text a'));
-                    let IEQuestionDetails = [];
-                    let isQuestionFactor = true;
-                    IEQuestionsArr.forEach((element) => {
-                        let title = element.innerText.trim();
-                        let link = element.getAttribute('href');
-                        if (title.toLowerCase() === 'DSA Self Paced Course'.toLowerCase()) isQuestionFactor = false;
-                        if (isQuestionFactor === true) IEQuestionDetails.push({ title, link });
-                    });
-                    return IEQuestionDetails;
-                }
+            await gPage.goto(allIELinks[i], { waitUntil: 'domcontentloaded' });
+            QuestionsDetails.push(
+                await gPage.evaluate(() => {
 
-            })
-        );
-        await gPage.goBack({ waitUntil: 'domcontentloaded' });  //waitUntil (option) : domcontentloaded
+                    if (document.querySelector('.editor-buttons-container') !== null) {  //If it's a diresct question
+                        let title = document.querySelector('.a-wrapper .title').innerText;
+                        let link = window.location.href; //Gets current page URL in browser
+                        return { title, link };
+                    }
+                    else {  //Else if it's an IE where we collect all questions
+                        let IEQuestionsArr = Array.from(document.querySelectorAll('.a-wrapper .text a'));
+                        let IEQuestionDetails = [];
+                        let isQuestionFactor = true;
+                        IEQuestionsArr.forEach((element) => {
+                            let title = element.innerText.trim();
+                            let link = element.getAttribute('href');
+                            if (title.toLowerCase() === 'DSA Self Paced Course'.toLowerCase()) isQuestionFactor = false;
+                            if (isQuestionFactor === true) IEQuestionDetails.push({ title, link });
+                        });
+                        return IEQuestionDetails;
+                    }
 
+                })
+            );
+            await gPage.goBack({ waitUntil: 'domcontentloaded' });
+
+        }
+
+    }
+    catch (err) {
+        console.log(err);
     }
 }
 
@@ -136,9 +174,16 @@ function getPageAllIELinks(postSelector) {
 }
 
 async function nextPageSelectorExists(nextPageSelector) {
-    return await gPage.evaluate((selector) => {
-        return document.querySelector(selector);
-    }, nextPageSelector);
+    try {
+        
+        return await gPage.evaluate((selector) => {
+            return document.querySelector(selector);
+        }, nextPageSelector);
+
+    }
+    catch (err) {
+        console.log(err);
+    }
 }
 
 module.exports = {
