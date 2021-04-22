@@ -1,9 +1,9 @@
-let pdf = require('./writePDF.js')
+const pdf = require('./writePDF.js')
 let questionsTilte = [];
 let questionsLinks = [];
 let questionsfrequency = [];
 let Questions = [];
-let errorCases = [undefined, null, ''];
+const errorCases = [undefined, null, ''];
 
 function filterQuestions(QuestionsArr, location, companyName) {
     QuestionsArr.forEach((element) => {

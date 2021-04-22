@@ -1,9 +1,10 @@
 const puppeteer = require('puppeteer');
 const help = require('./help.js');
 const filter = require('./filter.js');
-let pageLink = 'https://www.geeksforgeeks.org/';
+const pageLink = 'https://www.geeksforgeeks.org/';
 let gPage;
 let allQuestionDetails;
+
 
 async function scrapExperiences(location, companyName) {
     try {
@@ -32,7 +33,7 @@ async function getToMainPage(location, companyName) {
 
         await waitAndClick('.header-main__list-item');
         await gPage.evaluate(getToCompanyIEListPage, '.header-main__list-item.selected .mega-dropdown .mega-dropdown__list-item');
-        let companyIEExists = await checkCompanyIEExists('.entry-content .sLiClass a', companyName);
+        let companyIEExists = await checkCompanyIEExists('.entry-content .sLiClass a', companyName); //IE -> Interview Experiences
         if (companyIEExists === true) { //If requested company IE exists or not.
             allQuestionDetails = await collectInterviewQuestions('.articles-list .content .head a', '.nextpostslink');
             filter.filterQuestions(allQuestionDetails, location, companyName);
@@ -175,7 +176,7 @@ function getPageAllIELinks(postSelector) {
 
 async function nextPageSelectorExists(nextPageSelector) {
     try {
-        
+
         return await gPage.evaluate((selector) => {
             return document.querySelector(selector);
         }, nextPageSelector);
