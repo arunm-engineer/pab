@@ -1,0 +1,64 @@
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    background-color: rgb(82, 80, 80);
+}
+
+li {
+    list-style: none;
+}
+
+.input-container {
+    /* border: 2px solid red; */
+    height: 13vh;
+}
+
+.main-container {
+    /* border: 2px solid green; */
+    font-family: 'Karantina', cursive;
+    text-align: center;
+    padding-top: 2rem;
+}
+
+.action {
+    color: white;
+    width: 60%;
+    font-size: 2rem;
+    margin: 0 auto;
+    /* border: 2px solid violet; */
+}
+
+.task-list {
+    /* border: 2px solid yellow; */
+    width: 60%;
+    padding-left: 0;
+    margin: 0 auto;
+    
+}
+
+.task {
+    height: 3rem;
+    font-size: 2rem;
+    margin: 1rem;
+    background-color: grey;
+    /* border: 2px solid pink; */
+}
+
+.input-box {
+    display: block;
+    margin: 0 auto;
+    height: 50%;  /* sets acc to parent*/
+    text-align: center;
+    margin-top: 1rem;
+    width: 40vw;
+    font-size: 2rem;
+}
+
+/* media query -> works acc to screen size */
+@media only screen and (max-width: 800px) {
+    .input-box {
+        width: 70vw;
+    }
+}
