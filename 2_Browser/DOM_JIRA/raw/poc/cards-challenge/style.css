@@ -16,25 +16,24 @@ body {
 
     /* each-card css */
     .card-container {
-        /* height: calc(100%/3); */
-        height: 100;
+        height: 100%;
         width: calc(100%/3);
         border-radius: 10px;
     }
     .sedan-pos {
-        background-color: blueviolet;
+        background-color: rgb(174, 99, 243);
     }
     .suv-pos {
         position: relative;
         right: 1rem;
         z-index: 5;
-        background-color: rgb(238, 175, 16);
+        background-color: rgb(248, 191, 47);
     }
     .lux-pos {
         position: relative;
         right: 2rem;
         z-index: 10;
-        background-color: rgb(240, 102, 11);
+        background-color: rgb(255, 140, 64);
     }
     .car-desc-container {
         margin: 3rem 0 0 2.5rem;
@@ -63,26 +62,27 @@ body {
         cursor: pointer;
     }
     .sedan-btn {
-        color: blueviolet;
+        color: rgb(174, 99, 243);
     }
     .suv-btn {
-        color: rgb(238, 175, 16);
+        color: rgb(248, 191, 47);
     }
     .lux-btn {
-        color: rgb(240, 102, 11);
+        color: rgb(255, 140, 64);
     }
     .sedan-btn:hover {
-        background-color: blueviolet;
+        background-color: rgb(174, 99, 243);
+
         border: 1px solid white;
         color: white;
     }
     .suv-btn:hover {
-        background-color: rgb(238, 175, 16);
+        background-color: rgb(248, 191, 47);
         border: 1px solid white;
         color: white;
     }
     .lux-btn:hover {
-        background-color: rgb(240, 102, 11);
+        background-color: rgb(255, 140, 64);
         border: 1px solid white;
         color: white;
     }
