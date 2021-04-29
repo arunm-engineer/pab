@@ -1,0 +1,88 @@
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+}
+/* cards collective css */
+.cards-collection-cantainer {
+    height: 30rem;
+    width: 50rem;
+    position: relative;
+    top: calc((100vh - 30rem)/2);
+    left: calc((100vw - 50rem)/2);
+    display: flex;
+}
+
+    /* each-card css */
+    .card-container {
+        /* height: calc(100%/3); */
+        height: 100;
+        width: calc(100%/3);
+        border-radius: 10px;
+    }
+    .sedan-pos {
+        background-color: blueviolet;
+    }
+    .suv-pos {
+        position: relative;
+        right: 1rem;
+        z-index: 5;
+        background-color: rgb(238, 175, 16);
+    }
+    .lux-pos {
+        position: relative;
+        right: 2rem;
+        z-index: 10;
+        background-color: rgb(240, 102, 11);
+    }
+    .car-desc-container {
+        margin: 3rem 0 0 2.5rem;
+        height: calc(100% - 3rem);
+    }
+    .car-name {
+        font-family: 'Anton', sans-serif;
+        font-size: 2rem;
+    }
+    .fas {
+        font-size: 2.5rem;
+    }
+    .car-desc {
+        height: 40%;
+        width: 12rem;
+        font-size: larger;
+        line-height: 150%;
+        font-family: 'Yanone Kaffeesatz', sans-serif;
+    }
+    .more-info-btn {
+        width: 8rem;
+        height: 3rem;
+        border-radius: 1.5rem;
+        border: none;
+        font-family: 'Source Sans Pro', sans-serif;
+        cursor: pointer;
+    }
+    .sedan-btn {
+        color: blueviolet;
+    }
+    .suv-btn {
+        color: rgb(238, 175, 16);
+    }
+    .lux-btn {
+        color: rgb(240, 102, 11);
+    }
+    .sedan-btn:hover {
+        background-color: blueviolet;
+        border: 1px solid white;
+        color: white;
+    }
+    .suv-btn:hover {
+        background-color: rgb(238, 175, 16);
+        border: 1px solid white;
+        color: white;
+    }
+    .lux-btn:hover {
+        background-color: rgb(240, 102, 11);
+        border: 1px solid white;
+        color: white;
+    }
