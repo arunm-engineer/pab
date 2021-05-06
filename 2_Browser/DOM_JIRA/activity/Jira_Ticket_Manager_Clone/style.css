@@ -274,7 +274,7 @@ body {
 @media only screen and (max-width: 500px) {
     .modal-container {
         width: 18rem;
-        height: 20rem;
+        height: 23rem;
         left: calc((100vw - 18rem)/2);
         top: calc((100vh - 20rem + 13vh)/2);
         flex-direction: column;
@@ -292,7 +292,7 @@ body {
         flex-direction: row;
         column-gap: 1rem;
         justify-content: center;
-        width: 65%;
+        width: 80%;
     } 
     .priority-color {
         width: 20%;
