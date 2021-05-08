@@ -74,6 +74,21 @@ body {
         font-size: xx-large;
     }
 
+    /* trash bin css */
+    .trash-bin-container {
+        height: 3rem;
+        width: 3rem;
+        margin-left: auto;
+        margin-right: 4rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 2000;
+    }
+    .trash-bin-container:hover {
+        transform: rotate(20deg);
+    }
+
 /* main container (display area) css */
 .main-container {
     min-height: 100vh;
@@ -170,7 +185,7 @@ body {
         }
         .ticket-sub-container {
              width: 100%; 
-             height: 10rem
+             height: calc(100% - 1rem - 0.5rem - 3rem);
         }
         .task-id {
             width: 100%;
@@ -200,7 +215,7 @@ body {
             background-color: lightcoral;
         } */
         .lock-container {
-            height: calc(100% - 1rem - 0.5rem - 10rem);
+            height: 3rem;
             width: 100%;
             /* background-color: whitesmoke; */
             display: flex;
@@ -218,8 +233,8 @@ body {
         justify-content: center;
     }
     .filter-container {
-        width: 35%;
-        margin-left: 0%;
+        width: 25%;
+        margin-left: 5%;
     }
     .action-container {
         margin-left: 0%;
@@ -234,7 +249,7 @@ body {
     }
     .filter-container {
         width: 40%;
-        margin-left: 0%;
+        margin-left: 5%;
     }
     .action-container {
         margin-left: 0%;
@@ -242,8 +257,8 @@ body {
 }
 
 @media only screen and (min-width: 450px) and (max-width: 800px) {
-    .modal-container {
 
+    .modal-container {
         flex-direction: column;
         width: 30rem;
         left: calc((100vw - 30rem)/2);
@@ -297,5 +312,11 @@ body {
     .priority-color {
         width: 20%;
         height: 100%;
+    }
+    .trash-bin-container {
+        margin-right: 1rem;
+    }
+    .toolbox-container {
+        gap: 1.5rem;
     }
 }

@@ -10,12 +10,12 @@ let cColor = colors[colors.length - 1];
 let taskArea = document.querySelector(".task-area");
 let collectiveTicketContainer = document.querySelector(".collective-ticket-container");
 let removeBtn = document.querySelector(".remove");
+let trashBin = document.querySelector(".trash-bin-container");
 let addFlag = false;
 let removeFlag = false;
 let lockClass = "fa-lock";
 let unlockClass = "fa-lock-open";
 let ticketsArr = [];
-
 
 if (localStorage.getItem("availableTickets")) {  //Create previously saved tickets from local storage on page
     let strTicketsArr = localStorage.getItem("availableTickets");
@@ -82,13 +82,13 @@ for (let i = 0; i < colorElemArr.length; i++) {  //Filtering tickets according t
 
     });
 
-    colorElemArr[i].addEventListener("dblclick", function() {  //Display all requested color tickets
+    colorElemArr[i].addEventListener("dblclick", function () {  //Display all requested color tickets
         let crudTicketsArr = collectiveTicketContainer.children;
         for (let i = collectiveTicketContainer.children.length - 1; i >= 0; i--) {
             collectiveTicketContainer.removeChild(crudTicketsArr[i]);
         }
 
-        ticketsArr.forEach(function(ticketObj) {
+        ticketsArr.forEach(function (ticketObj) {
             createTicket(ticketObj.task, ticketObj.color, ticketObj.id);
         });
     });
@@ -119,13 +119,17 @@ function createTicket(task, color, ticketID) {  //Create new tickets
 
     handleTicketColor(ticket, id);
     handleTicketLock(ticket, id);
-    handleTicketRemoval(ticket, id);
-    
+    handleTicketRemoval(ticket);
+
+}
+
+function handleDraggable(ticket, id, ticketIdx) {
+
 }
 
 function handleTicketLock(ticket, id) {  //Manage ticket locks for ticket task editing
     let ticketLock = ticket.querySelector(".fas");
-    ticketLock.addEventListener("click", function() {
+    ticketLock.addEventListener("click", function () {
         let ticketIdx;
         ticketsArr.forEach((ele, idx) => {
             if (ele.id === id) {
@@ -156,7 +160,7 @@ function handleTicketLock(ticket, id) {  //Manage ticket locks for ticket task e
 }
 
 function handleTicketColor(ticket, id) {  //Manage priority colors of ticket
-    
+
     let colorHeader = ticket.querySelector(".head-color");
     colorHeader.addEventListener("click", () => {
         let ticketIdx;
@@ -176,21 +180,53 @@ function handleTicketColor(ticket, id) {  //Manage priority colors of ticket
     });
 }
 
-function handleTicketRemoval(ticket, id) {  //Manage removal of tickets
-    ticket.addEventListener("click", () => {
-        let ticketIdx;
-        ticketsArr.forEach((ele, idx) => {
-            if (ele.id === id) {
-                ticketIdx = idx;
+function handleTicketRemoval(ticket) {  //Manage removal of tickets
+
+    ticket.addEventListener("mousedown", function (e) {
+        let ticketId = ticket.querySelector(".task-id").innerText.slice(1);
+        if (removeFlag == true) {
+            let ticketIdx;
+            ticketsArr.forEach((ele, idx) => {
+                if (ele.id === ticketId) {
+                    ticketIdx = idx;
+                }
+            });
+
+            let shiftX = e.clientX - ticket.getBoundingClientRect().left;
+            let shiftY = e.clientY - ticket.getBoundingClientRect().top;
+
+            ticket.style.position = "absolute";
+            ticket.style.zIndex = 1000;
+            ticket.style.opacity = 0.5;
+
+            function moveAt(pageX, pageY) {  //This keeps the ticket at same position where the mouse clicked, wherever you drag the ticket
+                ticket.style.left = pageX - shiftX + "px";  
+                ticket.style.top = pageY - shiftY + "px";
             }
-        }, id);
-    
-        if (removeFlag == true) {  //Delete ticket
-            ticketsArr.splice(ticketIdx, 1);
-    
-            let strTicketsArr = JSON.stringify(ticketsArr);
-            localStorage.setItem("availableTickets", strTicketsArr);
-            collectiveTicketContainer.removeChild(ticket);
+
+            moveAt(e.pageX, e.pageY);
+
+            function moveTicket(e) {
+                moveAt(e.pageX, e.pageY);
+            };
+
+            ticket.addEventListener("mousemove", moveTicket);
+
+            trashBin.addEventListener("mouseup", deleteTask);
+
+            function deleteTask() {
+                ticket.removeEventListener("mousemove", moveTicket);
+
+                ticketsArr.splice(ticketIdx, 1);   //Delete in local storage and update in local storage and then delete from UI page
+                let strTicketsArr = JSON.stringify(ticketsArr);
+                localStorage.setItem("availableTickets", strTicketsArr);
+                collectiveTicketContainer.removeChild(ticket);
+                trashBin.removeEventListener("mouseup", deleteTask);
+            }
+
+            ticket.ondragstart = function () {  //To have no effect on default draggable from browser on elements
+                return false;
+            }
         }
     });
 }
