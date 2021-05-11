@@ -1,0 +1,164 @@
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0px;
+}
+
+/* Excel top layer */
+
+
+.formula-container {
+    height: 2rem;
+    background-color: lightcoral;
+    border: 1px solid black;
+}
+
+.grid-container {
+    height: calc( 100vh - ( 4rem + 2rem + 2rem ) );
+    background-color: lightgreen;
+    border: 1px solid black;
+    overflow: auto;
+    position: relative;
+}
+
+.sheets-container {
+    height: 2rem;
+    background-color: lightpink;
+    border: 1px solid black;
+    display: flex;
+}
+
+/* sheet container css */
+
+.add-sheets-btn-container {
+    width: 3rem;
+    height: 100%;
+    border: 1px solid black;
+    padding-top: 0.3rem;
+    padding-left: 0.3rem;
+}
+
+.sheets-list-container {
+    width: calc( 100vw - 3rem );
+    height: 100%;
+    border: 1px solid black;
+    display: flex;
+}
+
+.sheet {
+    min-width: 5rem;
+    height: 100%;
+    border: 1px solid red;
+}
+
+.active {
+    background-color: white;
+}
+
+/* grid container css */
+.grid {
+    position: absolute;
+    left: 2rem;
+    top: 2rem;
+}
+
+.box {
+    height: 2rem;
+    width: 2rem;
+    text-align: center;
+    border: 1px solid black;
+}
+
+.top-left-box {
+    background-color: gray;
+}
+
+.top-row {
+    height: 2rem;
+    position: absolute;
+    left: 2rem;
+    top: 0rem;
+}
+
+.cell {
+    text-align: center;
+    width: 6rem;
+    height: 2rem;
+    border: 1px solid black;
+    background-color: lightcyan;
+}
+
+.row {
+    display: flex;
+}
+
+/* formula container css */
+.formula-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.formula-container > * {
+    height: 1.5rem;
+}
+
+.address-bar {
+    width: 5rem;
+    border: none;
+    border-right: 2px solid black;
+}
+
+.formula-bar {
+    width: calc( 100vw - 7rem );
+}
+
+/* options & tools container css */
+
+.menu-container {
+    height: 4rem;
+    background-color: lightblue;
+    border: 1px solid black;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.menu-container > *{
+    height: 50%;
+}
+
+.font-size {
+    width: 5%;
+}
+
+.font-family {
+    width: 20%;
+}
+
+.text-property {
+    width: 10rem;
+    border: 1px solid;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.text-property > * {
+    width: 30%;
+    height: 80%;
+}
+
+.text-alignment {
+    width: 10rem;
+    border: 1px solid;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.text-alignment > * {
+    width: 30%;
+    height: 80%;
+}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button id="all">Remove All</button>
+    <ul>
+      <li>
+        <p>Task - 1</p>
+        <button>delete</button>
+      </li>
+      <li>
+        <p>Task - 2</p>
+        <button>delete</button>
+      </li>
+      <li>
+        <p>Task - 3</p>
+        <button>delete</button>
+      </li>
+      <li>
+        <p>Task - 4</p>
+        <button>delete</button>
+      </li>
+    </ul>
+    <script>
+      // Q- Make remove all button work  and make individual delete btn work 
+      //   Solution:
+
+      let deleteBtn = document.querySelectorAll("button");
+
+      deleteBtn[0].addEventListener("click", function() {
+          let allTasks = document.querySelectorAll("li");
+          for (let i = allTasks.length-1;i >= 0;i--) {
+              allTasks[i].remove();
+          }
+      });
+
+      for (let i = 1;i < deleteBtn.length;i++) {
+          deleteBtn[i].addEventListener("click", function(e) {
+              e.target.parentNode.remove();
+          });
+      }
+    </script>
+  </body>
+</html>

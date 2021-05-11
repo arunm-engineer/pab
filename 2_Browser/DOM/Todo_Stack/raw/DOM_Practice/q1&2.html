@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <style>
+    .balls {
+      margin-top: 4rem;
+      display: flex;
+      justify-content: space-evenly;
+    }
+
+    .ball {
+      height: 4rem;
+      width: 4rem;
+      border-radius: 50%;
+      border: none;
+      background-color: red;
+    }
+  </style>
+</head>
+
+<body>
+  Q1.1 Fix the mathematical problem using JS <br>
+  Q1.2 Make all the balls blue
+  <p>2 + 2 = 22</p>
+  <div class="balls">
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+    <div class="ball"></div>
+  </div>
+  <script>
+    //1.
+    let exp = document.getElementsByTagName("p")[0];
+    exp.innerText = "2 + 2 = 4";
+
+    //2.
+    // let allBalls = document.querySelectorAll(".ball");
+    // for(let i = 0;i < allBalls.length;i++) {
+    // allBalls[i].style.backgroundColor = "blue";
+    // }
+
+    //3.
+    function showHide(idx) {
+      idx = idx % 5;
+      console.log(idx);
+      let allBallsArr = document.querySelectorAll(".ball");
+      let myBall = allBallsArr[idx];
+      if (idx == 0) {
+        allBallsArr[allBallsArr.length - 1].style.opacity = 1;
+      }
+      else {
+        allBallsArr[idx - 1].style.opacity = 1;
+      }
+      myBall.style.opacity = 0;
+
+      setTimeout(function () {
+        showHide(idx + 1);
+      }, 200);
+    }
+    // showHide(0);
+
+  </script>
+</body>
+
+</html>

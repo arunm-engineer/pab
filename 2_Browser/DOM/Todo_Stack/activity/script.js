@@ -123,10 +123,6 @@ function createTicket(task, color, ticketID) {  //Create new tickets
 
 }
 
-function handleDraggable(ticket, id, ticketIdx) {
-
-}
-
 function handleTicketLock(ticket, id) {  //Manage ticket locks for ticket task editing
     let ticketLock = ticket.querySelector(".fas");
     ticketLock.addEventListener("click", function () {
@@ -211,7 +207,6 @@ function handleTicketRemoval(ticket) {  //Manage removal of tickets
             };
 
             ticket.addEventListener("mousemove", moveTicket);
-
             trashBin.addEventListener("mouseup", deleteTask);
 
             function deleteTask() {
@@ -221,6 +216,8 @@ function handleTicketRemoval(ticket) {  //Manage removal of tickets
                 let strTicketsArr = JSON.stringify(ticketsArr);
                 localStorage.setItem("availableTickets", strTicketsArr);
                 collectiveTicketContainer.removeChild(ticket);
+                console.log(ticketIdx);
+
                 trashBin.removeEventListener("mouseup", deleteTask);
             }
 
