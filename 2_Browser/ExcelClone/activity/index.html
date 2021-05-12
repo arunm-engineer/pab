@@ -4,38 +4,48 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" integrity="sha512-PgQMlq+nqFLV4ylk1gwUOgm6CtIIXkKwaIHp/PAIWHzig/lKZSEGKEysh0TCVbHJXCLN7WetD8TFecIky75ZfQ==" crossorigin="anonymous" />
     <link rel="stylesheet" href="style.css">
     <title>Document</title>
 </head>
 <body>
     <div class="menu-container">
         <select class="font-size">
-            <option value="8">8</option>
-            <option value="10">10</option>
             <option value="12">12</option>
             <option value="14">14</option>
+            <option value="16">16</option>
+            <option value="18">18</option>
         </select>
 
         <select class="font-family">
             <option value="monospace">monospace</option>
             <option value="sans-serif">sans-serif</option>
             <option value="Georgia">Georgia</option>
-            <option value="fantasy">fantasy</option>
+            <option value="cursive">cursive</option>
         </select>
 
         <div class="text-property">
-            <input type="button" class="bold" value="B">
-            <input type="button" class="underline" value="U">
-            <input type="button" class="italic" value="I">
+            <i class="fas fa-bold bold"></i>
+            <i class="fas fa-underline underline"></i>
+            <i class="fas fa-italic italic"></i>
+            <!-- <input type="button" class="bold" value="B"> -->
+            <!-- <input type="button" class="underline" value="U"> -->
+            <!-- <input type="button" class="italic" value="I"> -->
         </div>
 
         <div class="text-alignment">
-            <div class="left">L</div>
-            <div class="center">J</div>
-            <div class="right">R</div>
+            <i class="left align fas fa-align-left"></i>
+            <i class="center align fas fa-align-center"></i>
+            <i class="right align fas fa-align-right"></i>
+            <!-- <input type="button" class="left align" value="L"> -->
+            <!-- <input type="button" class="center align" value="C"> -->
+            <!-- <input type="button" class="right align" value="R"> -->
         </div>
 
-        <div class="color-palette"></div>
+        <div class="color-palette">
+            <input type="color" class="color" value="#000000">
+            <input type="color" class="background-color" value="#e0ffff">
+        </div>
     </div>
     <div class="formula-container">
         <input type="text" class="address-bar" readonly>

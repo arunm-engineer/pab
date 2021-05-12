@@ -16,7 +16,6 @@ body {
 
 .grid-container {
     height: calc( 100vh - ( 4rem + 2rem + 2rem ) );
-    background-color: lightgreen;
     border: 1px solid black;
     overflow: auto;
     position: relative;
@@ -61,6 +60,7 @@ body {
     position: absolute;
     left: 2rem;
     top: 2rem;
+    /* background-color: lightcyan; */
 }
 
 .box {
@@ -68,6 +68,11 @@ body {
     width: 2rem;
     text-align: center;
     border: 1px solid black;
+}
+
+.left-col {
+    background-color: lightgreen;
+    width: 2rem;
 }
 
 .top-left-box {
@@ -79,6 +84,7 @@ body {
     position: absolute;
     left: 2rem;
     top: 0rem;
+    background-color: lightgreen;
 }
 
 .cell {
@@ -86,7 +92,6 @@ body {
     width: 6rem;
     height: 2rem;
     border: 1px solid black;
-    background-color: lightcyan;
 }
 
 .row {
@@ -118,27 +123,33 @@ body {
 
 .menu-container {
     height: 4rem;
-    background-color: lightblue;
+    background-color: lightsteelblue;
     border: 1px solid black;
     display: flex;
     gap: 1rem;
     align-items: center;
 }
 
-.menu-container > *{
-    height: 50%;
+.menu-container > * {
+    height: 60%;
+    border-radius: 3px;
 }
 
 .font-size {
-    width: 5%;
+    min-width: 5%;
+    border: none;
+    outline: none;
+    margin-left: 1rem;
 }
 
 .font-family {
-    width: 20%;
+    min-width: 20%;
+    border: none;
+    outline: none;
 }
 
 .text-property {
-    width: 10rem;
+    min-width: 10rem;
     border: 1px solid;
     display: flex;
     justify-content: space-around;
@@ -148,10 +159,14 @@ body {
 .text-property > * {
     width: 30%;
     height: 80%;
+    border: 1px solid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .text-alignment {
-    width: 10rem;
+    min-width: 10rem;
     border: 1px solid;
     display: flex;
     justify-content: space-around;
@@ -161,4 +176,21 @@ body {
 .text-alignment > * {
     width: 30%;
     height: 80%;
+    border: 1px solid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.color-palette {
+    min-width: 10rem;
+    border: 1px solid;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.color-palette > * {
+    width: 40%;
+    height: 55%;
 }
