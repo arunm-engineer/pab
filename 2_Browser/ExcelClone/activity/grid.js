@@ -23,6 +23,11 @@ let optionFontSize = document.querySelectorAll(".font-size > option");
 let cellColor = document.querySelector(".color");
 let cellBackgroundColor = document.querySelector(".background-color");
 
+let inactive = "rgb(223, 230, 233)";
+let active = "rgb(178, 190, 195)";
+
+let formulaBar = document.querySelector(".formula-bar");
+
 let sheetDB = [];
 let rows = 100;
 let cols = 26;
@@ -35,10 +40,14 @@ for (let i = 0;i < rows;i++) {  // Creating initial left column
     leftCol.appendChild(colBox);
 }
 for (let i = 0;i < 26;i++) {  // Creating initial top row
+    let topRowCell = document.createElement("div");
+    topRowCell.setAttribute("class", "top-row-cells");
+
     let rowBox = document.createElement("div");
     rowBox.innerText = String.fromCharCode(65+i);
-    rowBox.setAttribute("class", "cell");
-    topRow.appendChild(rowBox);   
+
+    topRowCell.appendChild(rowBox);
+    topRow.appendChild(topRowCell);   
 }
 for (let i = 0;i < rows;i++) {  // Creating grid box (with all cells of grid) of single sheet
     let gridRow = document.createElement("div");
@@ -74,9 +83,10 @@ for (let i = 0;i < rows;i++) {  // Set individual properties for each cell of a 
             fontSizeVal : "14",
             fontFamilyVal : "sans-serif",
             color : "#000000",
-            BGcolor : "#e0ffff"
+            BGcolor : "#e0ffff",
+            value : "",
+            formula : ""
         });
-
         let cell = grid.querySelector(`.cell[rid="${i}"][cid="${j}"]`);  //Get address of cell
         setCellProperties(cell);
     }
@@ -84,15 +94,17 @@ for (let i = 0;i < rows;i++) {  // Set individual properties for each cell of a 
 }
 
 function setCellProperties(cell) {   //Set to default properties values on individual cell click
+    
+
     cell.addEventListener("click", function() {
         let address = addressBar.value;
         let {rid, cid} = getRIDCIDfromAddress(address);
         let cellProp = sheetDB[rid][cid];
 
         // On cell click, add its properties
-        bold.style.backgroundColor = cellProp.bold ? "#b2bec3" : "#dfe6e9";
-        italic.style.backgroundColor = cellProp.italic ? "#b2bec3" : "#dfe6e9";
-        underline.style.backgroundColor = cellProp.underline ? "#b2bec3" : "#dfe6e9";
+        bold.style.backgroundColor = cellProp.bold ? active : inactive;
+        italic.style.backgroundColor = cellProp.italic ? active : inactive;
+        underline.style.backgroundColor = cellProp.underline ? active : inactive;
         cell.style.fontSize = cellProp.fontSizeVal + "px";
         cell.style.fontFamily = cellProp.fontFamilyVal;
         cell.style.color = cellProp.color;
@@ -116,26 +128,35 @@ function setCellProperties(cell) {   //Set to default properties values on indiv
 
         switch (cellProp.align) {   // This sets to active cell font-alignment
             case "center":
-                center.style.backgroundColor = "#b2bec3";
-                left.style.backgroundColor = "#dfe6e9";
-                right.style.backgroundColor = "#dfe6e9";
+                center.style.backgroundColor = active;
+                left.style.backgroundColor = inactive;
+                right.style.backgroundColor = inactive;
                 cellProp.align = "center";
                 break;
             case "left":
-                center.style.backgroundColor = "#dfe6e9";
-                left.style.backgroundColor = "#b2bec3";
-                right.style.backgroundColor = "#dfe6e9";
+                center.style.backgroundColor = inactive;
+                left.style.backgroundColor = active;
+                right.style.backgroundColor = inactive;
                 cellProp.align = "left";
                 break;
             case "right":
-                center.style.backgroundColor = "#dfe6e9";
-                left.style.backgroundColor = "#dfe6e9";
-                right.style.backgroundColor = "#b2bec3";
+                center.style.backgroundColor = inactive;
+                left.style.backgroundColor = inactive;
+                right.style.backgroundColor = active;
                 cellProp.align = "right";
                 break;
         }
 
     });
+
+    // cell.addEventListener("blur", function() {  // Save content of active cell on blur event
+    //     let address = addressBar.value;
+    //     let {rid, cid} = getRIDCIDfromAddress(address);
+    //     let cellProp = sheetDB[rid][cid];
+
+    //     let cellCurrentText = cell.innerText;
+    //     cellProp.content = cellCurrentText;
+    // });
 }
 
 let allCells = document.querySelectorAll(".grid .cell");  //This ensures that initial first cell of sheet is always clicked
@@ -149,7 +170,7 @@ bold.addEventListener("click", function() {   // Update cell bold property
     
     cellProp.bold = !cellProp.bold; 
     cell.style.fontWeight = cellProp.bold ? "bold" : "normal";
-    bold.style.backgroundColor = cellProp.bold ? "#b2bec3" : "#dfe6e9";
+    bold.style.backgroundColor = cellProp.bold ? active : inactive;
 });
 
 italic.addEventListener("click", function() {  // Update cell italic property
@@ -159,7 +180,7 @@ italic.addEventListener("click", function() {  // Update cell italic property
 
     cellProp.italic = !cellProp.italic; 
     cell.style.fontStyle = cellProp.italic ? "italic" : "normal";
-    italic.style.backgroundColor = cellProp.italic ? "#b2bec3" : "#dfe6e9";
+    italic.style.backgroundColor = cellProp.italic ? active : inactive;
 });
 
 underline.addEventListener("click", function() {   // Update cell underline property
@@ -169,7 +190,7 @@ underline.addEventListener("click", function() {   // Update cell underline prop
 
     cellProp.underline = !cellProp.underline; 
     cell.style.textDecoration = cellProp.underline ? "underline" : "none";
-    underline.style.backgroundColor = cellProp.underline ? "#b2bec3" : "#dfe6e9";
+    underline.style.backgroundColor = cellProp.underline ? active : inactive;
 });
 
 for(let i = 0;i < allAlignBtn.length;i++) {   // Update cell alignment property
@@ -183,19 +204,22 @@ for(let i = 0;i < allAlignBtn.length;i++) {   // Update cell alignment property
         cell.style.textAlign = cellProp.align;
         switch (cellProp.align) {
             case "center":
-                center.style.backgroundColor = "#b2bec3";
-                left.style.backgroundColor = "#dfe6e9";
-                right.style.backgroundColor = "#dfe6e9";
+                center.style.backgroundColor = active;
+                left.style.backgroundColor = inactive;
+                right.style.backgroundColor = inactive;
+                cellProp.align = "center";
                 break;
             case "left":
-                center.style.backgroundColor = "#dfe6e9";
-                left.style.backgroundColor = "#b2bec3";
-                right.style.backgroundColor = "#dfe6e9";
+                center.style.backgroundColor = inactive;
+                left.style.backgroundColor = active;
+                right.style.backgroundColor = inactive;
+                cellProp.align = "left";
                 break;
             case "right":
-                center.style.backgroundColor = "#dfe6e9";
-                left.style.backgroundColor = "#dfe6e9";
-                right.style.backgroundColor = "#b2bec3";
+                center.style.backgroundColor = inactive;
+                left.style.backgroundColor = inactive;
+                right.style.backgroundColor = active;
+                cellProp.align = "right";
                 break;
         }
 
@@ -239,6 +263,7 @@ cellBackgroundColor.addEventListener("change", function() {   // Update active c
     cell.style.backgroundColor = cellProp.BGcolor;
     cellBackgroundColor.value = cellProp.BGcolor;
 });
+
 
 function getActiveCell() {   // Get current cell & its properties which is active(clicked)
     let address = addressBar.value;

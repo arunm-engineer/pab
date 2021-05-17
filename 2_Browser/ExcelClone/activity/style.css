@@ -7,35 +7,148 @@ body {
 
 /* Excel top layer */
 
+/* options & tools container css */
+
+.menu-container {
+    height: 7rem;
+    background-color: #010101;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
+.menu-bar {
+    width: 98%;
+    height: 75%;
+    /* background-color: #010101; */
+    background-color: #26282b;
+
+
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    border-radius: 0.3rem;
+}
+
+.menu-bar > * {
+    height: 2.7rem;
+    border-radius: 3px;
+}
+
+.font-size {
+    min-width: 5%;
+    border: none;
+    outline: none;
+    margin-left: 1rem;
+}
+
+.font-family {
+    min-width: 20%;
+    border: none;
+    outline: none;
+}
+
+.text-property {
+    min-width: 10rem;
+    /* border: 1px solid; */
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.text-property > * {
+    width: 30%;
+    height: 100%;
+    /* border: 1px solid; */
+    border-radius: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.text-alignment {
+    min-width: 10rem;
+    /* border: 1px solid; */
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.text-alignment > * {
+    width: 30%;
+    height: 100%;
+    /* border: 1px solid; */
+    border-radius: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.color-palette {
+    min-width: 10rem;
+    /* border: 1px solid; */
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.color-palette > * {
+    width: 40%;
+    height: 55%;
+}
+
+/* new open save css */
+
+.nos-container {
+    min-width: 10rem;
+    /* border: 1px solid; */
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.nos-container > * {
+    width: 30%;
+    height: 100%;
+    border-radius: 3px;
+    background-color: rgb(223, 230, 233);
+    /* border: 1px solid; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: x-large;
+}
+
+.nos-container > *:hover {
+    background-color: rgb(178, 190, 195);
+}
 
 .formula-container {
-    height: 2rem;
-    background-color: lightcoral;
-    border: 1px solid black;
+    height: 3.5rem;
+    background-color: #010101;
 }
 
 .grid-container {
-    height: calc( 100vh - ( 4rem + 2rem + 2rem ) );
-    border: 1px solid black;
+    height: calc( 100vh - ( 7rem + 2.5rem + 3.5rem ) );
+    /* border: 1px solid black; */
     overflow: auto;
     position: relative;
 }
 
 .sheets-container {
-    height: 2rem;
-    background-color: lightpink;
-    border: 1px solid black;
+    height: 2.5rem;
+    background-color: rgb(223, 230, 233);
+    /* border: 1px solid black; */
     display: flex;
 }
 
 /* sheet container css */
 
 .add-sheets-btn-container {
+    /* background-color: rgb(223, 230, 233); */
     width: 3rem;
     height: 100%;
     border: 1px solid black;
-    padding-top: 0.3rem;
-    padding-left: 0.3rem;
 }
 
 .sheets-list-container {
@@ -60,23 +173,26 @@ body {
     position: absolute;
     left: 2rem;
     top: 2rem;
-    /* background-color: lightcyan; */
+    background-color: #dfe4ea;
 }
 
 .box {
-    height: 2rem;
+    height: 1.5rem;
     width: 2rem;
     text-align: center;
-    border: 1px solid black;
+    border: 1px solid #c4bbf0;
 }
 
 .left-col {
-    background-color: lightgreen;
     width: 2rem;
+    color: #dfe6e9;
+    background-color: #26282b;
+
 }
 
 .top-left-box {
-    background-color: gray;
+    background-color: #010101;
+    height: 2rem;
 }
 
 .top-row {
@@ -84,14 +200,28 @@ body {
     position: absolute;
     left: 2rem;
     top: 0rem;
-    background-color: lightgreen;
+    color: #dfe6e9;
+    background-color: #26282b;
+
+
+}
+
+.top-row-cells  {
+    text-align: center;
+    width: 6rem;
+    height: 2rem;
+    border: 1px solid #c4bbf0;
+    color: #dfe6e9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .cell {
     text-align: center;
     width: 6rem;
-    height: 2rem;
-    border: 1px solid black;
+    height: 1.5rem;
+    border: 1px solid #c4bbf0;
 }
 
 .row {
@@ -106,91 +236,31 @@ body {
 }
 
 .formula-container > * {
-    height: 1.5rem;
+    height: 2rem;
+    border-radius: 3px;
 }
 
 .address-bar {
     width: 5rem;
     border: none;
-    border-right: 2px solid black;
+    outline: none;
 }
 
 .formula-bar {
     width: calc( 100vw - 7rem );
-}
-
-/* options & tools container css */
-
-.menu-container {
-    height: 4rem;
-    background-color: lightsteelblue;
-    border: 1px solid black;
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-}
-
-.menu-container > * {
-    height: 60%;
-    border-radius: 3px;
-}
-
-.font-size {
-    min-width: 5%;
-    border: none;
-    outline: none;
-    margin-left: 1rem;
-}
-
-.font-family {
-    min-width: 20%;
     border: none;
     outline: none;
 }
 
-.text-property {
-    min-width: 10rem;
-    border: 1px solid;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
+input {
+    background-color: #ecf0f1;
 }
 
-.text-property > * {
-    width: 30%;
-    height: 80%;
-    border: 1px solid;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+select {
+    background-color: #ecf0f1;
+}
+ select > * {
+    background-color: #ecf0f1;
 }
 
-.text-alignment {
-    min-width: 10rem;
-    border: 1px solid;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-}
-
-.text-alignment > * {
-    width: 30%;
-    height: 80%;
-    border: 1px solid;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.color-palette {
-    min-width: 10rem;
-    border: 1px solid;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-}
-
-.color-palette > * {
-    width: 40%;
-    height: 55%;
-}
+ 

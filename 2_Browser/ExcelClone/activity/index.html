@@ -10,62 +10,77 @@
 </head>
 <body>
     <div class="menu-container">
-        <select class="font-size">
-            <option value="12">12</option>
-            <option value="14">14</option>
-            <option value="16">16</option>
-            <option value="18">18</option>
-        </select>
+        <div class="menu-bar">
+            <select class="font-size">
+                <option value="12">12</option>
+                <option value="14">14</option>
+                <option value="16">16</option>
+                <option value="18">18</option>
+            </select>
 
-        <select class="font-family">
-            <option value="monospace">monospace</option>
-            <option value="sans-serif">sans-serif</option>
-            <option value="Georgia">Georgia</option>
-            <option value="cursive">cursive</option>
-        </select>
+            <select class="font-family">
+                <option value="monospace">monospace</option>
+                <option value="sans-serif">sans-serif</option>
+                <option value="Georgia">Georgia</option>
+                <option value="cursive">cursive</option>
+            </select>
 
-        <div class="text-property">
-            <i class="fas fa-bold bold"></i>
-            <i class="fas fa-underline underline"></i>
-            <i class="fas fa-italic italic"></i>
-            <!-- <input type="button" class="bold" value="B"> -->
-            <!-- <input type="button" class="underline" value="U"> -->
-            <!-- <input type="button" class="italic" value="I"> -->
-        </div>
+            <div class="text-property">
+                <i class="fas fa-bold bold"></i>
+                <i class="fas fa-underline underline"></i>
+                <i class="fas fa-italic italic"></i>
+                <!-- <input type="button" class="bold" value="B"> -->
+                <!-- <input type="button" class="underline" value="U"> -->
+                <!-- <input type="button" class="italic" value="I"> -->
+            </div>
 
-        <div class="text-alignment">
-            <i class="left align fas fa-align-left"></i>
-            <i class="center align fas fa-align-center"></i>
-            <i class="right align fas fa-align-right"></i>
-            <!-- <input type="button" class="left align" value="L"> -->
-            <!-- <input type="button" class="center align" value="C"> -->
-            <!-- <input type="button" class="right align" value="R"> -->
-        </div>
+            <div class="text-alignment">
+                <i class="left align fas fa-align-left"></i>
+                <i class="center align fas fa-align-center"></i>
+                <i class="right align fas fa-align-right"></i>
+                <!-- <input type="button" class="left align" value="L"> -->
+                <!-- <input type="button" class="center align" value="C"> -->
+                <!-- <input type="button" class="right align" value="R"> -->
+            </div>
 
-        <div class="color-palette">
-            <input type="color" class="color" value="#000000">
-            <input type="color" class="background-color" value="#e0ffff">
+            <div class="color-palette">
+                <input type="color" class="color" value="#000000">
+                <input type="color" class="background-color" value="#e0ffff">
+            </div>
+
+            <div class="nos-container">
+                <i class="fas fa-folder-plus new"></i>
+                <i class="fas fa-folder-open open"></i>
+                <i class="fas fa-file-download download"></i>
+            </div>
         </div>
     </div>
+
     <div class="formula-container">
         <input type="text" class="address-bar" readonly>
         <input type="text" class="formula-bar">
     </div>
+
     <div class="grid-container">
         <div class="top-left-box box"></div>
         <div class="top-row row"></div>
         <div class="left-col"></div>
         <div class="grid"></div>
     </div>
+
     <div class="sheets-container">
         <div class="add-sheets-btn-container">
-            add
+            <!-- <i class="fas fa-plus-square"></i> -->
+            <i class="fas fa-plus-circle"></i>
         </div>
         <div class="sheets-list-container">
             <div class="sheet active" id="0">Sheet1</div>
         </div>
     </div>
+    
     <script src="grid.js"></script>
     <script src="script.js"></script>
+    <script src="formula.js"></script>
+    <!-- <script src="newOpenSave.js"></script> -->
 </body>
 </html>
