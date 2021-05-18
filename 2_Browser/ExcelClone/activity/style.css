@@ -123,11 +123,6 @@ body {
     background-color: rgb(178, 190, 195);
 }
 
-.formula-container {
-    height: 3.5rem;
-    background-color: #010101;
-}
-
 .grid-container {
     height: calc( 100vh - ( 7rem + 2.5rem + 3.5rem ) );
     /* border: 1px solid black; */
@@ -187,12 +182,13 @@ body {
     width: 2rem;
     color: #dfe6e9;
     background-color: #26282b;
-
 }
 
 .top-left-box {
     background-color: #010101;
     height: 2rem;
+    border-right: 0px;
+    border-bottom: 0px;
 }
 
 .top-row {
@@ -229,7 +225,17 @@ body {
 }
 
 /* formula container css */
+
+.formula-wrapper {
+    height: 3.5rem;
+    display: flex;
+    background-color: #010101;
+    justify-content: center;
+    align-items: center;
+}
+
 .formula-container {
+    width: 99%;
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -247,7 +253,7 @@ body {
 }
 
 .formula-bar {
-    width: calc( 100vw - 7rem );
+    width: calc( 100% - 7rem );
     border: none;
     outline: none;
 }

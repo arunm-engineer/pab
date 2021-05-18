@@ -25,6 +25,8 @@ let cellBackgroundColor = document.querySelector(".background-color");
 
 let inactive = "rgb(223, 230, 233)";
 let active = "rgb(178, 190, 195)";
+let rowColActiveColor = "aqua";
+let rowColInactiveColor = "#dfe6e9";
 
 let formulaBar = document.querySelector(".formula-bar");
 
@@ -37,11 +39,13 @@ for (let i = 0;i < rows;i++) {  // Creating initial left column
     let colBox = document.createElement("div");
     colBox.innerText = i+1;
     colBox.setAttribute("class", "box");
+    colBox.setAttribute("rid", i);
     leftCol.appendChild(colBox);
 }
 for (let i = 0;i < 26;i++) {  // Creating initial top row
     let topRowCell = document.createElement("div");
     topRowCell.setAttribute("class", "top-row-cells");
+    topRowCell.setAttribute("cid", i);
 
     let rowBox = document.createElement("div");
     rowBox.innerText = String.fromCharCode(65+i);
@@ -85,7 +89,8 @@ for (let i = 0;i < rows;i++) {  // Set individual properties for each cell of a 
             color : "#000000",
             BGcolor : "#e0ffff",
             value : "",
-            formula : ""
+            formula : "",
+            children : []
         });
         let cell = grid.querySelector(`.cell[rid="${i}"][cid="${j}"]`);  //Get address of cell
         setCellProperties(cell);
@@ -111,6 +116,8 @@ function setCellProperties(cell) {   //Set to default properties values on indiv
         cellColor.value = cellProp.color;
         // cell.style.backgroundColor = cellProp.BGcolor;
         cellBackgroundColor.value = cellProp.BGcolor;
+        formulaBar.value = cellProp.formula;
+        
 
         let fontFamilySelectIdx;  // This sets to active cell font-family 
         for (let i = 0;i < optionFontFamily.length;i++) {
@@ -148,15 +155,6 @@ function setCellProperties(cell) {   //Set to default properties values on indiv
         }
 
     });
-
-    // cell.addEventListener("blur", function() {  // Save content of active cell on blur event
-    //     let address = addressBar.value;
-    //     let {rid, cid} = getRIDCIDfromAddress(address);
-    //     let cellProp = sheetDB[rid][cid];
-
-    //     let cellCurrentText = cell.innerText;
-    //     cellProp.content = cellCurrentText;
-    // });
 }
 
 let allCells = document.querySelectorAll(".grid .cell");  //This ensures that initial first cell of sheet is always clicked
