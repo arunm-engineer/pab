@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box1 {
+            background-color: pink;
+            width: 5rem;
+            height: 5rem;
+        }
+        .box2 {
+            background-color: aqua;
+            height: 3rem;
+            width: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="box1">
+        <div class="box2"></div>
+    </div>
+    
+    <script>
+        let box1 = document.querySelector(".box1");
+        let box2 = document.querySelector(".box2");
+        box1.addEventListener("click", function(e) {
+            console.log("Im", e.target, "And Im", e.currentTarget);
+        });
+        box2.addEventListener("click", function(e) {
+            console.log("Im", e.target, "And Im", e.currentTarget);
+        });
+    </script>
+</body>
+</html>

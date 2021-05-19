@@ -1,6 +1,7 @@
 for (let i = 0;i < rows;i++) {
     for (let j = 0;j < cols;j++) {
-        allCells[i].addEventListener("blur", function(e) {  // Blur event gets triggered first compared to click ( so you can get base address directly from address bar without confusion of click( click event added to same element in grid.js ) and blur event on same element
+        let cell = grid.querySelector(`.cell[rid="${i}"][cid="${j}"]`);  //Get address of cell
+        cell.addEventListener("blur", function(e) {  // Blur event gets triggered first compared to click ( so you can get base address directly from address bar without confusion of click( click event added to same element in grid.js ) and blur event on same element
 
             let cellDetails = getActiveCell();
             let cell = cellDetails[0];
@@ -31,6 +32,14 @@ formulaBar.addEventListener("keydown", function(e) {  // On formula registry in 
         let {rid, cid} = getRIDCIDfromAddress(activeAddress);
         let cellProp = sheetDB[rid][cid];
 
+        addChildToParentInGraphComponent(inputFormula, activeAddress);  // Parent-child( Creating edge with neighbours ) relation in graph components
+        let inputFormulaValidation = isGraphCyclic(graphComponentsMatrix);
+
+        if (inputFormulaValidation == true) {  // Incorrect formula, since cycle is formed in this "directed graph"
+            removeChildToParentInGraphComponent(inputFormula);  // Also break the edge created with neighbours
+            return;
+        }
+
         if (inputFormula != cellProp.formula) {  // If formula is updated to new formula, break it's parent-child relationship, then evaluate on new formula
             removeChildFromParent(cellProp, activeAddress);
         }
@@ -43,6 +52,38 @@ formulaBar.addEventListener("keydown", function(e) {  // On formula registry in 
         updateChildrenCells(cellProp);
     }
 });
+
+function addChildToParentInGraphComponent(formula, activeAddress) {
+    let decodedFormula = formula.split(" ");
+    let childObj = getRIDCIDfromAddress(activeAddress);  // Child(active) row & col ID
+    let Crid = childObj.rid;
+    let Ccid = childObj.cid;
+
+    for (let i = 0;i < decodedFormula.length;i++) {
+        let asciiVal = decodedFormula[i].charCodeAt(0);  
+        if (asciiVal >= 65 && asciiVal <= 90) {
+            let parentObj = getRIDCIDfromAddress(decodedFormula[i]);  // Parent row & col ID
+            let Prid = parentObj.rid;
+            let Pcid = parentObj.cid;
+            // console.log(Prid, Pcid);
+            graphComponentsMatrix[Prid][Pcid].push([Crid,Ccid]);  // Create edge with neighbour
+        }
+    }
+}
+
+function removeChildToParentInGraphComponent(formula) {   // Break edge when cyclic graph formed ( Invalid formula )
+    let decodedFormula = formula.split(" ");
+
+    for (let i = 0;i < decodedFormula.length;i++) {
+        let asciiVal = decodedFormula[i].charCodeAt(0);  
+        if (asciiVal >= 65 && asciiVal <= 90) {
+            let parentObj = getRIDCIDfromAddress(decodedFormula[i]);  // Parent row & col ID
+            let Prid = parentObj.rid;
+            let Pcid = parentObj.cid;
+            graphComponentsMatrix[Prid][Pcid].pop();  // Break edge, No need to specify which index to break since only those edges will be broken which were created
+        }
+    }
+}
 
 function removeChildFromParent(cellProp, activeAddress) {   // Break child-parent relationship
     let formula = cellProp.formula;
@@ -60,8 +101,6 @@ function removeChildFromParent(cellProp, activeAddress) {   // Break child-paren
     cellProp.formula = "";  // Nullify formula ( Empty formula )
 }
 
-
-
 function evaluateFormula(formula) {  // Formula evaluation
     let decodedFormula = formula.split(" ");  // Decode formula for easy parsing
     for (let i = 0;i < decodedFormula.length;i++) {
@@ -74,7 +113,7 @@ function evaluateFormula(formula) {  // Formula evaluation
     }
 
     let encodedFormula = decodedFormula.join(" "); // Finally encode after parsing of formula to evaluate
-    return eval(encodedFormula);  // Evaluate
+    return infixEvaluation(encodedFormula);  // Evaluate
 }
 
 function addChildToParent(childAddress, formula) {  // Make parent - child relationship   ( Base address of cell to be added )
@@ -114,7 +153,7 @@ function updateChildrenCells(parentProp) {  // Update every children value ( on 
     }
 }
 
-function setUpdatedCellUIAndProp(value, formula, rid, cid) {  // Update every children value ( on parent value change by evaluating ) in UI and DB
+function setUpdatedCellUIAndProp(value, formula, rid, cid) {  // In chaining process. Update every children value ( on parent value change by evaluating ) in UI and DB
     let cell = grid.querySelector(`.cell[rid="${rid}"][cid="${cid}"]`);
     let cellProp = sheetDB[rid][cid];
     
@@ -122,5 +161,4 @@ function setUpdatedCellUIAndProp(value, formula, rid, cid) {  // Update every ch
     cellProp.value = value;
     cellProp.formula = formula;
 }
-
 

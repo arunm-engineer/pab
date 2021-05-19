@@ -95,6 +95,7 @@ body {
 .color-palette > * {
     width: 40%;
     height: 55%;
+    border-radius: 2px;
 }
 
 /* new open save css */
@@ -160,7 +161,7 @@ body {
 }
 
 .active {
-    background-color: white;
+    background-color: black;
 }
 
 /* grid container css */
