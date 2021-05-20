@@ -1,7 +1,7 @@
-for (let i = 0;i < rows;i++) {
-    for (let j = 0;j < cols;j++) {
+for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
         let cell = grid.querySelector(`.cell[rid="${i}"][cid="${j}"]`);  //Get address of cell
-        cell.addEventListener("blur", function(e) {  // Blur event gets triggered first compared to click ( so you can get base address directly from address bar without confusion of click( click event added to same element in grid.js ) and blur event on same element
+        cell.addEventListener("blur", async function (e) {  // Blur event gets triggered first compared to click ( so you can get base address directly from address bar without confusion of click( click event added to same element in grid.js ) and blur event on same element
             let activeAddress = addressBar.value;
 
             let cellDetails = getActiveCell();
@@ -9,27 +9,28 @@ for (let i = 0;i < rows;i++) {
             let cellProp = cellDetails[1];
 
             let enteredData = cell.innerText;
-            
+
             if (cellProp.value == enteredData) {  // If hardcoded new value and previous value ( access from DB ) are same, no operation to be made
                 return;
             }
             if (cellProp.formula) {  // If active cell has a formula means a child cell, so break parent-child relationship first, then continue remaining operation
                 removeChildFromParent(cellProp, activeAddress);
             }
-            
+
             cellProp.value = enteredData; // Updating data from active cell UI in DB
-            
+
             // If intermediate parent gets updated ( hardcoded value ) -> perform updated evaluation on dependents ( child cells ) 
-            updateChildrenCells(cellProp);
+
+            let updateP = await updateChildrenCells(activeAddress, 0);  // Second argument for forward color track
         });
     }
 }
 
-formulaBar.addEventListener("keydown", function(e) {  // On formula registry in formula bar
+formulaBar.addEventListener("keydown", function (e) {  // On formula registry in formula bar
     if (e.key === "Enter" && formulaBar.value) {
         let inputFormula = formulaBar.value;
         let activeAddress = addressBar.value;
-        let {rid, cid} = getRIDCIDfromAddress(activeAddress);
+        let { rid, cid } = getRIDCIDfromAddress(activeAddress);
         let cellProp = sheetDB[rid][cid];
 
         addChildToParentInGraphComponent(inputFormula, activeAddress);  // Parent-child( Creating edge with neighbours ) relation in graph components
@@ -49,7 +50,7 @@ formulaBar.addEventListener("keydown", function(e) {  // On formula registry in 
         setCellUIAndProp(evaluatedValue, inputFormula);  // Update cell's evaluated value in UI and DB
 
         // Update formula again on change in formula
-        updateChildrenCells(cellProp);
+        let updateP = await updateChildrenCells(activeAddress, 0);  // Second argument for color check
     }
 });
 
@@ -59,14 +60,14 @@ function addChildToParentInGraphComponent(formula, activeAddress) {
     let Crid = childObj.rid;
     let Ccid = childObj.cid;
 
-    for (let i = 0;i < decodedFormula.length;i++) {
-        let asciiVal = decodedFormula[i].charCodeAt(0);  
+    for (let i = 0; i < decodedFormula.length; i++) {
+        let asciiVal = decodedFormula[i].charCodeAt(0);
         if (asciiVal >= 65 && asciiVal <= 90) {
             let parentObj = getRIDCIDfromAddress(decodedFormula[i]);  // Parent row & col ID
             let Prid = parentObj.rid;
             let Pcid = parentObj.cid;
             // console.log(Prid, Pcid);
-            graphComponentsMatrix[Prid][Pcid].push([Crid,Ccid]);  // Create edge with neighbour
+            graphComponentsMatrix[Prid][Pcid].push([Crid, Ccid]);  // Create edge with neighbour
         }
     }
 }
@@ -74,8 +75,8 @@ function addChildToParentInGraphComponent(formula, activeAddress) {
 function removeChildToParentInGraphComponent(formula) {   // Break edge when cyclic graph formed ( Invalid formula )
     let decodedFormula = formula.split(" ");
 
-    for (let i = 0;i < decodedFormula.length;i++) {
-        let asciiVal = decodedFormula[i].charCodeAt(0);  
+    for (let i = 0; i < decodedFormula.length; i++) {
+        let asciiVal = decodedFormula[i].charCodeAt(0);
         if (asciiVal >= 65 && asciiVal <= 90) {
             let parentObj = getRIDCIDfromAddress(decodedFormula[i]);  // Parent row & col ID
             let Prid = parentObj.rid;
@@ -88,10 +89,10 @@ function removeChildToParentInGraphComponent(formula) {   // Break edge when cyc
 function removeChildFromParent(cellProp, activeAddress) {   // Break child-parent relationship
     let formula = cellProp.formula;
     let decodedFormula = formula.split(" ");
-    for (let i = 0;i < decodedFormula.length;i++) {
-        let asciiVal = decodedFormula[i].charCodeAt(0);  
+    for (let i = 0; i < decodedFormula.length; i++) {
+        let asciiVal = decodedFormula[i].charCodeAt(0);
         if (asciiVal >= 65 && asciiVal <= 90) {
-            let {rid, cid} = getRIDCIDfromAddress(decodedFormula[i]);
+            let { rid, cid } = getRIDCIDfromAddress(decodedFormula[i]);
             let parentCellProp = sheetDB[rid][cid];
             let removeIdx = parentCellProp.children.indexOf(activeAddress);  // Get index of child from parent to remove child
             parentCellProp.children.splice(removeIdx, 1);  // Remove child in parent
@@ -103,11 +104,11 @@ function removeChildFromParent(cellProp, activeAddress) {   // Break child-paren
 
 function evaluateFormula(formula) {  // Formula evaluation
     let decodedFormula = formula.split(" ");  // Decode formula for easy parsing
-    for (let i = 0;i < decodedFormula.length;i++) {
-        let asciiVal = decodedFormula[i].charCodeAt(0);  
+    for (let i = 0; i < decodedFormula.length; i++) {
+        let asciiVal = decodedFormula[i].charCodeAt(0);
         if (asciiVal >= 65 && asciiVal <= 90) {  // Check for a valid address to evaluate
-            let {rid, cid} = getRIDCIDfromAddress(decodedFormula[i]);
-            let cellProp = sheetDB[rid][cid];   
+            let { rid, cid } = getRIDCIDfromAddress(decodedFormula[i]);
+            let cellProp = sheetDB[rid][cid];
             decodedFormula[i] = cellProp.value;
         }
     }
@@ -118,11 +119,11 @@ function evaluateFormula(formula) {  // Formula evaluation
 
 function addChildToParent(childAddress, formula) {  // Make parent - child relationship   ( Base address of cell to be added )
     let decodedFormula = formula.split(" ");
-    for (let i = 0;i < decodedFormula.length;i++) {
+    for (let i = 0; i < decodedFormula.length; i++) {
         let asciiVal = decodedFormula[i].charCodeAt(0);
         if (asciiVal >= 65 && asciiVal <= 90) {  // If valid parent -> add child(active) cell in parent
             let parentAddress = decodedFormula[i];
-            let {rid, cid} = getRIDCIDfromAddress(parentAddress);
+            let { rid, cid } = getRIDCIDfromAddress(parentAddress);
             let parentProp = sheetDB[rid][cid];
             parentProp.children.push(childAddress);
         }
@@ -139,24 +140,54 @@ function setCellUIAndProp(value, formula) {  // Update evaluated value in UI and
     cellProp.formula = formula;
 }
 
-function updateChildrenCells(parentProp) {  // Update every children value ( on parent value change by evaluating ) from root -> recursively
+function colorTrackPromise() {
+    return new Promise((resolve, reject) => {
+        setTimeout(function() {
+            resolve();
+        }, 1000);
+    });
+}
+
+// Function with color tracking -> on data updation
+// Second argument for forward color track
+async function updateChildrenCells(parentAddress, pathCount) {  // Update every children value ( on parent value change by evaluating ) from root -> recursively
+    let parentDetails = getRIDCIDfromAddress(parentAddress);
+    let Prid = parentDetails.rid;
+    let Pcid = parentDetails.cid;
+    let parentCell = grid.querySelector(`.cell[rid="${Prid}"][cid="${Pcid}"]`);
+    let parentProp = sheetDB[Prid][Pcid];
     let children = parentProp.children;
-    for (let i = 0;i < children.length;i++) {
+
+    if (children.length > 0 || pathCount > 0) parentCell.style.backgroundColor = "blue";
+    let colorForwardP = await colorTrackPromise();  // Returns a promise for slow tracking, with setTimeout usage
+         
+
+    // If len > 0 -> then valid recursion change going on, else just a regular update
+    for (let i = 0; i < children.length; i++) {
         let childAddress = children[i];
-        let {rid, cid} = getRIDCIDfromAddress(childAddress);
+        let { rid, cid } = getRIDCIDfromAddress(childAddress);
+        cell = grid.querySelector(`.cell[rid="${rid}"][cid="${cid}"]`);
+
         let childProp = sheetDB[rid][cid];
         let childFormula = childProp.formula;
 
         let evaluatedValue = evaluateFormula(childFormula);
         setUpdatedCellUIAndProp(evaluatedValue, childFormula, rid, cid);
-        updateChildrenCells(childProp);
+
+        await updateChildrenCells(childAddress, pathCount + 1);
+
     }
+
+    parentCell.style.backgroundColor = "tomato";
+    let colorReverseP = await colorTrackPromise();   // Returns a promise for slow tracking, with setTimeout usage
+    parentCell.style.backgroundColor = "transparent";
+    return colorReverseP;
 }
 
 function setUpdatedCellUIAndProp(value, formula, rid, cid) {  // In chaining process. Update every children value ( on parent value change by evaluating ) in UI and DB
     let cell = grid.querySelector(`.cell[rid="${rid}"][cid="${cid}"]`);
     let cellProp = sheetDB[rid][cid];
-    
+
     cell.innerText = value;
     cellProp.value = value;
     cellProp.formula = formula;
