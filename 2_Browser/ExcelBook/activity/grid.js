@@ -18,8 +18,8 @@ let fontFamily = document.querySelector(".font-family");
 let optionFontFamily = document.querySelectorAll(".font-family > option");
 let optionFontSize = document.querySelectorAll(".font-size > option");
 
-let cellColor = document.querySelector(".color");
-let cellBackgroundColor = document.querySelector(".background-color");
+let cellColor = document.querySelector(".color-tag");
+let cellBackgroundColor = document.querySelector(".bg-color-tag");
 
 let inactive = "rgb(223, 230, 233)";
 let active = "rgb(178, 190, 195)";
@@ -84,18 +84,26 @@ function setCellUIProperties(cell) {   //Set to default properties values on ind
         let {rid, cid} = getRIDCIDfromAddress(address);
         let cellProp = sheetDB[rid][cid];
 
+
         // On cell click, add its properties
         cell.innerText = cellProp.value;
+
         bold.style.backgroundColor = cellProp.bold ? active : inactive;
+        cell.style.fontWeight = cellProp.bold ? "bold" : "normal";
         italic.style.backgroundColor = cellProp.italic ? active : inactive;
+        cell.style.fontStyle = cellProp.italic ? "italic" : "normal";
         underline.style.backgroundColor = cellProp.underline ? active : inactive;
-        cell.style.fontSize = cellProp.fontSizeVal + "px";
-        cell.style.fontFamily = cellProp.fontFamilyVal;
+        cell.style.textDecoration = cellProp.underline ? "underline" : "none";
+
         cell.style.color = cellProp.color;
         cellColor.value = cellProp.color;
+        cell.style.backgroundColor = cellProp.BGcolor == "#000000" ? "transparent" : cellProp.BGcolor;
         cellBackgroundColor.value = cellProp.BGcolor;
+
         formulaBar.value = cellProp.formula;
         
+        cell.style.fontSize = cellProp.fontSizeVal + "px";
+        cell.style.fontFamily = cellProp.fontFamilyVal;
 
         let fontFamilySelectIdx;  // This sets to active cell font-family 
         for (let i = 0;i < optionFontFamily.length;i++) {
@@ -147,23 +155,35 @@ firstSheet.addEventListener("click", handleSheetActiveness);
 firstSheet.click();
 
 addSheetBtn.addEventListener("click", function() {
-    let totalSheets = document.querySelectorAll(".sheet");
+    let totalSheets = document.querySelectorAll(".sheet-display");
     let lastSheet = totalSheets[totalSheets.length-1];
     let lastSheetID = Number(lastSheet.getAttribute("id"));
 
-    let newSheet = document.createElement("div");
-    newSheet.setAttribute("class", "sheet");
-    newSheet.setAttribute("id", `${lastSheetID+1}`);
-    newSheet.textContent = `Sheet${lastSheetID+2}`;
-    sheetsListContainer.appendChild(newSheet);
+    let sheet = document.createElement("div");
+    sheet.setAttribute("class", "sheet");
+
+    let perspective = document.createElement("div");
+    let sheetContent = document.createElement("div");
+    let sheetDisplay = document.createElement("div");
+
+    perspective.setAttribute("class", "perspective");
+    sheetContent.setAttribute("class", "sheet-content");
+    sheetContent.textContent = `Sheet${lastSheetID+2}`;
+    sheetDisplay.setAttribute("class", "sheet-display");
+    sheetDisplay.setAttribute("id", `${lastSheetID+1}`);
+    perspective.appendChild(sheetContent);
+    perspective.appendChild(sheetDisplay);
+    sheet.appendChild(perspective);
+
+    sheetsListContainer.appendChild(sheet);
     
     // Maintaining sheets activeness on user click
     for (let i = 0;i < totalSheets.length;i++) {  // Make newly added sheet tab active
         totalSheets[i].classList.remove("active");
     }
-    newSheet.classList.add("active");
+    sheetDisplay.classList.add("active");
 
-    newSheet.addEventListener("click", handleSheetActiveness);  // To keep track of activeness of sheets
+    sheet.addEventListener("click", handleSheetActiveness);  // To keep track of activeness of sheets
 
     createNewSheet();  // Create entire new sheet and with its cells properties
 
@@ -173,20 +193,20 @@ addSheetBtn.addEventListener("click", function() {
 
 function handleSheetActiveness(e) {
     let curSheet = e.currentTarget;  // Gets element on which this eventlistener was called 
-    let totalSheets = document.querySelectorAll(".sheet");
+    let totalSheets = document.querySelectorAll(".sheet-display");
     for (let i = 0;i < totalSheets.length;i++) {
         totalSheets[i].classList.remove("active");
     }
 
-    curSheet.classList.add("active");
+    let sheetDisplay = curSheet.querySelector(".sheet-display");
+    sheetDisplay.classList.add("active");
 
-    let sheetId = curSheet.getAttribute("id");
+    let sheetId = sheetDisplay.getAttribute("id");
     if (!SheetCollectionDB[sheetId]) {  // This case is when you put a entire new workbook and there are no sheets. So you must create one as default and make that first sheet active
         createNewSheet();  // This will generate DB for new sheet
     }
 
     sheetDB = SheetCollectionDB[sheetId];
-
     setSheetUI();  // Set UI corresponding to current sheet properties
 }
 
@@ -202,15 +222,12 @@ function createNewSheet() {
                 align : "center",
                 fontSizeVal : "14",
                 fontFamilyVal : "sans-serif",
-                color : "#000000",
-                BGcolor : "#e0ffff",
+                color : "#000000",  
+                BGcolor : "#000000",  // Marking black as primary color for identification in two-way binding
                 value : "",
                 formula : "",
                 children : []
             });
-
-            // let cell = grid.querySelector(`.cell[rid="${i}"][cid="${j}"]`);  //Get address of cell
-            // cell.click();
         }
         newMonoSheetDB.push(sheetRows);
       

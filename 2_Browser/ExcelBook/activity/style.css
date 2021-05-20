@@ -20,7 +20,6 @@ body {
 .menu-bar {
     width: 98%;
     height: 75%;
-    /* background-color: #010101; */
     background-color: #26282b;
 
 
@@ -50,7 +49,6 @@ body {
 
 .text-property {
     min-width: 10rem;
-    /* border: 1px solid; */
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -59,7 +57,6 @@ body {
 .text-property > * {
     width: 30%;
     height: 100%;
-    /* border: 1px solid; */
     border-radius: 3px;
     display: flex;
     justify-content: center;
@@ -68,7 +65,6 @@ body {
 
 .text-alignment {
     min-width: 10rem;
-    /* border: 1px solid; */
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -77,7 +73,6 @@ body {
 .text-alignment > * {
     width: 30%;
     height: 100%;
-    /* border: 1px solid; */
     border-radius: 3px;
     display: flex;
     justify-content: center;
@@ -85,35 +80,51 @@ body {
 }
 
 .color-palette {
-    min-width: 10rem;
+    min-width: 8rem;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.color-palette > i {
+    position: relative;
+    width: 41%;
+    height: 100%;
+    font-size: x-large;
+    border-radius: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(223, 230, 233);
+    border-radius: 3px;
+}
+
+.color-palette > i:hover {
+    background-color: rgb(178, 190, 195);
+}
+
+.color-palette input {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    opacity: 0.01;
+}
+
+/* new open save css */
+
+.nos-container {
+    min-width: 8rem;
     /* border: 1px solid; */
     display: flex;
     justify-content: space-evenly;
     align-items: center;
 }
 
-.color-palette > * {
-    width: 40%;
-    height: 55%;
-    border-radius: 2px;
-}
-
-/* new open save css */
-
-.nos-container {
-    min-width: 10rem;
-    /* border: 1px solid; */
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-}
-
 .nos-container > * {
-    width: 30%;
+    width: 41%;
     height: 100%;
     border-radius: 3px;
     background-color: rgb(223, 230, 233);
-    /* border: 1px solid; */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -126,42 +137,91 @@ body {
 
 .grid-container {
     height: calc( 100vh - ( 7rem + 2.5rem + 3.5rem ) );
-    /* border: 1px solid black; */
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 1rem;
     overflow: auto;
     position: relative;
 }
 
 .sheets-container {
+    font-family: 'Ubuntu', sans-serif;
     height: 2.5rem;
     background-color: rgb(223, 230, 233);
-    /* border: 1px solid black; */
     display: flex;
+    gap: 1rem;
 }
 
 /* sheet container css */
 
 .add-sheets-btn-container {
-    /* background-color: rgb(223, 230, 233); */
     width: 3rem;
     height: 100%;
-    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(178, 190, 195);
+}
+
+.icon-box {
+    height: 90%;
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 3px;
+}
+
+.material-icons {
+    font-size: x-large;
+}
+
+.material-icons:hover {
+    cursor: default;
 }
 
 .sheets-list-container {
+    color: #010101;
+    font-size: 0.9rem;
     width: calc( 100vw - 3rem );
     height: 100%;
-    border: 1px solid black;
     display: flex;
+    align-items: flex-end;
+    gap: 0.65rem;
+    overflow: auto;
+    
 }
 
-.sheet {
+.sheet-display {
+    background-color: rgb(178, 190, 195);
+
+}
+
+.perspective {
+    position: relative;
+    perspective: 4rem;
+    height: 2rem;
+    display: flex;
+    align-items: flex-end;
+}
+
+.sheet-content {
+    position: absolute;
+    top: 30%;
+    left: 20%;
+    z-index: 1;
+}
+
+.sheet-display {
     min-width: 5rem;
-    height: 100%;
-    border: 1px solid red;
+    text-align: center;
+    height: 90%;
+    transform: rotateX(30deg);
+    border-top-left-radius: 0.2rem;
+    border-top-right-radius: 0.2rem;
 }
 
 .active {
-    background-color: black;
+    background-color: rgb(223, 230, 233);
 }
 
 /* grid container css */
@@ -199,8 +259,6 @@ body {
     top: 0rem;
     color: #dfe6e9;
     background-color: #26282b;
-
-
 }
 
 .top-row-cells  {
@@ -216,6 +274,7 @@ body {
 
 .cell {
     text-align: center;
+    outline: none;
     width: 6rem;
     height: 1.5rem;
     border: 1px solid #c4bbf0;
@@ -243,14 +302,18 @@ body {
 }
 
 .formula-container > * {
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 0.9rem;
     height: 2rem;
     border-radius: 3px;
 }
 
 .address-bar {
     width: 5rem;
+    text-align: center;
     border: none;
     outline: none;
+
 }
 
 .formula-bar {
@@ -264,10 +327,50 @@ input {
 }
 
 select {
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 0.9rem;
     background-color: #ecf0f1;
 }
  select > * {
+    font-family: 'Ubuntu', sans-serif;
+    font-size: 0.9rem;
     background-color: #ecf0f1;
 }
 
- 
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: rgb(178, 190, 195);
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #26282b;
+    border-radius: 1rem;
+}
+
+#first-sheet {
+    margin-left: 0.4rem;
+}
+
+.sheet {
+    cursor: default;
+}
+
+option[value="monospace"] {
+    font-family: monospace;
+}
+
+option[value="sans-serif"] {
+    font-family: sans-serif;
+}
+
+option[value="Georgia"] {
+    font-family: Georgia;
+}
+
+option[value="cursive"] {
+    font-family: cursive;
+}

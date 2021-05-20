@@ -2,11 +2,11 @@ for (let i = 0;i < rows;i++) {
     for (let j = 0;j < cols;j++) {
         let cell = grid.querySelector(`.cell[rid="${i}"][cid="${j}"]`);  //Get address of cell
         cell.addEventListener("blur", function(e) {  // Blur event gets triggered first compared to click ( so you can get base address directly from address bar without confusion of click( click event added to same element in grid.js ) and blur event on same element
+            let activeAddress = addressBar.value;
 
             let cellDetails = getActiveCell();
             let cell = cellDetails[0];
             let cellProp = cellDetails[1];
-            let activeAddress = addressBar.value;
 
             let enteredData = cell.innerText;
             

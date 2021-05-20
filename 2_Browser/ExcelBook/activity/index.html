@@ -5,8 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" integrity="sha512-PgQMlq+nqFLV4ylk1gwUOgm6CtIIXkKwaIHp/PAIWHzig/lKZSEGKEysh0TCVbHJXCLN7WetD8TFecIky75ZfQ==" crossorigin="anonymous" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+    <title>ExcelBook</title>
 </head>
 <body>
     <div class="menu-container">
@@ -29,27 +33,25 @@
                 <i class="fas fa-bold bold"></i>
                 <i class="fas fa-underline underline"></i>
                 <i class="fas fa-italic italic"></i>
-                <!-- <input type="button" class="bold" value="B"> -->
-                <!-- <input type="button" class="underline" value="U"> -->
-                <!-- <input type="button" class="italic" value="I"> -->
             </div>
 
             <div class="text-alignment">
                 <i class="left align fas fa-align-left"></i>
                 <i class="center align fas fa-align-center"></i>
                 <i class="right align fas fa-align-right"></i>
-                <!-- <input type="button" class="left align" value="L"> -->
-                <!-- <input type="button" class="center align" value="C"> -->
-                <!-- <input type="button" class="right align" value="R"> -->
             </div>
 
             <div class="color-palette">
-                <input type="color" class="color" value="#000000">
-                <input type="color" class="background-color" value="#e0ffff">
+                <i class="fas fa-palette color">
+                    <input type="color" class="color-tag" value="#000000">
+                </i>
+                <i class="fas fa-fill-drip background-color">
+                    <input type="color" class="bg-color-tag" value="#000000">
+                </i>
             </div>
 
             <div class="nos-container">
-                <i class="fas fa-folder-plus new"></i>
+                <!-- <i class="fas fa-folder-plus new"></i> -->
                 <i class="fas fa-folder-open open"></i>
                 <i class="fas fa-file-download download"></i>
             </div>
@@ -72,11 +74,17 @@
 
     <div class="sheets-container">
         <div class="add-sheets-btn-container">
-            <!-- <i class="fas fa-plus-square"></i> -->
-            <i class="fas fa-plus-circle"></i>
+            <div class="icon-box">
+                <span class="material-icons-outlined material-icons">post_add</span>
+            </div>
         </div>
         <div class="sheets-list-container">
-            <div class="sheet active" id="0">Sheet1</div>
+            <div class="sheet" id="first-sheet">
+                <div class="perspective">
+                    <div class="sheet-content">Sheet1</div>
+                    <div class="sheet-display active" id="0"></div>
+                </div>
+            </div>
         </div>
     </div>
     
@@ -84,6 +92,6 @@
     <script src="cyclicGraphValidation.js"></script>
     <script src="infix.js"></script>
     <script src="formula.js"></script>
-    <!-- <script src="newOpenSave.js"></script> -->
+    <script src="newOpenSave.js"></script>
 </body>
 </html>
