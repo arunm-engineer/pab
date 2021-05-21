@@ -9,86 +9,90 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <title>ExcelBook</title>
 </head>
 <body>
-    <div class="menu-container">
-        <div class="menu-bar">
-            <select class="font-size">
-                <option value="12">12</option>
-                <option value="14">14</option>
-                <option value="16">16</option>
-                <option value="18">18</option>
-            </select>
+    <div class="excel-container">  
+        <div class="menu-container">
+            <div class="menu-bar">
+                <select class="font-size">
+                    <option value="12">12</option>
+                    <option value="14">14</option>
+                    <option value="16">16</option>
+                    <option value="18">18</option>
+                </select>
 
-            <select class="font-family">
-                <option value="monospace">Monospace</option>
-                <option value="sans-serif">Sans-serif</option>
-                <option value="Georgia">Georgia</option>
-                <option value="cursive">Cursive</option>
-            </select>
+                <select class="font-family">
+                    <option value="monospace">Monospace</option>
+                    <option value="sans-serif">Sans-serif</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="cursive">Cursive</option>
+                </select>
 
-            <div class="text-property">
-                <i class="fas fa-bold bold"></i>
-                <i class="fas fa-underline underline"></i>
-                <i class="fas fa-italic italic"></i>
-            </div>
+                <div class="text-property">
+                    <i class="fas fa-bold bold"></i>
+                    <i class="fas fa-underline underline"></i>
+                    <i class="fas fa-italic italic"></i>
+                </div>
 
-            <div class="text-alignment">
-                <i class="left align fas fa-align-left"></i>
-                <i class="center align fas fa-align-center"></i>
-                <i class="right align fas fa-align-right"></i>
-            </div>
+                <div class="text-alignment">
+                    <i class="left align fas fa-align-left"></i>
+                    <i class="center align fas fa-align-center"></i>
+                    <i class="right align fas fa-align-right"></i>
+                </div>
 
-            <div class="color-palette">
-                <i class="fas fa-palette color">
-                    <input type="color" class="color-tag" value="#000000">
-                </i>
-                <i class="fas fa-fill-drip background-color">
-                    <input type="color" class="bg-color-tag" value="#000000">
-                </i>
-            </div>
+                <div class="color-palette">
+                    <i class="fas fa-palette color">
+                        <input type="color" class="color-tag" value="#000000">
+                    </i>
+                    <i class="fas fa-fill-drip background-color">
+                        <input type="color" class="bg-color-tag" value="#000000">
+                    </i>
+                </div>
 
-            <div class="nos-container">
-                <!-- <i class="fas fa-folder-plus new"></i> -->
-                <i class="fas fa-folder-open open"></i>
-                <i class="fas fa-file-download download"></i>
-            </div>
-
-            <div class="trash-container">
-                <i class="fas fa-trash-alt trash"></i>
-            </div>
-        </div>
-    </div>
-
-    <div class="formula-wrapper">
-        <div class="formula-container">
-            <input type="text" class="address-bar" readonly>
-            <input type="text" class="formula-bar">
-        </div>
-    </div>
-
-    <div class="grid-container">
-        <div class="top-left-box box"></div>
-        <div class="major-row-box">
-            <div class="top-row row"></div>
-        </div>
-        <div class="left-col"></div>
-        <div class="grid"></div>
-    </div>
-
-    <div class="sheets-container">
-        <div class="add-sheets-btn-container">
-            <div class="icon-box">
-                <span class="material-icons-outlined material-icons">post_add</span>
+                <div class="nos-container">
+                    <!-- <i class="fas fa-folder-plus new"></i> -->
+                    <i class="fas fa-folder-open open"></i>
+                    <i class="fas fa-file-download download"></i>
+                </div>
+                
+                <div class="trace-container">
+                    <i class="fas fa-route trace-path"></i>
+                    <i class="fas fa-recycle cycle-path"></i>
+                </div>
             </div>
         </div>
-        <div class="sheets-list-container">
-            <div class="sheet" id="first-sheet">
-                <div class="perspective">
-                    <div class="sheet-content">Sheet1</div>
-                    <div class="sheet-display active" id="0"></div>
+
+        <div class="formula-wrapper">
+            <div class="formula-container">
+                <input type="text" class="address-bar" readonly>
+                <input type="text" class="formula-bar">
+            </div>
+        </div>
+
+        <div class="grid-container">
+            <div class="top-left-box box"></div>
+            <div class="major-row-box">
+                <div class="top-row row"></div>
+            </div>
+            <div class="left-col"></div>
+            <div class="grid"></div>
+        </div>
+
+        <div class="sheets-container">
+            <div class="add-sheets-btn-container">
+                <div class="icon-box">
+                    <span class="material-icons-outlined material-icons">post_add</span>
+                </div>
+            </div>
+            <div class="sheets-list-container">
+                <div class="sheet" id="first-sheet-margin">
+                    <div class="perspective">
+                        <div class="sheet-content">Sheet1</div>
+                        <div class="sheet-display active" id="0"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -97,6 +101,7 @@
     <script src="grid.js"></script>
     <script src="cyclicGraphValidation.js"></script>
     <script src="infix.js"></script>
+    <script src="pathTrace.js"></script>
     <script src="formula.js"></script>
     <script src="newOpenSave.js"></script>
 </body>

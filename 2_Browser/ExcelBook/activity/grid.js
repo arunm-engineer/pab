@@ -1,3 +1,5 @@
+let excelContainer = document.querySelector(".excel-container");
+
 let leftCol = document.querySelector(".left-col");
 let topRow = document.querySelector(".top-row");
 let grid = document.querySelector(".grid");
@@ -77,7 +79,6 @@ for (let i = 0;i < rows;i++) {  // Creating grid box (with all cells of grid) of
     grid.appendChild(gridRow);
 }
 
-
 function setCellUIProperties(cell) {   //Set to default properties values on individual cell click
     cell.addEventListener("click", function() {
         let address = addressBar.value;
@@ -119,6 +120,7 @@ function setCellUIProperties(cell) {   //Set to default properties values on ind
         }
         optionFontSize[fontSizeSelectIdx].selected = true;
 
+        cell.style.textAlign = cellProp.align;
         switch (cellProp.align) {   // This sets to active cell font-alignment
             case "center":
                 center.style.backgroundColor = active;
@@ -144,20 +146,119 @@ function setCellUIProperties(cell) {   //Set to default properties values on ind
 
 }
 
-
 // Handling sheets
 let addSheetBtn = document.querySelector(".add-sheets-btn-container");
 let sheetsListContainer = document.querySelector(".sheets-list-container");
 let firstSheet = document.querySelector(".sheet");
 
+
 // Excel always has one sheet by default. So that sheet to be active
 firstSheet.addEventListener("click", handleSheetActiveness);
 firstSheet.click();
 
+firstSheet.addEventListener("dblclick", deleteSheet);  // To delete sheet
+
+function deleteSheet(e) {
+    let curSheet = e.currentTarget;
+    
+    let trashModal = document.createElement("div");
+    trashModal.setAttribute("class", "modal");
+
+    trashModal.innerHTML = `
+                            <div class="msg">
+                                <div class="text-box">This will delete your sheet permanently.
+                                Are you sure?</div>
+                            </div>
+                            <div class="action-container">
+                                <button class="del-btn">
+                                    <i class="fas fa-trash-alt"></i>
+                                    <span>Delete</span>
+                                </button>
+                                <button class="cancel-btn">
+                                    <i class="far fa-times-circle"></i>
+                                    <span>Cancel</span>
+                                </button>
+                            </div>`;
+
+    document.body.appendChild(trashModal);
+    excelContainer.style.filter = "blur(1px)";
+
+    let deleteBtn = trashModal.querySelector(".del-btn");
+    let cancelBtn = trashModal.querySelector(".cancel-btn");
+
+    deleteBtn.addEventListener("click", function deleteAction(e) {  // Delete action
+        let sheetID = Number(curSheet.querySelector(".sheet-display").getAttribute("id"));  // Gets ID of active sheet 
+        document.body.removeChild(trashModal);
+        
+        let totalSheets = document.querySelectorAll(".sheet");
+        if (totalSheets.length == 1) {   // There must be atleast one sheet in workbook
+            
+
+            let minSheetModal = document.createElement("div");
+            minSheetModal.setAttribute("class", "modal");
+            minSheetModal.innerHTML = `
+                                    <div class="msg">
+                                        <div class="text-box">There must always be at least one sheet in your WorkBook!!</div>
+                                    </div>
+                                    <div class="action-container">
+                                        <button class="okay-btn">
+                                            <i class="fas fa-check-circle"></i>
+                                            <span>Okay</span>
+                                        </button>
+                                    </div>`;
+
+            document.body.appendChild(minSheetModal);
+            let okayBtn = minSheetModal.querySelector(".okay-btn");
+            okayBtn.addEventListener("click", function okayAction() {
+                document.body.removeChild(minSheetModal);
+                excelContainer.style.filter = "blur(0px)";  // Reset blur background to normal
+                okayBtn.removeEventListener("click", okayAction);
+            });
+
+            return;
+        } 
+    
+        SheetCollectionDB.splice(sheetID, 1);
+        let sheetToRemove = document.querySelector(`.sheet-display[id="${sheetID}"]`);
+        sheetToRemove = sheetToRemove.parentElement.parentElement;  // Get main sheet element and remove
+        sheetsListContainer.removeChild(sheetToRemove);
+    
+        totalSheets = document.querySelectorAll(".sheet");
+        
+        for (let i = sheetID;i < totalSheets.length;i++) {   // Change id & content of all sheets
+            let sheetContent = totalSheets[i].querySelector(".sheet-content");
+            let sheetDisplay = totalSheets[i].querySelector(".sheet-display");
+    
+            sheetContent.textContent = `Sheet${i+1}`;
+            sheetDisplay.setAttribute("id", i);
+        }
+    
+        if (sheetID == totalSheets.length) {  // Incase of last sheet ( display last before sheet )
+            let sheetToDisplay = document.querySelector(`.sheet-display[id="${sheetID-1}"]`);
+            sheetToDisplay.click();
+        }
+        else {
+            let sheetToDisplay = document.querySelector(`.sheet-display[id="${sheetID}"]`);
+            sheetToDisplay.click();
+        }
+    
+        excelContainer.style.filter = "blur(0px)";  // Reset blur background to normal
+        deleteBtn.removeEventListener("click", deleteAction);
+    });
+
+    cancelBtn.addEventListener("click", function cancelAction(e) {  // Cancel action
+        document.body.removeChild(trashModal);
+        excelContainer.style.filter = "blur(0px)";  // Reset blur background to normal
+        cancelBtn.removeEventListener("click", cancelAction);
+    });
+    
+}
+
+
 addSheetBtn.addEventListener("click", function() {
     let totalSheets = document.querySelectorAll(".sheet-display");
-    let lastSheet = totalSheets[totalSheets.length-1];
-    let lastSheetID = Number(lastSheet.getAttribute("id"));
+
+    let sheetID = SheetCollectionDB.length;  // Get last sheet
 
     let sheet = document.createElement("div");
     sheet.setAttribute("class", "sheet");
@@ -168,9 +269,9 @@ addSheetBtn.addEventListener("click", function() {
 
     perspective.setAttribute("class", "perspective");
     sheetContent.setAttribute("class", "sheet-content");
-    sheetContent.textContent = `Sheet${lastSheetID+2}`;
+    sheetContent.textContent = `Sheet${sheetID+1}`;
     sheetDisplay.setAttribute("class", "sheet-display");
-    sheetDisplay.setAttribute("id", `${lastSheetID+1}`);
+    sheetDisplay.setAttribute("id", `${sheetID}`);
     perspective.appendChild(sheetContent);
     perspective.appendChild(sheetDisplay);
     sheet.appendChild(perspective);
@@ -184,10 +285,11 @@ addSheetBtn.addEventListener("click", function() {
     sheetDisplay.classList.add("active");
 
     sheet.addEventListener("click", handleSheetActiveness);  // To keep track of activeness of sheets
+    sheet.addEventListener("dblclick", deleteSheet);  // To delete sheet
 
     createNewSheet();  // Create entire new sheet and with its cells properties
 
-    sheetDB = SheetCollectionDB[lastSheetID+1];  // Assign new sheet as current UI sheet
+    sheetDB = SheetCollectionDB[sheetID];  // Assign new sheet as current UI sheet
     setSheetUI();
 });
 
@@ -232,7 +334,7 @@ function createNewSheet() {
         newMonoSheetDB.push(sheetRows);
       
     }
-    SheetCollectionDB.push(newMonoSheetDB);  // Push entire mono sheet details in the main Sheet collection DB
+    SheetCollectionDB.push(newMonoSheetDB);  // Push entire mono-sheet details in the main Sheet collection DB
 }
 
 function setSheetUI() {  // Put complete UI of current sheet properties

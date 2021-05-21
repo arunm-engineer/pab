@@ -1,3 +1,7 @@
+let tracePath = document.querySelector(".trace-path");
+let cyclePath = document.querySelector(".cycle-path");
+
+
 for (let i = 0; i < rows; i++) {
     for (let j = 0; j < cols; j++) {
         let cell = grid.querySelector(`.cell[rid="${i}"][cid="${j}"]`);  //Get address of cell
@@ -26,7 +30,7 @@ for (let i = 0; i < rows; i++) {
     }
 }
 
-formulaBar.addEventListener("keydown", function (e) {  // On formula registry in formula bar
+formulaBar.addEventListener("keydown", async function (e) {  // On formula registry in formula bar
     if (e.key === "Enter" && formulaBar.value) {
         let inputFormula = formulaBar.value;
         let activeAddress = addressBar.value;
@@ -36,7 +40,18 @@ formulaBar.addEventListener("keydown", function (e) {  // On formula registry in
         addChildToParentInGraphComponent(inputFormula, activeAddress);  // Parent-child( Creating edge with neighbours ) relation in graph components
         let inputFormulaValidation = isGraphCyclic(graphComponentsMatrix);
 
-        if (inputFormulaValidation == true) {  // Incorrect formula, since cycle is formed in this "directed graph"
+        if (inputFormulaValidation) {  // Incorrect formula, since cycle is formed in this "directed graph"
+            // console.log(inputFormulaValidation);
+            let action = confirm("One or more cycle detected. Wanna trace your path!!");
+
+            while (action) {  // Track until you want to..
+                cyclePath.style.backgroundColor = "#2ed573";
+                let cycleSourcePoint = inputFormulaValidation;  // Cycle source point
+                await isGraphCyclicTracePath(graphComponentsMatrix, cycleSourcePoint);
+                action = confirm("Loop again in your path?");
+            }
+
+            cyclePath.style.backgroundColor = "rgb(223, 230, 233)";
             removeChildToParentInGraphComponent(inputFormula);  // Also break the edge created with neighbours
             return;
         }
@@ -54,6 +69,14 @@ formulaBar.addEventListener("keydown", function (e) {  // On formula registry in
     }
 });
 
+tracePath.addEventListener("click", async function() {
+    let activeAddress = addressBar.value;
+    tracePath.style.backgroundColor = "#2ed573";
+    let tracePathP = await tracePathColor(activeAddress, 0);
+    tracePath.style.backgroundColor = "rgb(223, 230, 233)";
+
+});
+
 function addChildToParentInGraphComponent(formula, activeAddress) {
     let decodedFormula = formula.split(" ");
     let childObj = getRIDCIDfromAddress(activeAddress);  // Child(active) row & col ID
@@ -66,7 +89,6 @@ function addChildToParentInGraphComponent(formula, activeAddress) {
             let parentObj = getRIDCIDfromAddress(decodedFormula[i]);  // Parent row & col ID
             let Prid = parentObj.rid;
             let Pcid = parentObj.cid;
-            // console.log(Prid, Pcid);
             graphComponentsMatrix[Prid][Pcid].push([Crid, Ccid]);  // Create edge with neighbour
         }
     }
@@ -148,20 +170,14 @@ function colorTrackPromise() {
     });
 }
 
-// Function with color tracking -> on data updation
-// Second argument for forward color track
-async function updateChildrenCells(parentAddress, pathCount) {  // Update every children value ( on parent value change by evaluating ) from root -> recursively
+
+function updateChildrenCells(parentAddress) {  // Update every children value ( on parent value change by evaluating ) from root -> recursively
     let parentDetails = getRIDCIDfromAddress(parentAddress);
     let Prid = parentDetails.rid;
     let Pcid = parentDetails.cid;
-    let parentCell = grid.querySelector(`.cell[rid="${Prid}"][cid="${Pcid}"]`);
     let parentProp = sheetDB[Prid][Pcid];
     let children = parentProp.children;
-
-    if (children.length > 0 || pathCount > 0) parentCell.style.backgroundColor = "blue";
-    let colorForwardP = await colorTrackPromise();  // Returns a promise for slow tracking, with setTimeout usage
          
-
     // If len > 0 -> then valid recursion change going on, else just a regular update
     for (let i = 0; i < children.length; i++) {
         let childAddress = children[i];
@@ -173,15 +189,9 @@ async function updateChildrenCells(parentAddress, pathCount) {  // Update every 
 
         let evaluatedValue = evaluateFormula(childFormula);
         setUpdatedCellUIAndProp(evaluatedValue, childFormula, rid, cid);
-
-        await updateChildrenCells(childAddress, pathCount + 1);
+        updateChildrenCells(childAddress);
 
     }
-
-    parentCell.style.backgroundColor = "tomato";
-    let colorReverseP = await colorTrackPromise();   // Returns a promise for slow tracking, with setTimeout usage
-    parentCell.style.backgroundColor = "transparent";
-    return colorReverseP;
 }
 
 function setUpdatedCellUIAndProp(value, formula, rid, cid) {  // In chaining process. Update every children value ( on parent value change by evaluating ) in UI and DB

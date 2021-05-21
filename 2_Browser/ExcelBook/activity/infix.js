@@ -3,8 +3,6 @@ function infixEvaluation(exp) {  // Formula evaluation algorithm
     let operatorStack = []; // CustomStack
     exp = exp.split(" ");
 
-    console.log(exp);
-
     for (let i = 0;i < exp.length;i++) {
         let char = exp[i];
         let asciiVal = char.charCodeAt(0);
