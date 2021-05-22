@@ -9,59 +9,62 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@700&display=swap" rel="stylesheet">
+    
     <title>ExcelBook</title>
 </head>
 <body>
     <div class="excel-container">  
         <div class="menu-container">
             <div class="menu-bar">
-                <select class="font-size">
-                    <option value="12">12</option>
-                    <option value="14">14</option>
-                    <option value="16">16</option>
-                    <option value="18">18</option>
-                </select>
-
-                <select class="font-family">
-                    <option value="monospace">Monospace</option>
-                    <option value="sans-serif">Sans-serif</option>
-                    <option value="Georgia">Georgia</option>
-                    <option value="cursive">Cursive</option>
-                </select>
-
-                <div class="text-property">
-                    <i class="fas fa-bold bold"></i>
-                    <i class="fas fa-underline underline"></i>
-                    <i class="fas fa-italic italic"></i>
+                <div class="major-font-container">
+                    <select class="font-size">
+                        <option value="12">12</option>
+                        <option value="14">14</option>
+                        <option value="16">16</option>
+                        <option value="18">18</option>
+                    </select>
+    
+                    <select class="font-family">
+                        <option value="monospace">Monospace</option>
+                        <option value="sans-serif">Sans-serif</option>
+                        <option value="Georgia">Georgia</option>
+                        <option value="cursive">Cursive</option>
+                    </select>
                 </div>
-
-                <div class="text-alignment">
-                    <i class="left align fas fa-align-left"></i>
-                    <i class="center align fas fa-align-center"></i>
-                    <i class="right align fas fa-align-right"></i>
+                <div class="major-text-property">
+                    <div class="text-property">
+                        <i class="fas fa-bold bold"></i>
+                        <i class="fas fa-underline underline"></i>
+                        <i class="fas fa-italic italic"></i>
+                    </div>
+                    <div class="text-alignment">
+                        <i class="left align fas fa-align-left"></i>
+                        <i class="center align fas fa-align-center"></i>
+                        <i class="right align fas fa-align-right"></i>
+                    </div>
                 </div>
-
-                <div class="color-palette">
-                    <i class="fas fa-palette color">
-                        <input type="color" class="color-tag" value="#000000">
-                    </i>
-                    <i class="fas fa-fill-drip background-color">
-                        <input type="color" class="bg-color-tag" value="#000000">
-                    </i>
+                <div class="major-color-nos">
+                    <div class="color-palette">
+                        <i class="fas fa-palette color">
+                            <input type="color" class="color-tag" value="#000000">
+                        </i>
+                        <i class="fas fa-fill-drip background-color">
+                            <input type="color" class="bg-color-tag" value="#000000">
+                        </i>
+                    </div>
+                    <div class="nos-container">
+                        <i class="fas fa-folder-open open"></i>
+                        <i class="fas fa-file-download download"></i>
+                    </div>
                 </div>
-
-                <div class="nos-container">
-                    <!-- <i class="fas fa-folder-plus new"></i> -->
-                    <i class="fas fa-folder-open open"></i>
-                    <i class="fas fa-file-download download"></i>
-                </div>
-                
-                <div class="trace-container">
-                    <i class="fas fa-route trace-path"></i>
-                    <i class="fas fa-recycle cycle-path"></i>
-                </div>
+                <div class="major-trace-container">
+                    <div class="trace-container">
+                        <i class="fas fa-route trace-path"></i>
+                        <i class="fas fa-recycle cycle-path"></i>
+                    </div>
+                </div>   
             </div>
         </div>
 
@@ -88,7 +91,7 @@
                 </div>
             </div>
             <div class="sheets-list-container">
-                <div class="sheet" id="first-sheet-margin">
+                <div class="sheet">
                     <div class="perspective">
                         <div class="sheet-content">Sheet1</div>
                         <div class="sheet-display active" id="0"></div>
@@ -97,6 +100,25 @@
             </div>
         </div>
     </div>
+
+
+    <!-- <div class="modal">
+        <div class="msg">
+            <div class="text-box">This will delete your sheet permanently.
+            Are you sure?</div>
+        </div>
+        <div class="action-container">
+            <button class="del-btn">
+                <i class="fas fa-trash-alt"></i>
+                <span>Delete</span>
+            </button>
+            <button class="cancel-btn">
+                <i class="far fa-times-circle"></i>
+                <span>Cancel</span>
+            </button>
+        </div>
+    </div> -->
+
     
     <script src="grid.js"></script>
     <script src="cyclicGraphValidation.js"></script>

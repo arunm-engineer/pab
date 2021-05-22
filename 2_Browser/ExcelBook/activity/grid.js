@@ -37,6 +37,8 @@ let sheetDB = [];
 let rows = 100;
 let cols = 26;
 
+let localStorageFlag = true;  // This is to manage for the first opening of application to manage localStorage elements 
+
 
 // Make a common grid UI for all sheets. And shuffle it with new sheets DB and the current sheet's cell properties
 for (let i = 0;i < rows;i++) {  // Creating initial left column
@@ -144,7 +146,10 @@ function setCellUIProperties(cell) {   //Set to default properties values on ind
 
     });
 
+
 }
+
+
 
 // Handling sheets
 let addSheetBtn = document.querySelector(".add-sheets-btn-container");
@@ -254,12 +259,7 @@ function deleteSheet(e) {
     
 }
 
-
-addSheetBtn.addEventListener("click", function() {
-    let totalSheets = document.querySelectorAll(".sheet-display");
-
-    let sheetID = SheetCollectionDB.length;  // Get last sheet
-
+function createSheetUI(totalSheets, sheetID) {
     let sheet = document.createElement("div");
     sheet.setAttribute("class", "sheet");
 
@@ -287,9 +287,21 @@ addSheetBtn.addEventListener("click", function() {
     sheet.addEventListener("click", handleSheetActiveness);  // To keep track of activeness of sheets
     sheet.addEventListener("dblclick", deleteSheet);  // To delete sheet
 
-    createNewSheet();  // Create entire new sheet and with its cells properties
+    return sheet;
+}
+
+
+addSheetBtn.addEventListener("click", function() {
+    let totalSheets = document.querySelectorAll(".sheet-display");
+
+    let sheetID = SheetCollectionDB.length;  // Get last sheet
+
+    let sheet = createSheetUI(totalSheets, sheetID); // Create sheet UI
+
+    createNewSheetDB();  // Create entire new sheet and with its cells properties
 
     sheetDB = SheetCollectionDB[sheetID];  // Assign new sheet as current UI sheet
+    localStorage.setItem("sheetDetails", JSON.stringify(sheetDB));  // Update local storage at every change
     setSheetUI();
 });
 
@@ -303,16 +315,24 @@ function handleSheetActiveness(e) {
     let sheetDisplay = curSheet.querySelector(".sheet-display");
     sheetDisplay.classList.add("active");
 
-    let sheetId = sheetDisplay.getAttribute("id");
-    if (!SheetCollectionDB[sheetId]) {  // This case is when you put a entire new workbook and there are no sheets. So you must create one as default and make that first sheet active
-        createNewSheet();  // This will generate DB for new sheet
-    }
+    let sheetID = sheetDisplay.getAttribute("id");
 
-    sheetDB = SheetCollectionDB[sheetId];
+    if (localStorage.getItem("sheetDetails") === null) {
+        createNewSheetDB();
+    }
+    else if (localStorageFlag == true){  // There must be flag on every start of application, otherwise same DB will be updated and there will be no change
+        SheetCollectionDB[sheetID] = JSON.parse(localStorage.getItem("sheetDetails"));
+        localStorageFlag = !localStorageFlag;  
+    }
+            
+            
+    // console.log(localStorage.getItem("sheetDetails"));
+    sheetDB = SheetCollectionDB[sheetID];
+    localStorage.setItem("sheetDetails", JSON.stringify(sheetDB));  // Update local storage at every change
     setSheetUI();  // Set UI corresponding to current sheet properties
 }
 
-function createNewSheet() {
+function createNewSheetDB() {
     let newMonoSheetDB = [];
     for (let i = 0;i < rows;i++) {  // Set individual properties for each cell of a single sheet
         let sheetRows = [];
