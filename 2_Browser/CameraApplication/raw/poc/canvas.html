@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+        }
+        .colors-container {
+            width: 80vw;
+            height: 5rem;
+            border: 2px solid;
+            margin: auto;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        .colorbox {
+            height: 70%;
+            width: 20%;
+        }
+        .lightpink {
+            background-color: lightpink;
+        }
+        .lightgreen {
+            background-color: lightgreen;
+        }
+        .lightblue {
+            background-color: lightblue;
+        }
+        .yellow {
+            background-color: yellow;
+        }
+        
+    </style>
+</head>
+<body>
+    <!-- <h1>Canvas Board</h1> -->
+
+    <div class="colors-container">
+        <div class="colorbox lightpink"></div>
+        <div class="colorbox lightgreen"></div>
+        <div class="colorbox lightblue"></div>
+        <div class="colorbox yellow"></div>
+    </div>
+
+    <canvas class="board"></canvas>
+
+    <script>
+        let cboard = document.querySelector(".board");
+        let colorsContainer = document.querySelector(".colors-container");
+        let colorBoxes = document.querySelectorAll(".colorbox");
+
+        // tool -> digitizer pen
+        let tool = cboard.getContext("2d");
+        cboard.height = window.innerHeight;
+        cboard.width = window.innerWidth;
+        // //  default color of board -> black 
+
+        // tool.fillStyle = "lightblue";  // To fillcolor of board
+        tool.fillRect(0, 0, window.innerWidth, window.innerHeight);  // Set height width with respect to co-ordinates
+
+        // // stroke -> for outline border
+        // tool.strokeStyle = "yellow";
+        // tool.lineWidth = 10;  // outline width
+        // tool.strokeRect(0, 0, window.innerWidth/2, window.innerHeight/2);
+        
+        // tool.fillStyle = "red";
+        // tool.fillRect(40, 40, window.innerWidth/2, window.innerHeight/2);
+
+        tool.strokeStyle = "red";
+        // tool.lineWidth = 10;
+
+
+        let isMouseDown = false;
+        cboard.addEventListener("mousedown", function(e) {
+            tool.beginPath();
+            tool.moveTo(e.clientX, getY(e.clientY));
+            isMouseDown = true;
+            // console.log("down", e.x, e.y);
+        });
+        
+        cboard.addEventListener("mousemove", function(e) {
+            if (isMouseDown == true) {
+                tool.lineTo(e.clientX, getY(e.clientY));
+                tool.stroke();
+                // console.log("up", e.x, e.y);
+            }
+        });
+
+        cboard.addEventListener("mouseup", function(e) {
+            isMouseDown = false;
+        });
+
+        for (let i = 0;i < colorBoxes.length;i++) {
+            colorBoxes[i].addEventListener("mousedown", function(e) {
+                let targetColor = e.currentTarget;
+                let penColor = targetColor.classList[1];
+                tool.strokeStyle = penColor;
+            });
+        }
+        
+
+        function getY(originalY) {  // Since there is a defelection in height because of colorbox in between, we minus from original point
+            let objDimension = colorsContainer.getBoundingClientRect();
+            let extraHeight = objDimension.height;
+            return originalY - extraHeight;
+        }
+
+        function getX(originalX) {
+            let objDimension = colorsContainer.getBoundingClientRect();
+            let extraWidth = objDimension.width;
+            return originalX - extraWidth;
+        }
+
+    </script>
+</body>
+</html>
