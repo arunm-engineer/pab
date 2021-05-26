@@ -4,114 +4,27 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>Document</title>
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-        body {
-            margin: 0;
-        }
-        .video-container {
-            height: 100vh;
-            width: 100vw;
-            background-color: black;
-        }
-        video {
-            height: 100%;
-            width: 100%;
-        }
-        .record {
-            background-color: whitesmoke;
-            border: 1px solid;
-            position: fixed;
-            right: 5rem;
-            top: 35vh;
-            height: 4rem;
-            width: 4rem;
-            border-radius: 50%;
-        }
-        .click {
-            background-color: whitesmoke;
-            border: 1px solid;
-            position: fixed;
-            height: 4rem;
-            width: 4rem;
-            right: 5rem;
-            top: 50vh;
-            border-radius: 50%;
-        }
-    </style>
 </head>
 <body>
 
     <div class="video-container">
         <video class="video-box" autoplay></video>
     </div>
+    <div class="filter-layer"></div>
+    <div class="filter-container">
+        <div class="filter-box filter-color-1" style="background-color: #ee7c9052;"></div>
+        <div class="filter-box filter-color-2" style="background-color: #a0484854;"></div>
+        <div class="filter-box filter-color-3" style="background-color: #8bbf8b47"></div>
+        <div class="filter-box filter-color-4" style="background-color: transparent"></div>
+    </div>
+    <div class="timer-box">
+        <div class="timer">00:00:00</div>
+    </div>
     <!-- <audio controls autoplay></audio> -->
     <button class="record round-btn">Record</button>
-    <button class="click round-btn">Click</button>
-
-    <script>
-        let videoElem = document.querySelector("video");
-        let recordBtn = document.querySelector(".record");
-        let isRecording = false;
-        let recordingData = [];
-
-        
-        let mediaRecoringObjectForCurrentStream;
-        // Asks user access for given constraints 
-        let constraint = {
-            audio: true, 
-            video: true
-        }
-
-        // Returns promise, of user reply 
-        let userMediaPromise = navigator.mediaDevices.getUserMedia(constraint);
-
-        // If resoved -> streams gets your stream 
-        userMediaPromise
-            .then(function(stream) {
-                videoElem.srcObject = stream;  // srcObject represents your stream source
-
-                //  Object for media recording
-                mediaRecoringObjectForCurrentStream = new MediaRecorder(stream);
-
-                mediaRecoringObjectForCurrentStream.ondataavailable = function(e) {
-                    recordingData.push(e.data);  // Push chunks of data
-                }
-
-                // Download video on stop event of media object
-                mediaRecoringObjectForCurrentStream.addEventListener("stop", function() {
-                    // recordingData -> convert to url
-                    // MIME type -> video/mp4
-
-                    let blob = new Blob(recordingData, {type: "video/mp4"});  // MIME type for video
-                    let url = window.URL.createObjectURL(blob);
-
-                    let a = document.createElement("a");
-                    a.download = "file.mp4";
-                    a.href = url;
-                    a.click();
-                    recordingData = [];
-                });
-            })
-            .catch(function(err) {
-                alert("Please allow access to audio and video");
-            })
-
-            recordBtn.addEventListener("click", function() {
-                if (isRecording == false) {
-                    mediaRecoringObjectForCurrentStream.start();  // Start recording
-                    recordBtn.innerText = "Recording..";
-                }
-                else {
-                    mediaRecoringObjectForCurrentStream.stop();  // Stop recording
-                    recordBtn.innerText = "Record";
-                }
-
-                isRecording = !isRecording;
-            });
-        </script>
+    <button class="capture round-btn">Click</button>
+    <script src="script.js"></script>
 </body>
 </html>

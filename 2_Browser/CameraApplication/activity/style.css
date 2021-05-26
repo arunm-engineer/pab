@@ -1,0 +1,87 @@
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+}
+.video-container {
+    height: 100vh;
+    width: 100vw;
+    background-color: black;
+}
+video {
+    height: 100%;
+    width: 100%;
+}
+.record {
+    background-color: whitesmoke;
+    border: 1px solid;
+    position: fixed;
+    right: 5rem;
+    top: 35vh;
+    height: 5rem;
+    width: 5rem;
+    border-radius: 50%;
+    z-index: 2;
+}
+.capture {
+    background-color: whitesmoke;
+    border: 1px solid;
+    position: fixed;
+    height: 5rem;
+    width: 5rem;
+    right: 5rem;
+    top: 50vh;
+    border-radius: 50%;
+    z-index: 2;
+}
+
+/* filter layer css */
+.filter-layer {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+/* filter container css */
+.filter-container {
+    height: 22rem;
+    width: 6rem;
+    position: absolute;
+    top: calc( (100vh - 22rem) / 2);
+    left: 3rem;
+    z-index: 2;
+}
+
+.filter-box {
+    height: calc( ( 100% / 6 ) );
+    background-image: url("https://picsum.photos/seed/picsum/200/300");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-blend-mode: color-burn;
+}
+
+.timer-box {
+    display: none;
+    background-color: blueviolet;
+    width: 9rem;
+    height: 3rem;
+    position: fixed;
+    bottom: 20vh;
+    left: 2vw;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    border-radius: 3px;
+    z-index: 2;
+}
+
+.timer {
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+}
