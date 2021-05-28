@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .stream-video {
+            height: 10rem;
+            width: 15rem;
+        }
+    </style>
+</head>
+<body>
+    <button class="start">Start</button>
+    <button class="stop">Stop</button>
+    <video class="stream-video" controls></video>
+    <video class="screen-video" controls></video>
+    <script>
+        let displayMedia = document.querySelector(".stream-video");
+        let userMedia = document.querySelector(".screen-video");
+        let startBtn = document.querySelector(".start");
+        let stopBtn = document.querySelector(".stop");
+
+        (async function() {
+
+            // Screen share stream
+            let displayStream = await navigator.mediaDevices.getDisplayMedia({
+                video: { mediaSource: "screen" }
+            });
+
+            // Audio share stream to be collected separately
+            let audioStream = await navigator.mediaDevices.getUserMedia({
+                audio: true
+            });
+
+            [videoTrack] = displayStream.getVideoTracks();
+            [audioTrack] = audioStream.getAudioTracks();
+
+            // Stream of different video and audio source combined (Merge both screen share video & audio in a new media source)
+            let combinedMediaStream = new MediaStream([videoTrack, audioTrack]);
+
+            let chunks = [];
+            let mediaRecorder = new MediaRecorder(combinedMediaStream);
+            mediaRecorder.start();  // Start combined media recording
+            mediaRecorder.ondataavailable = function(e) {
+                chunks.push(e.data);
+            }
+
+            mediaRecorder.onstop = function(e) {
+                let blob = new Blob(chunks, { mimeType: "video.mp4" });
+                let videoURL = URL.createObjectURL(blob);
+                displayMedia.src = videoURL;  // Assign url to the html video
+                
+                // let a = document.createElement("a");
+                // a.href = videoURL;
+                // a.download = "ScreenShare.webm";
+                // a.click();
+            }
+
+            stopBtn.addEventListener("click", function(e) {
+                mediaRecorder.stop();
+            })
+
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+        }
+        video {
+            position: absolute;
+            background-color: black;
+            top: 0;
+            right: 0;
+            width: 15rem;
+            height: 10rem;
+        }
+    </style>
+</head>
+<body>
+    <video autoplay controls></video>
+    <button>Capture</button>
+    <script>
+        let video = document.querySelector("video");
+        let capture = document.querySelector("button");
+        let constraints = {
+            video: true,
+            audio: true
+        }
+        let screenshareP = navigator.mediaDevices.getUserMedia(constraints);
+        screenshareP
+            .then(function(stream) {
+                video.srcObject = stream;
+            })
+
+        capture.addEventListener("click", function(e) {
+            let cboard = document.createElement("canvas");
+            let ht = video.videoHeight;
+            let wd = video.videoWidth;
+            // Set board ht
+            cboard.height = ht;
+            cboard.width = wd;
+
+            let tool = cboard.getContext("2d");
+
+            //  Draw image from the html video element itself
+            tool.drawImage(video, 0, 0, video.videoWidth, video.videoWidth);
+            let imgurl = cboard.toDataURL();
+            let a = document.createElement("a");
+            a.download = "image.png";
+            a.href = imgurl;
+            a.click();
+            
+        })
+    </script>
+</body>
+</html>

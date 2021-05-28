@@ -1,0 +1,10 @@
+.box-1 {
+    height: 5rem;
+    width: 5rem;
+    background-color: pink;
+}
+.box-2 {
+    height: 5rem;
+    width: 5rem;
+    margin-top: 1rem;
+}

@@ -50,19 +50,19 @@ userMediaPromise
         });
     })
     .catch(function(err) {
-        alert("Please allow access to audio and video");
+        alert("Allow access to record audio and video");
     })
 
     recordBtn.addEventListener("click", function() {
         if (isRecording == false) {
             mediaRecoringObjectForCurrentStream.start();  // Start recording
-            recordBtn.innerText = "Recording..";
+            recordBtn.querySelector(".internal-record-btn").classList.add("scale-animation");
             startTimer();
         }
         else {
             stopTimer();
             mediaRecoringObjectForCurrentStream.stop();  // Stop recording
-            recordBtn.innerText = "Record";
+            recordBtn.querySelector(".internal-record-btn").classList.remove("scale-animation");
         }
 
         isRecording = !isRecording;
@@ -93,7 +93,9 @@ userMediaPromise
             a.click();
     });
 
-// Filter application
+
+
+// Filter color logic
 let allFilters = filterContainer.children;
 for (let i = 0;i < allFilters.length;i++) {     // Apply filter on image with respect to specified filter option
     allFilters[i].addEventListener("click", function() {
@@ -104,6 +106,7 @@ for (let i = 0;i < allFilters.length;i++) {     // Apply filter on image with re
 }
 
 
+//Timer clock logic
 function startTimer() {
     timerBox.style.display = "flex";
     function displayRecorderTime() {  // Timer logic

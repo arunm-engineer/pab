@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .page {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+        .imgcontainer {
+            position: absolute;
+            width: 5rem;
+            height: 5rem;
+            top: 0;
+            left: 0;
+            resize: both;
+            overflow: hidden;
+        }
+        img {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <div class="imgcontainer">
+            <!-- Draggable must be true to make event listener work -->
+            <img draggable="true" src="https://picsum.photos/seed/picsum/200/300" alt="temp-image">  
+        </div>
+    </div>
+    <script>
+        let page = document.querySelector(".page");
+        let imgbox = document.querySelector(".imgcontainer");
+
+        imgbox.addEventListener("dragstart", function(e) {
+            e.dataTransfer.setData("pic", e.target.class);
+        })
+        imgbox.addEventListener("dragover", function(e) {
+            e.preventDefault();
+        })
+        imgbox.addEventListener("dragend", function(e) {
+            e.preventDefault();
+            e.currentTarget.style.left = e.x + "px";
+            e.currentTarget.style.top = e.y + "px";
+        })
+    </script>
+</body>
+</html>

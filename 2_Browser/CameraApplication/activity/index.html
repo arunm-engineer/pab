@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.1/css/all.min.css" integrity="sha512-SUwyLkI1Wgm4aEZkDkwwigXaOI2HFLy1/YW73asun4sfvlkB9Ecl99+PHfCnfWD0FJjIuFTvWMM7BZPXCckpAA==" crossorigin="anonymous" />
     <link rel="stylesheet" href="style.css">
     <title>Document</title>
 </head>
@@ -23,8 +24,12 @@
         <div class="timer">00:00:00</div>
     </div>
     <!-- <audio controls autoplay></audio> -->
-    <button class="record round-btn">Record</button>
-    <button class="capture round-btn">Click</button>
+    <button class="record round-btn"><div class="internal-record-btn"></div></button>
+    <button class="capture round-btn"><div class="internal-capture-btn"></div></button>
+    <div class="zoom-container">
+        <div class="zoom-in"><i class="fas fa-plus"></i></div>
+        <div class="zoom-out"><i class="fas fa-minus"></i></div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>

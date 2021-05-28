@@ -13,9 +13,11 @@ video {
     height: 100%;
     width: 100%;
 }
+
+/* record-capture button css */
 .record {
-    background-color: whitesmoke;
-    border: 1px solid;
+    background-color: black;
+    border: 0.5rem solid white;
     position: fixed;
     right: 5rem;
     top: 35vh;
@@ -23,10 +25,13 @@ video {
     width: 5rem;
     border-radius: 50%;
     z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .capture {
-    background-color: whitesmoke;
-    border: 1px solid;
+    background-color: black;
+    border: 0.5rem solid white;
     position: fixed;
     height: 5rem;
     width: 5rem;
@@ -34,6 +39,69 @@ video {
     top: 50vh;
     border-radius: 50%;
     z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.scale-animation {
+    animation: button-scale 0.8s ease-out infinite;
+}
+
+.internal-record-btn {
+    height: 2.8rem;
+    width: 2.8rem;
+    background-color: red;
+    border-radius: 50%;
+}
+
+.internal-capture-btn {
+    height: 2.8rem;
+    width: 2.8rem;
+    background-color: white;
+    border-radius: 50%;
+}
+
+@keyframes button-scale {
+    0% {
+        transform: scale(0.9);
+    }
+    100% {
+        transform: scale(1.2);
+    }
+}
+
+/* zoom button css */
+.zoom-container {
+    background-color: rgb(41, 39, 39);
+    position: fixed;
+    height: 7rem;
+    width: 4rem;
+    top: 4rem;
+    right: 6rem;
+    border-radius: 3px;
+    z-index: 2;
+}
+
+.zoom-in {
+    color: white;
+    height: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.zoom-out {
+    color: white;
+    height: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+i {
+    font-size: xx-large;
 }
 
 /* filter layer css */
