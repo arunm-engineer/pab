@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <canvas></canvas>
+    <script>
+        let cboard = document.querySelector("canvas");
+        cboard.height = window.innerHeight;
+        cboard.width = window.innerWidth;
+        let tool = cboard.getContext("2d");
+
+        // Draw circle shape
+        let ox;
+        let oy;
+        document.body.addEventListener("mousedown", function(e) {
+            ox = e.x;
+            oy = e.y;
+        })
+        let nx;
+        let ny;
+        document.body.addEventListener("mouseup", function(e) {
+            nx = e.x;
+            ny = e.y;
+
+            let circlex = (ox + nx)/2;  // Center point in x-axis
+            let circley = (oy + ny)/2;  // Center point in y-axis
+            let radFactor = (nx - circlex);
+            let circlerad = radFactor < 0 ? (circlex - nx) : radFactor;  // Circle radius
+
+            tool.strokeStyle = "blueviolet";
+            tool.beginPath();
+            tool.arc(circlex, circley, circlerad, 0, 2*Math.PI);
+            tool.stroke();
+
+            let drawBox = document.createElement("div");
+            drawBox.style.position = "absolute";
+            drawBox.style.top = "0";
+            drawBox.style.left = "0";
+            drawBox.style.resize = "both";
+
+            let shapeCanvas = document.createElement("canvas");
+            let shapeCanvasTool = shapeCanvas.getContext("2d");
+
+            // Four different angles to stretch shapes, covers all directions shape stretch
+            let srcx = circlex - circlerad;
+            let srcy = circley - circlerad;
+            let srcht = circlex + circlerad;
+            let srcwd = circlex + circlerad;
+
+            drawBox.style.width = srcwd + "px";
+            drawBox.style.height = srcht + "px";
+            shapeCanvas.width = srcwd;
+            shapeCanvas.height = srcht;
+            shapeCanvasTool.drawImage(cboard, srcx, srcy, srcwd+1, srcht+1, 0, 0, srcwd, srcht);
+            tool.clearRect(srcx-1, srcy-1, srcwd+2, srcht+2);
+            
+
+            drawBox.appendChild(shapeCanvas);
+            document.body.appendChild(drawBox);
+        })
+    </script>
+</body>
+</html>
