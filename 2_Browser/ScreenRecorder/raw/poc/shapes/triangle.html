@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,11 +10,13 @@
         * {
             box-sizing: border-box;
         }
+
         body {
             margin: 0;
         }
     </style>
 </head>
+
 <body>
     <canvas></canvas>
     <script>
@@ -22,23 +25,25 @@
         cboard.width = window.innerWidth;
         let tool = cboard.getContext("2d");
 
-        // Draw triangle shape
+        // Triangle shape
         let ox;
         let oy;
-        document.body.addEventListener("mousedown", function(e) {
+        document.body.addEventListener("mousedown", function (e) {
             ox = e.x;
             oy = e.y;
         })
         let nx;
         let ny;
-        document.body.addEventListener("mouseup", function(e) {
+        document.body.addEventListener("mouseup",drawShape);
+        
+        function drawShape(e) {
             nx = e.x;
             ny = e.y;
 
             console.log("old -> ", ox, oy);
             console.log("new -> ", nx, ny);
 
-            let triangleax = (ox+nx)/2;
+            let triangleax = (ox + nx) / 2;
             let triangleay = oy;
 
             let trianglebx = nx;
@@ -55,70 +60,77 @@
             tool.lineTo(triangleax, triangleay);
             tool.stroke();
 
-        
+
             // Create a div of canvas element within to draw image of shape drawn and add over the canvas
+            // Note: overflow property is must to be able to resize
             let drawBox = document.createElement("div");
-            drawBox.style.width = (nx - ox) + "px";
-            drawBox.style.height = (ny - oy) + "px";
             drawBox.style.position = "absolute";
             drawBox.style.resize = "both";
-            drawBox.style.top = "0";
-            drawBox.style.left = "0";
+            drawBox.style.overflow = "hidden";  
+            drawBox.style.backgroundRepeat = "no-repeat";
+            drawBox.style.backgroundSize = "100% 100%";
 
             let shapeCanvas = document.createElement("canvas");
             let shapeCanvasTool = shapeCanvas.getContext("2d");
 
 
             // Four different angles to stretch shapes, so draw image handling all cases of height and width
-            if (ny > oy && nx > ox) {  // Drag top-left to bottom-right
-                let srcht  = ny - oy;
-                let srcwd = nx - ox;
-                drawBox.style.width = srcwd + "px";
-                drawBox.style.height = srcht + "px";
+            // 1. top-left to bottom-right
+            // 2. bottom-left to top-right 
+            // 3. bottom-right to top-left
+            // 4. top-right to botom-left
+
+            let srcwd;
+            let srcht;
+            if (ny > oy && nx > ox) {  
+                srcht = ny - oy;
+                srcwd = nx - ox;
+                drawBox.style.top = oy + "px";
+                drawBox.style.left = ox + "px";
                 shapeCanvas.width = srcwd;
                 shapeCanvas.height = srcht;
                 shapeCanvasTool.drawImage(cboard, ox, oy, srcwd, srcht, 0, 0, srcwd, srcht);
-                // tool.clearRect(ox, oy, srcwd, srcht+1);
-                tool.clearRect(ox-1, oy-1, srcwd+2, srcht+2);
+                tool.clearRect(ox - 1, oy - 1, srcwd + 2, srcht + 2);
             }
-            else if (oy > ny && nx > ox) {  // Drag bottom-left to top-right 
-                let srcht = oy - ny;
-                let srcwd = nx - ox;
-                drawBox.style.width = srcwd + "px";
-                drawBox.style.height = srcht + "px";
+            else if (oy > ny && nx > ox) {  
+                srcht = oy - ny;
+                srcwd = nx - ox;
+                drawBox.style.top = ny + "px";
+                drawBox.style.left = ox + "px";
                 shapeCanvas.width = srcwd;
                 shapeCanvas.height = srcht;
                 shapeCanvasTool.drawImage(cboard, ox, ny, srcwd, srcht, 0, 0, srcwd, srcht);
-                // tool.clearRect(ox, ny-1, srcwd, srcht+1);
-                tool.clearRect(ox-1, ny-1, srcwd+2, srcht+2);
+                tool.clearRect(ox - 1, ny - 1, srcwd + 2, srcht + 2);
             }
-            else if (oy > ny && ox > nx) {  // Drag bottom-right to top-left
-                let srcht = oy - ny;
-                let srcwd = ox - nx;
-                drawBox.style.width = srcwd + "px";
-                drawBox.style.height = srcht + "px";
+            else if (oy > ny && ox > nx) {  
+                srcht = oy - ny;
+                srcwd = ox - nx;
+                drawBox.style.top = ny + "px";
+                drawBox.style.left = nx + "px";
                 shapeCanvas.width = srcwd;
                 shapeCanvas.height = srcht;
                 shapeCanvasTool.drawImage(cboard, nx, ny, srcwd, srcht, 0, 0, srcwd, srcht);
-                // tool.clearRect(nx, ny-1, srcwd, srcht+1);
-                tool.clearRect(nx-1, ny-1, srcwd+2, srcht+2);
+                tool.clearRect(nx - 1, ny - 1, srcwd + 2, srcht + 2);
             }
-            else if (ny > oy && ox > nx) {  // Drag top-right to botom-left
-                let srcht = ny - oy;
-                let srcwd = ox - nx;
-                drawBox.style.width = srcwd + "px";
-                drawBox.style.height = srcht + "px";
+            else if (ny > oy && ox > nx) {  
+                srcht = ny - oy;
+                srcwd = ox - nx;
+                drawBox.style.top = oy + "px";
+                drawBox.style.left = nx + "px";
                 shapeCanvas.width = srcwd;
                 shapeCanvas.height = srcht;
                 shapeCanvasTool.drawImage(cboard, nx, oy, srcwd, srcht, 0, 0, srcwd, srcht);
-                // tool.clearRect(nx, oy, srcwd, srcht+1);
-                tool.clearRect(nx-1, oy-1, srcwd+2, srcht+2);
+                tool.clearRect(nx - 1, oy - 1, srcwd + 2, srcht + 2);
             }
 
-            drawBox.appendChild(shapeCanvas);
+            // Set drawn shape as background from url
+            drawBox.style.width = srcwd + "px";
+            drawBox.style.height = srcht + "px";
+            drawBox.style.backgroundImage = `url(${shapeCanvas.toDataURL()})`;
             document.body.appendChild(drawBox);
-            
-        })
+            document.removeEventListener("mouseup", drawShape);
+        }
     </script>
 </body>
+
 </html>

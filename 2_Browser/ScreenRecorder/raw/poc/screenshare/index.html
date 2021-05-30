@@ -27,7 +27,8 @@
 
             // Screen share stream
             let displayStream = await navigator.mediaDevices.getDisplayMedia({
-                video: { mediaSource: "screen" }
+                video: { mediaSource: "screen" },
+                audio: true
             });
 
             // Audio share stream to be collected separately
@@ -49,14 +50,15 @@
             }
 
             mediaRecorder.onstop = function(e) {
-                let blob = new Blob(chunks, { mimeType: "video.mp4" });
+                let blob = new Blob(chunks, { mimeType: "video.webm" });
                 let videoURL = URL.createObjectURL(blob);
                 displayMedia.src = videoURL;  // Assign url to the html video
                 
-                // let a = document.createElement("a");
-                // a.href = videoURL;
-                // a.download = "ScreenShare.webm";
-                // a.click();
+                let a = document.createElement("a");
+                a.href = displayMedia.src;
+                a.download = "ScreenShare.webm";
+                a.click();
+                a.remove();
             }
 
             stopBtn.addEventListener("click", function(e) {
