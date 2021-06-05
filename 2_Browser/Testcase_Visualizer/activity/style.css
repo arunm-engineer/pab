@@ -113,26 +113,26 @@ body {
 
 .tools-btn {
     border-radius: 50%;
-    width: 1.6rem;
-    height: 1.6rem;
+    width: 1.4rem;
+    height: 1.4rem;
     display: flex;
+    font-size: 0.8rem;
     justify-content: center;
     align-items: center;
 }
 
 .decrease-btn {
-    font-size: 1rem;
     background-color: #EA2027;
 }
 .increase-btn {
-    font-size: 1rem;
     background-color: #4cd137;
 }
-
 .tree-level-indicator-btn {
-    background-color: #f5f6fa;
+    /* background-color: #f5f6fa; */
+    background-color: #fff200;
+
+    font-size: 1rem;
     font-weight: bold;
-    font-size: 1.3rem;
 }
 
 .remove-subtree-btn {
