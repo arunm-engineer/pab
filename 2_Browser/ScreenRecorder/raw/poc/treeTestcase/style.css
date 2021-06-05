@@ -1,0 +1,27 @@
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+}
+.board {
+    position: absolute;
+    width: 80vw;
+    height: 85vh;
+    border-radius: 8px;
+    top: calc( ( 100vh - 75vh ) / 2 );
+    left: calc( ( 100vw - 80vw ) / 2 );
+    background-color: blueviolet;
+}
+/* textarea {
+    position: absolute;
+    width: 20rem;
+    height: 12rem;
+    left: 5rem;
+    bottom: 3rem;
+} */
+canvas {
+    position: absolute;
+    left: 5rem;
+    top: 5rem;
+}

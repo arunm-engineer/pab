@@ -1,0 +1,155 @@
+* {
+    box-sizing: border-box;
+    font-family: 'Roboto Condensed', sans-serif;
+}
+body {
+    margin: 0;
+}
+
+.header {
+    height: 3rem;
+    width: 100vw;
+    background-color: blueviolet;
+}
+
+.vis-container {
+    height: 120vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.vis-outline-cont {
+    height: 90%;
+    width: 99%;
+    margin: 1rem;
+    border-radius: 5px;
+    /* border: 1px solid; */
+    /* display: flex; */
+
+}
+
+
+
+.vis-input-cont {
+    height: calc( 100% - 3rem );
+    width: 100%;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    background-color: #f5f6fa;
+}
+
+.ds-cont {
+    height: 85%;
+    width: 100%;
+    border-top-right-radius: 5px;
+    /* background-color: #f5f6fa; */
+    position: relative;
+    /* background-color: blueviolet; */
+    /* transform: rotate(180deg); */
+}
+.input-cont {
+    height: 20%;
+    width: 100%;
+    overflow: auto;
+    resize: none;
+    border-bottom-right-radius: 5px;
+    background-color: coral;
+}
+
+.root-cont {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+
+}
+
+.node-cont {
+    width: 50%;
+    top: 6rem;
+    height: calc( 100% - 6rem );
+    /* border: 2px solid blueviolet; */
+    position: absolute;
+}
+
+.node {
+    height: 1.5rem;
+    width: 1.5rem;
+    border-radius: 50%;
+    position: relative;
+    border: 1px solid #2f3640;
+    left: calc( ( 100% - 1.5rem ) / 2);
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.9rem;
+    outline: none;
+    padding-top: 0.1rem;
+}
+
+.node:hover {
+    background-color: yellow;
+}
+
+
+/* controls css */
+
+.controls {
+    height: 3rem;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding-left: 0.7rem;
+    /* background-color: #ecf0f1; */
+    background-color: #c8d6e5;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.controls * {
+    margin: 0.3rem;
+}
+
+.tools-btn {
+    border-radius: 50%;
+    width: 1.6rem;
+    height: 1.6rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.decrease-btn {
+    font-size: 1rem;
+    background-color: #EA2027;
+}
+.increase-btn {
+    font-size: 1rem;
+    background-color: #4cd137;
+}
+
+.tree-level-indicator-btn {
+    background-color: #f5f6fa;
+    font-weight: bold;
+    font-size: 1.3rem;
+}
+
+.remove-subtree-btn {
+    background-color: #f5f6fa;
+}
+
+/* tools cont css */
+
+.tools-cont {
+    width: 30rem;
+    height: 3rem;
+    /* border: 2px solid #EA2027; */
+    border-left: 2px solid black;
+    display: flex;
+    align-items: center;
+}
+
+.highlighter-btn {
+    background-color: #f5f6fa;
+} 

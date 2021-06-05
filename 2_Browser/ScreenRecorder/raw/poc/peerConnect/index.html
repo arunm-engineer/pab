@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+        }
+        #peer-id {
+            width: 20rem;
+            border: 1px solid;
+            height: 2rem;
+            border-radius: 3px;
+        }
+        button {
+            background-color: rgb(88, 157, 214);
+            color: white;
+            border: none;
+            border-radius: 3px;
+            width: 7rem;
+            height: 2rem;
+        }
+        .controls-container {
+            width: 70vw;
+            margin: auto;
+        }
+        #remote-video {
+            position: absolute;
+            top: calc( ( 100vh - 60vh ) / 2 );
+            left: calc( ( 100vw - 70vw ) / 2 );
+            width: 70vw;
+            height: 70vh;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls-container">
+        <h3 id="show-peer-id"></h3>
+        <input type="text" id="peer-id" placeholder="Enter Peer ID...">
+        <button id="call-peer">Call Peer</button>
+    </div>
+
+    <video controls id="remote-video"></video>
+    
+    <script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
+    <script>
+        window.addEventListener("load", function(e) {
+            let peer = new Peer();
+            let header = document.querySelector("h3");
+            let peerID = document.querySelector("#peer-id");
+            let callBtn = document.querySelector("#call-peer");
+            let remoteVideo = document.querySelector("#remote-video");
+
+            peer.on("open", function(id) {  // Each gets unique ID whoever open the application
+                header.textContent = id;
+            })
+
+            callBtn.addEventListener("click", function(e) {  // Call peer by click on the call button
+                let remotePeerID = peerID.value
+                header.textContent = `Connecting...${remotePeerID}`;
+                callPeer(remotePeerID);
+            })
+
+            function callPeer(remotePeerID) {   // OPeration to call and connect with peer
+                navigator.mediaDevices.getDisplayMedia({
+                    video: { mediaSource: "screen" }
+                })
+                .then(async function(screenStream) {   // Get the caller's media stream
+                    let audioStream = await navigator.mediaDevices.getUserMedia({
+                        audio: true
+                    })
+                    
+                    let [videoTrack] = screenStream.getVideoTracks();
+                    let [audioTrack] = audioStream.getAudioTracks();
+
+                    let combinedStream = new MediaStream([videoTrack, audioTrack]);  // Combine audio from usermedia and video from displayMedia(Screenshare)
+                    let call = peer.call(remotePeerID, combinedStream);  // Call the peer with his ID, passing caller's(local) mediastream
+                    call.on("stream", function(remoteStream) {  // When connection succesful with stream, adding peer's stream(callee) in remoteVideo of caller
+                        addRemoteVideoStream(remoteStream);
+                    })
+                })
+                .catch(function(err) {
+                    console.log(err, "..media connection failed!!");
+                })
+            }
+
+            function addRemoteVideoStream(remoteStream) {  // Adding stream to remote video container
+                remoteVideo.srcObject = remoteStream;
+                remoteVideo.play();
+            }
+
+            peer.on("call", function(call) {  // Peer receiving the call (callee)
+                navigator.mediaDevices.getUserMedia({
+                    // video: true,
+                    audio: true
+                })
+                .then(function(localStream) {  // Get callee's stream
+                    call.answer(localStream);  // Answering call from caller and sending callee's(self) stream to the caller
+                    call.on("stream", function(remoteStream) {  // Adding the caller's stream in the remoteVideo of callee
+                        addRemoteVideoStream(remoteStream);
+                    })
+                })
+                .catch(function(err) {
+                    console.log(err, "..media connection failed!!");
+                })
+            })
+
+
+        })
+    </script>
+</body>
+</html>

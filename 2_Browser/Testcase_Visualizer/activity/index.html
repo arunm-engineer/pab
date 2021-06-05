@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" integrity="sha512-PgQMlq+nqFLV4ylk1gwUOgm6CtIIXkKwaIHp/PAIWHzig/lKZSEGKEysh0TCVbHJXCLN7WetD8TFecIky75ZfQ==" crossorigin="anonymous" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <title>TestCase Visualizer</title>
+</head>
+<body>
+    <div class="header"></div>
+
+    <div class="vis-container">
+        <div class="vis-outline-cont">
+            <div class="controls">
+                <div class="decrease-btn tools-btn">
+                    <i class="fas fa-minus"></i>
+                </div>
+                <div class="tree-level-indicator-btn tools-btn">-1</div>
+                <div class="increase-btn tools-btn">
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="tools-btn remove-subtree-btn">
+                    <i class="fas fa-user-times "></i>
+                </div>
+                <!-- <div class="tools-cont"> -->
+                    <i class="fas fa-highlighter highlighter-btn tools-btn"></i>
+                <!-- </div> -->
+            </div>
+
+            <div class="vis-input-cont vis-input-1">
+                <div class="ds-cont"></div>
+                <!-- <textarea class="input-cont"></textarea> -->
+            </div>
+        </div>
+        <!-- <div class="vis-outline-cont vis-width-2">
+            <div class="contols-2 controls"></div>
+            <div class="vis-input-cont">
+                <div class="ds-cont"></div>
+                <textarea class="input-cont"></textarea>
+            </div>
+        </div> -->
+    </div>
+
+    <script src="tree.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- For UI highly optimized way -> manipulates -->
+    <!-- Algorithm -->
+    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+    <!-- react through -> Dom change -->
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+    <!-- bebel -> JSX-> js -->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+
+        // Component
+        function Hello(props) {
+            return (
+                <React.Fragment>
+                    <h1>Hello {props.name}</h1>
+                    <p>Nice to meet you!!</p>
+                </React.Fragment>
+            )
+        }
+
+        // Hellos component render
+        function Hellos() {
+            return (
+                <React.Fragment>    
+                    <Hello/>  {/* If no prop set, then prop will be undefined */}
+                    <Hello name="Suren"/>
+                    <Hello name="Atif"/>
+                    <Hello name="Abdul"/>
+                    <Hello/>
+                </React.Fragment>
+            )
+        }
+
+        {/* Code flow works from bottom to top -> Just for reading terms */}
+        ReactDOM.render(<Hellos/>, 
+            document.getElementById("root"));
+
+
+     </script>
+
+
+
+</body>
+</html>

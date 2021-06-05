@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script src="https://unpkg.com/react@17/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+</head>
+<body>
+
+    <div id="root"></div>
+
+    <!-- a make anything dynamic -->
+    <!-- imagine  a static inital Ui -->
+    <!-- identify different variable and add them to state -->
+    <!-- replace static value with the state variable -->
+    <!-- whenever you 
+        will change the state i will call the 
+        render function again -->
+    <script type="text/babel">
+
+        class Counter extends React.Component {
+
+            constructor(props) {
+                // Fisrt need to call constructor of React.Component
+                super(props);
+
+                this.state = {
+                    count: 0
+                }
+
+                // Bind with objects "this"
+                this.incr = this.increment.bind(this);
+                this.decr = this.decrement.bind(this);
+
+            }
+
+            increment() {
+                this.setState({
+                    count: this.state.count+1
+                })
+            }
+
+            decrement() {
+                this.setState({
+                    count: this.state.count-1
+                })
+            }
+
+            // Inbuilt function of an component
+            render() {
+                
+                return (
+                    <React.Fragment>
+                        <p>{this.state.count}</p>
+                        <button onClick={this.incr}>+</button>
+                        <button onClick={this.decr}>-</button>
+                    </React.Fragment>
+                );
+                
+            }
+        }
+
+        // the above following code flow will be like below
+
+        // let Counter = new Counter();
+        // let obj = {
+        //     state: {
+        //         count: 0,
+        //         incr: this.increment binded with Counter obj
+        //         decr: this.decrement binded with Counter obj
+        //     }
+        // }
+
+        // ReactDOM.render(<Counter/>, 
+        //     document.getElementById("root"));
+
+        // For multiple counters
+        
+        function Counters() {
+            return (
+                <React.Fragment>
+                    <Counter/>
+                    <Counter/>
+                    <Counter/>
+                    <Counter/>
+                    <Counter/>
+                </React.Fragment>
+            )
+        }
+
+        ReactDOM.render(<Counters/>, 
+        document.getElementById("root"));
+
+    </script>
+</body>
+</html>
