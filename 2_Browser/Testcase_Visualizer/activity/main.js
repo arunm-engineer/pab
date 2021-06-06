@@ -1,39 +1,116 @@
 let decrBtn = document.querySelector(".decrease-btn");
 let incrBtn = document.querySelector(".increase-btn");
-let levelIndicator = document.querySelector(".tree-level-indicator-btn")
+let levelIndicator = document.querySelector(".tree-level-indicator");
 let removeSubtreeBtn = document.querySelector(".remove-subtree-btn");
+let removeSubtreeFlag = false;                                                      // Flag for removal of subtree accr to removeSubTreeBtn
 let highlightBtn = document.querySelector(".highlighter-btn");
+let highlighterColorsCont = document.querySelector(".highlighter-colors-cont");
+let pencilBtn = document.querySelector(".pencil-btn");
+let pencilColorsCont = document.querySelector(".pencil-colors-cont");
+let highlightFlag = false;
+let pencilFlag = false;
+let mouseDown = false;                                                             // Flag for drawing on board on mouseDown event
+let highlightColorElements = document.querySelectorAll(".highlight-color");
+let pencilColorElements = document.querySelectorAll(".pencil-color");
+let highlighter;                                                                   // Highlighter color tool for nodes
+let pencil = "transparent";
+let recursiveTreeBtn = document.querySelector(".recursive-tree-btn");
+let recursiveTreeFlag = false;
+let clearPageBtn = document.querySelector(".clear-page-btn");
 
-let removeSubtreeFlag = false;                              // Flag for removal of subtree accr to removeSubTreeBtn
+let pageFactor = 0;
 
-let activeColor = "#fff200";
+let activeColor = "#fff200";                                                       // Active & inactive color for functionality btns
 let inactiveColor = "#f5f6fa";
 
+recursiveTreeBtn.addEventListener("click", (e) => {                                 // Recursive tree active
+    if (pageFactor%2 == 1) location.reload();
+    clearPage();
+    recursiveTreeFlag = !recursiveTreeFlag;                                        
+    if (recursiveTreeFlag) recursiveTreeBtn.style.backgroundColor = activeColor;
+    else recursiveTreeBtn.style.backgroundColor = inactiveColor;
+
+    pageFactor++;
+});
+
+clearPageBtn.addEventListener("click", (e) => {
+    clearPage();
+});
+
+function clearPage() {                                                             // Clear entire page
+    clearTreeStructure();
+    let drawBoard = document.querySelector(".draw-board");
+    let tool = drawBoard.getContext("2d");
+    tool.clearRect(0, 0,drawBoard.width, drawBoard.height);
+    nodeObj = {};
+    levelIndicator.textContent = "-1";
+}
 
 decrBtn.addEventListener("click", (e) => {
     let level = Number(levelIndicator.textContent);
     if (level > -1) {
         level--;
         levelIndicator.textContent = level;
-        clearTree();                                          // Clear existing tree node and node connectors to draw tree with decr level 
-        displayTree(level);
+        clearTreeStructure();                                          // Clear existing tree node and node connectors to draw tree with decr level 
+
+        if (recursiveTreeFlag) {                                 // Recursive Tree
+            displayRecusiveTree(level);
+            rotateTree();
+        }
+        else {
+            displayTree(level);
+        }
+
+        initNodeProperties();                                // Init node properties to not lose previous nodes properties
     }
 });
+
 incrBtn.addEventListener("click", (e) => {
     let level = Number(levelIndicator.textContent);
     if (level < 6) {
         level++;
         levelIndicator.textContent = level;
-        clearTree();                                         // Clear existing tree node and node connectors to draw tree with incr level 
-        displayTree(level);
+        clearTreeStructure();                                         // Clear existing tree node and node connectors to draw tree with incr level 
+
+        if (recursiveTreeFlag) {                                 // Recursive Tree
+            displayRecusiveTree(level);
+            rotateTree();
+        }
+        else {
+            displayTree(level);
+        }
+
+        initNodeProperties();                                // Init node properties to not lose previous nodes properties
     }
 });
 
-function clearTree() {
+function rotateTree() {                                      // Rotate tree Structure of recusive tree
+    let dsCont = document.querySelector(".ds-cont");
+    dsCont.style.transform = "rotate(180deg)";
+    let connectorBoard = document.querySelector(".connector-board");
+    connectorBoard.style.transform = "rotate(180deg)";
+    let drawBoard = document.querySelector(".draw-board");               // Rotate draw board, since it rotates with it's parent (counter-rotate for drawing alignment)
+    drawBoard.style.transform = "rotate(180deg)";
+}
+
+function clearTreeStructure() {                                                              // Clear tree to default
     let rootContainer = document.querySelector(".root-cont");
     if (rootContainer) rootContainer.remove();
-    let canvas = document.querySelector("canvas");
-    if (canvas) canvas.remove();
+    let connectorBoard = document.querySelector(".connector-board");
+    let tool = connectorBoard.getContext("2d");
+    tool.clearRect(0, 0, connectorBoard.width, connectorBoard.height);
+}
+
+function initNodeProperties() {                                                // Init previous node properties on modificaton with tree levels
+    let allNodes = document.querySelectorAll(".node");
+    allNodes.forEach( node => {
+        let nodeID = node.getAttribute("id");
+        let nodeProp = nodeObj[nodeID];
+        if (nodeProp) {                                                             // Edge case since leaf node might not it's prop
+            node.textContent = nodeProp.value;
+            node.style.backgroundColor = nodeProp.BGColor;
+        }
+    });
 }
 
 removeSubtreeBtn.addEventListener("click", (e) => {
@@ -53,13 +130,13 @@ function removeSubtree(e) {
             childtreeContainer[i].remove();                                             // Remove children nodes container
         }
 
-        let canvas = document.querySelector("canvas");                                  // Get canvas for future use (clear & redraw connectors)
+        let canvas = document.querySelector(".connector-board");                                  // Get canvas for future use (clear & redraw connectors)
         let tool = canvas.getContext("2d");
 
         let rootContainer = document.querySelector(".root-cont");
         let rootRectObj = rootContainer.getBoundingClientRect();
 
-        let top = rootRectObj.top - (3*16) - (3*16);                                    // header 3rem, controls 3rem
+        let top = rootRectObj.top - (3*16);                                    // header 3rem, controls 3rem
         tool.clearRect(rootRectObj.left, top, rootRectObj.width, rootRectObj.height);  // Clear canvas to remove connectors
 
         let treeAvailableNodes = rootContainer.querySelectorAll(".node");
@@ -99,4 +176,16 @@ function getChildCount(nodeID) {
     let parentContainer = node.parentElement;
     let childContainer = parentContainer.querySelectorAll(".node-cont");
     return childContainer.length;
+}
+
+function storeNodeProperties(e) {
+    let node = e.target;
+    let nodeID = node.getAttribute("id");
+
+    let nodeValue = node.innerText;
+    let BGColor = getComputedStyle(node).backgroundColor;
+
+    if (!nodeObj[nodeID]) nodeObj[nodeID] = {};                                         // Since leaf node mightnot have property, initialize it
+    nodeObj[nodeID]["value"] = nodeValue;
+    nodeObj[nodeID]["BGColor"] = BGColor;
 }

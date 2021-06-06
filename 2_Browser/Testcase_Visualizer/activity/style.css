@@ -14,16 +14,16 @@ body {
 
 .vis-container {
     height: 120vh;
-    width: 100%;
-    display: flex;
-    justify-content: center;
+    /* width: 100vw; */
+    /* display: flex; */
+    /* justify-content: center; */
 }
 
 .vis-outline-cont {
     height: 90%;
-    width: 99%;
-    margin: 1rem;
-    border-radius: 5px;
+    width: 100%;
+    /* margin: 1rem; */
+    /* border-radius: 5px; */
     /* border: 1px solid; */
     /* display: flex; */
 
@@ -34,8 +34,8 @@ body {
 .vis-input-cont {
     height: calc( 100% - 3rem );
     width: 100%;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
+    /* border-top-right-radius: 5px; */
+    /* border-bottom-right-radius: 5px; */
     background-color: #f5f6fa;
 }
 
@@ -88,10 +88,6 @@ body {
     padding-top: 0.1rem;
 }
 
-.node:hover {
-    background-color: yellow;
-}
-
 
 /* controls css */
 
@@ -101,10 +97,7 @@ body {
     display: flex;
     align-items: center;
     padding-left: 0.7rem;
-    /* background-color: #ecf0f1; */
     background-color: #c8d6e5;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
 }
 
 .controls * {
@@ -127,10 +120,8 @@ body {
 .increase-btn {
     background-color: #4cd137;
 }
-.tree-level-indicator-btn {
-    /* background-color: #f5f6fa; */
+.tree-level-indicator {
     background-color: #fff200;
-
     font-size: 1rem;
     font-weight: bold;
 }
@@ -152,4 +143,101 @@ body {
 
 .highlighter-btn {
     background-color: #f5f6fa;
-} 
+}
+
+.zD6A2E8 {
+    background-color: #D6A2E8;
+}
+
+.zffbe76 {
+    background-color: #ffbe76;
+}
+
+.zff7979 {
+    background-color: #ff7979;
+}
+
+.zfffa65 {
+    background-color: #fffa65;
+}
+
+.zf5f6fa {
+    background-color: #f5f6fa;
+}
+
+.zbe2edd {
+    background-color: #D6A2E8;
+}
+
+.zff9f43 {
+    background-color: #ffbe76;
+}
+
+.z4cd137 {
+    background-color: #0be881;
+}
+
+.zFC427B {
+    background-color: #f78fb3;
+}
+
+.highlighter-colors-cont {
+    display: none;
+}
+
+.pencil-colors-cont {
+    display: none;
+}
+
+.pencil-btn {
+    background-color: #f5f6fa;
+}
+
+.animate-colors-pop-out {
+    animation-name: pop-out;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: both;
+}
+
+@keyframes pop-out {
+    0% {
+        width: 0rem;
+    }
+    100% {
+        width: 10rem;
+    }
+}
+
+.animate-colors-pop-in {
+    animation-name: pop-in;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: both;
+}
+
+@keyframes pop-in {
+    0% {
+        width: 10rem;
+    }
+    100% {
+        width: 0rem;
+    }
+}
+
+.draw-board {
+    position: absolute;
+    /* z-index: 10; */
+}
+
+.rotate-tree-btn {
+    background-color: #f5f6fa;
+}
+
+.recursive-tree-btn {
+    background-color: #f5f6fa;
+}
+
+.clear-page-btn {
+    background-color: #f5f6fa;
+}

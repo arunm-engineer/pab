@@ -11,7 +11,7 @@
     <title>TestCase Visualizer</title>
 </head>
 <body>
-    <div class="header"></div>
+    <!-- <div class="header"></div> -->
 
     <div class="vis-container">
         <div class="vis-outline-cont">
@@ -19,20 +19,44 @@
                 <div class="decrease-btn tools-btn">
                     <i class="fas fa-minus"></i>
                 </div>
-                <div class="tree-level-indicator-btn tools-btn">-1</div>
+                <div class="tree-level-indicator tools-btn">-1</div>
                 <div class="increase-btn tools-btn">
                     <i class="fas fa-plus"></i>
+                </div>
+                <div class="recursive-tree-btn tools-btn">
+                    <i class="fas fa-code-branch"></i>
                 </div>
                 <div class="tools-btn remove-subtree-btn">
                     <i class="fas fa-user-times "></i>
                 </div>
-                <!-- <div class="tools-cont"> -->
-                    <i class="fas fa-highlighter highlighter-btn tools-btn"></i>
-                <!-- </div> -->
+                <div class="clear-page-btn tools-btn">
+                    <i class="fas fa-ban"></i>
+                </div>
+                <div class="highlighter-btn tools-btn">
+                    <i class="fas fa-highlighter"></i>
+                </div>
+                <div class="highlighter-colors-cont">
+                    <div class="zD6A2E8 highlight-color tools-btn"></div>
+                    <div class="zffbe76 highlight-color tools-btn"></div>
+                    <div class="zff7979 highlight-color tools-btn"></div>
+                    <div class="zfffa65 highlight-color tools-btn"></div>
+                    <div class="zf5f6fa highlight-color tools-btn"></div>
+                </div>
+                <div class="pencil-btn tools-btn">
+                    <i class="fas fa-pencil-alt"></i>
+                </div>
+                <div class="pencil-colors-cont">
+                    <div class="zbe2edd pencil-color tools-btn"></div>
+                    <div class="zff9f43 pencil-color tools-btn"></div>
+                    <div class="z4cd137 pencil-color tools-btn"></div>
+                    <div class="zFC427B pencil-color tools-btn"></div>
+                </div>
             </div>
 
             <div class="vis-input-cont vis-input-1">
-                <div class="ds-cont"></div>
+                <div class="ds-cont">
+                    <canvas class="draw-board"></canvas>
+                </div>
                 <!-- <textarea class="input-cont"></textarea> -->
             </div>
         </div>
@@ -45,7 +69,9 @@
         </div> -->
     </div>
 
-    <script src="tree.js"></script>
-    <script src="main.js"></script>
+    <script src="tree.js" defer></script>
+    <script src="drawBoard.js" defer></script>
+    <script src="main.js" defer></script>
+    <script src="colors.js" defer></script>
 </body>
 </html>
