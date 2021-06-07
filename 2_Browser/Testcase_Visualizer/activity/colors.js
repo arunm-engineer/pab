@@ -24,9 +24,9 @@ highlightBtn.addEventListener("click", (e) => {
 
     
 });
-highlightColorElements.forEach( color => {
+highlightColorElements.forEach( color => {                                   // Change highlighter color on click istener
     color.addEventListener("click", (e) => {
-        highlighter = `#${e.target.classList[0].slice(1)}`;                                    // Change highlighter color on click istener
+        highlighter = `#${e.target.classList[0].slice(1)}`;                  // Slice since 1st char is dummmy char   
     });
 });
 
@@ -56,7 +56,7 @@ pencilBtn.addEventListener("click", (e) => {
 })
 pencilColorElements.forEach( color => {
     color.addEventListener("click", (e) => {
-        pencil = `#${e.target.classList[0].slice(1)}`;
+        pencil = `#${e.target.classList[0].slice(1)}`;                          // Slice since 1st char is dummmy char
     });
 });
 
@@ -89,3 +89,14 @@ function highlightNode(e) {                                                     
         node.style.backgroundColor = highlighter;
     }
 }
+
+eraserBtn.addEventListener("click", (e) => {
+    eraserFlag = !eraserFlag;
+    if (eraserFlag) {
+        pencil = "#f5f6fa";
+        eraserBtn.style.backgroundColor = activeColor;
+    }
+    else {
+        eraserBtn.style.backgroundColor = inactiveColor;
+    }
+})

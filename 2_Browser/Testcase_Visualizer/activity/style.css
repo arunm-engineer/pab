@@ -14,9 +14,6 @@ body {
 
 .vis-container {
     height: 120vh;
-    /* width: 100vw; */
-    /* display: flex; */
-    /* justify-content: center; */
 }
 
 .vis-outline-cont {
@@ -57,6 +54,13 @@ body {
     background-color: coral;
 }
 
+.canvas-stream {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+/* Tree css */
 .root-cont {
     width: 100%;
     height: 100%;
@@ -181,6 +185,10 @@ body {
     background-color: #f78fb3;
 }
 
+.z0984e3 {
+    background-color: #48dbfb;
+}
+
 .highlighter-colors-cont {
     display: none;
 }
@@ -240,4 +248,127 @@ body {
 
 .clear-page-btn {
     background-color: #f5f6fa;
+}
+
+.expand-btn {
+    background-color: #f5f6fa;
+}
+
+.snip-btn {
+    background-color: #f5f6fa;
+}
+
+.stream-btn {
+    background-color: #f5f6fa;
+}
+
+.eraser-btn {
+    background-color: #f5f6fa;
+}
+
+.screen-share {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+/* .video-stream-canvas { */
+/* } */
+
+/* media container css */
+.media-container {
+    /* width: 100vw; */
+    /* width: 100%; */
+    /* height: 100vh; */
+    background-color: #ecf0f1;
+}
+
+.video-display-container {
+    height: 80vh;
+    width: 80vw;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ecf0f1;
+}
+
+.video-player {
+    /* height: 85%;
+    width: 90%; */
+    height: 30rem;
+    width: 60rem;
+    border-radius: 0.5rem;
+}
+
+.saved-files-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+}
+
+.video-container {
+    width: 45%;
+    /* height: 100%; */
+    /* background-color: pink; */
+    margin-bottom: 3rem;
+}
+
+.image-container {
+    width: 45%;
+    height: 100%;
+    /* background-color: lightblue; */
+}
+
+.header {
+    background-color: transparent;
+    height: 3.5rem;
+    width: 100%;
+    font-size: xx-large;
+}
+
+.header-name {
+    background-color: #dfe6e9;
+    width: 80%;
+    height: 100%;
+    margin: auto;
+    text-align: center;
+    transition: all 1s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.3rem;
+    box-shadow: 0px 5px 0.7rem;
+}
+
+.header-name:hover {
+    transform: scale(1.1,1.1);
+}
+
+.files-container {
+    margin-top: 2rem;
+    /* background-color: lightgreen; */
+}
+
+.file {
+    background-color: #c8d6e5;
+    margin: 0.5rem;
+    border-radius: 0.1rem;
+    position: relative;
+    padding-left: 1rem;
+    font-size: 0.9rem;
+    height: 1.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.file-btn {
+    position: absolute;
+    right: 40px;
+    top: 4px;
+    font-size: small;
+}
+.download-btn {
+    right: 15px;
 }

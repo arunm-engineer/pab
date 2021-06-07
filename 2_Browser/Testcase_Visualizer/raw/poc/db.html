@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <script>
+        let db;
+        let Opendb = indexedDB.open("somefiles");
+        Opendb.addEventListener("success", (e) => {
+            alert("Su");
+            db = Opendb.result;
+        });
+        Opendb.addEventListener("error", (e) => {
+            alert("er");
+        });
+        Opendb.addEventListener("upgradeneeded", (e) => {
+            alert("up");                                
+            db = Opendb.result;                         // DB retrieved after build complete
+            // db.createObjectStore("video", {
+            //     keyPath: "videoID"
+            // });
+            db.createObjectStore("abc", {
+                keyPath: "id"
+            })
+        });
+    </script>
+</body>
+</html>

@@ -17,6 +17,8 @@ let pencil = "transparent";
 let recursiveTreeBtn = document.querySelector(".recursive-tree-btn");
 let recursiveTreeFlag = false;
 let clearPageBtn = document.querySelector(".clear-page-btn");
+let eraserBtn = document.querySelector(".eraser-btn");
+let eraserFlag = false;
 
 let pageFactor = 0;
 
@@ -50,8 +52,15 @@ decrBtn.addEventListener("click", (e) => {
     let level = Number(levelIndicator.textContent);
     if (level > -1) {
         level--;
+
         levelIndicator.textContent = level;
         clearTreeStructure();                                          // Clear existing tree node and node connectors to draw tree with decr level 
+
+        if (level == -1) {
+            let rootContainer = document.querySelector(".root-cont");
+            if (rootContainer) rootContainer.remove();
+            return;
+        }
 
         if (recursiveTreeFlag) {                                 // Recursive Tree
             displayRecusiveTree(level);
@@ -77,7 +86,7 @@ incrBtn.addEventListener("click", (e) => {
             rotateTree();
         }
         else {
-            displayTree(level);
+            displayTree(level, recursiveTreeFlag);
         }
 
         initNodeProperties();                                // Init node properties to not lose previous nodes properties
@@ -91,6 +100,10 @@ function rotateTree() {                                      // Rotate tree Stru
     connectorBoard.style.transform = "rotate(180deg)";
     let drawBoard = document.querySelector(".draw-board");               // Rotate draw board, since it rotates with it's parent (counter-rotate for drawing alignment)
     drawBoard.style.transform = "rotate(180deg)";
+    let videoElement = document.querySelectorAll("video");
+    if (videoElement.length > 1) {                                        // Counter Rotate video element 
+        videoElement[0].style.transform = "rotate(180deg)";
+    }
 }
 
 function clearTreeStructure() {                                                              // Clear tree to default

@@ -3,34 +3,39 @@
     let dsContStyle = getComputedStyle(dsCont);
     let dsContRectObj = dsCont.getBoundingClientRect();
 
-    let drawCanvas = document.querySelector(".draw-board");
-    let tool = drawCanvas.getContext("2d");
-    drawCanvas.width = Number(dsContStyle.width.split("px")[0]);
-    drawCanvas.height = Number(dsContStyle.height.split("px")[0]);
-    drawCanvas.style.top = dsContRectObj.top;
-    drawCanvas.style.left  = dsContRectObj.left;
+    let drawBoard = document.querySelector(".draw-board");
+    let tool = drawBoard.getContext("2d");
+    drawBoard.width = Number(dsContStyle.width.split("px")[0]);
+    drawBoard.height = Number(dsContStyle.height.split("px")[0]);
+    drawBoard.style.top = dsContRectObj.top;
+    drawBoard.style.left  = dsContRectObj.left;
 
+    drawBoard.addEventListener("mousedown", (e) => {
+        if (!pencilFlag) return;                                // Only if pencil is selected
 
-    drawCanvas.addEventListener("mousedown", (e) => {
         mouseDown = true;
+        if (eraserFlag) tool.lineWidth = 30;
+        else tool.lineWidth = 2;
         tool.strokeStyle = pencil;
         tool.beginPath();
         tool.moveTo(e.clientX, getY(e.clientY));
     });
-    drawCanvas.addEventListener("mousemove", (e) => {
+    drawBoard.addEventListener("mousemove", (e) => {
         if (mouseDown) {
             tool.lineTo(e.clientX, getY(e.clientY));
             tool.stroke();
         }
     });
-    drawCanvas.addEventListener("mouseup", (e) => {
+    drawBoard.addEventListener("mouseup", (e) => {
         mouseDown = false;
     });
 
-    function getY(orginalY) {
-        return orginalY - (3*16);                                                  // 3rem contols
-    }
+    
 })();
+
+function getY(orginalY) {
+    return orginalY - (3*16);                                                  // 3rem contols
+}
 
 (function setupCanvasConnectorBoard() {                                                  // Set up connector board canvas for drawing
     let dsCont = document.querySelector(".ds-cont");
