@@ -135,7 +135,7 @@ function createVideoFileUI(id) {
     let videoFileUI = document.createElement("div");
     videoFileUI.setAttribute("class", "file");
     videoFileUI.setAttribute("id", `vid-${id}`);
-    videoFileUI.innerHTML = `Video - ${new Date().toString()}
+    videoFileUI.innerHTML = `Video - ${new Date().toString().split("GMT")[0].trim()}
         <div class="play-btn file-btn">
             <i class="fas fa-play"></i>
         </div>
@@ -145,13 +145,11 @@ function createVideoFileUI(id) {
     </div>`
     videoFilesContainer.prepend(videoFileUI);
 
-    let playBtns = document.querySelectorAll(".play-btn");
-    playBtns.forEach(btn => btn.removeEventListener("click", playListener));
-    playBtns.forEach(btn => btn.addEventListener("click", playListener));                     // Add play listeners
+    let playBtn = videoFileUI.querySelector(".play-btn");
+    playBtn.addEventListener("click", playListener);                     // Add play listeners
 
-    let downloadBtns = document.querySelectorAll(".download-btn");
-    downloadBtns.forEach(btn => btn.removeEventListener("click", downloadListener));          // Add download listeners
-    downloadBtns.forEach(btn => btn.addEventListener("click", downloadListener));
+    let downloadBtn = videoFileUI.querySelector(".download-btn");
+    downloadBtn.addEventListener("click", downloadListener);
 
 }
 
@@ -160,21 +158,24 @@ function createImageFileUI(id) {
     let imageFileUI = document.createElement("div");
     imageFileUI.setAttribute("class", "file");
     imageFileUI.setAttribute("id", `img-${id}`);
-    imageFileUI.innerHTML = `Image - ${new Date().toDateString()}
+    imageFileUI.innerHTML = `Image - ${new Date().toDateString().split("GMT")[0].trim()}
        <div class="download-btn file-btn">
             <i class="fas fa-download"></i>
         </div> 
     </div>`
     imageFilesContainer.prepend(imageFileUI);
+
+    let downloadBtn = imageFileUI.querySelector(".download-btn");
+    downloadBtn.addEventListener("click", downloadListener);
 }
 
 function playListener(e) {
-    console.log(e.target, e.target.parentElement, e.target.parentElement.parentElement);
     let mediaElementID = e.target.parentElement.parentElement.getAttribute("id");
     let dbTransaction = db.transaction("video", "readonly");
     let videoStore = dbTransaction.objectStore("video");
     let cursorResponse = videoStore.openCursor();
     cursorResponse.onsuccess = function(e) {
+        console.log('play');
         let cursor = cursorResponse.result;
         if (cursor) {
             let id = cursor.key;                                                         // Fetches the unique key
@@ -182,6 +183,7 @@ function playListener(e) {
             if (id === mediaElementID) {
                 let blob = value.value;
                 let url = URL.createObjectURL(blob);
+                console.log(url);
 
                 let videoPlayer = document.querySelector(".video-player");
                 videoPlayer.src = url;
@@ -193,51 +195,53 @@ function playListener(e) {
 
 function downloadListener(e) {
     let mediaElementID = e.target.parentElement.parentElement.getAttribute("id");
-    if (db) {
-        if (mediaElementID.slice(0, 3) === "vid") {
-            let dbTransaction = db.transaction("video","readonly");
-            let videoStore = dbTransaction.objectStore("video");
-            let cursorResponse = videoStore.openCursor();
-            cursorResponse.onsuccess = function(e) {
-                let cursor = cursorResponse.result;
-                if (cursor) {
-                    let id = cursor.key;
-                    let value = cursor.value;
-                    if (id === mediaElementID) {
-                        let blob = value.value;
-                        let url = URL.createObjectURL(blob);
-                        let a = document.createElement("a");
-                        a.href = url;
-                        a.download = "VideoStream.webm"
-                        a.click();
-                        a.remove();
-                    }
-                    cursor.continue();
+    console.log(mediaElementID);
+    if (mediaElementID.slice(0, 3) === "vid") {
+        let dbTransaction = db.transaction("video","readonly");
+        let videoStore = dbTransaction.objectStore("video");
+        let cursorResponse = videoStore.openCursor();
+        cursorResponse.onsuccess = function(e) {
+            let cursor = cursorResponse.result;
+            console.log(cursor);
+            if (cursor) {
+                console.log('in');
+                let id = cursor.key;
+                let value = cursor.value;
+                if (id == mediaElementID) {
+                    console.log('int this');
+                    let blob = value.value;
+                    let url = URL.createObjectURL(blob);
+                    let a = document.createElement("a");
+                    a.href = url;
+                    a.download = "VideoStream.webm"
+                    a.click();
+                    a.remove();
                 }
+                cursor.continue();
             }
         }
-        else {
-            let dbTransaction = db.transaction("image", "readonly");
-            let imageStore = dbTransaction.objectStore("image");
-            let cursorResponse = imageStore.openCursor();
-            cursorResponse.onsuccess = function(e) {
-                let cursor = cursorResponse.result;
-                if (cursor) {
-                    let id = cursor.key;
-                    let value = cursor.value;
-                    if (id === mediaElementID) {
-                        let blob = value.value;
-                        let url = URL.createObjectURL(blob);
-                        let a = document.createElement("a");
-                        a.href = url;
-                        a.download = "Screencapture.png"
-                        a.click();
-                        a.remove();
-                    }
-                    cursor.continue();
-                }
-            }
-        }
-        
     }
+    else {
+        let dbTransaction = db.transaction("image", "readonly");
+        let imageStore = dbTransaction.objectStore("image");
+        let cursorResponse = imageStore.openCursor();
+        cursorResponse.onsuccess = function(e) {
+            let cursor = cursorResponse.result;
+            if (cursor) {
+                let id = cursor.key;
+                let value = cursor.value;
+                if (id === mediaElementID) {
+                    let blob = value.value;
+                    let url = URL.createObjectURL(blob);
+                    let a = document.createElement("a");
+                    a.href = url;
+                    a.download = "Screencapture.png"
+                    a.click();
+                    a.remove();
+                }
+                cursor.continue();
+            }
+        }
+    }
+        
 }

@@ -26,8 +26,6 @@ body {
 
 }
 
-
-
 .vis-input-cont {
     height: calc( 100% - 3rem );
     width: 100%;
@@ -45,13 +43,57 @@ body {
     /* background-color: blueviolet; */
     /* transform: rotate(180deg); */
 }
+
 .input-cont {
-    height: 20%;
+    height: 15%;
     width: 100%;
     overflow: auto;
     resize: none;
     border-bottom-right-radius: 5px;
-    background-color: coral;
+    overflow: hidden;
+    display: flex;
+}
+
+/* input & array display css */
+
+.input-box {
+    height: 100%;
+    outline: none;
+    resize: none;
+    width: 20%;
+    background-color: transparent;
+    font-size: 1.1rem;
+    overflow: hidden;
+    padding: 0.5rem;
+    border: none;
+    box-shadow: 5px 0px 1rem #ced6e0;
+
+}
+
+
+.array-display-area {
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.array-cont {
+    display: flex;
+    box-shadow: 5px 0px 1rem #ced6e0;
+}
+
+.array-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: #dfe4ea; */
+    border-left: 0.1px solid #d1d8e0;
+    border-top: 0.1px solid #d1d8e0;
+    border-bottom: 0.1px solid #d1d8e0;
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: larger;
 }
 
 .canvas-stream {
@@ -272,8 +314,6 @@ body {
     right: 0;
 }
 
-/* .video-stream-canvas { */
-/* } */
 
 /* media container css */
 .media-container {
@@ -296,8 +336,8 @@ body {
 .video-player {
     /* height: 85%;
     width: 90%; */
-    height: 30rem;
-    width: 60rem;
+    height: 80%;
+    width: 80%;
     border-radius: 0.5rem;
 }
 
@@ -339,7 +379,9 @@ body {
     justify-content: center;
     align-items: center;
     border-radius: 0.3rem;
-    box-shadow: 0px 5px 0.7rem;
+    /* box-shadow: 0px 5px 0.7rem; */
+    box-shadow: 0.5rem 0.5rem 1rem #ced6e0;
+
 }
 
 .header-name:hover {
@@ -352,7 +394,10 @@ body {
 }
 
 .file {
-    background-color: #c8d6e5;
+    /* background-color: #c8d6e5; */
+    border-right: 0.1px solid #d1d8e0;
+    border-bottom: 0.1px solid #d1d8e0;
+    box-shadow: 5px 5px 1rem #ced6e0;
     margin: 0.5rem;
     border-radius: 0.1rem;
     position: relative;
@@ -371,4 +416,31 @@ body {
 }
 .download-btn {
     right: 15px;
+}
+
+/* clipboard img css */
+
+.paste-img {
+    position: absolute;
+    border: 2px solid red;
+    top: 3rem;
+    left: 0;
+    resize: both;
+    overflow: hidden;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: rgb(223, 230, 233);
+
+}
+
+::-webkit-scrollbar-thumb {
+    /* background-color: rgb(178, 190, 195); */
+    background-color: #c8d6e5;
+    border-radius: 1rem;
 }

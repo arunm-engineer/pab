@@ -63,7 +63,7 @@ decrBtn.addEventListener("click", (e) => {
         }
 
         if (recursiveTreeFlag) {                                 // Recursive Tree
-            displayRecusiveTree(level);
+            displayTree(level, recursiveTreeFlag);
             rotateTree();
         }
         else {
@@ -82,7 +82,7 @@ incrBtn.addEventListener("click", (e) => {
         clearTreeStructure();                                         // Clear existing tree node and node connectors to draw tree with incr level 
 
         if (recursiveTreeFlag) {                                 // Recursive Tree
-            displayRecusiveTree(level);
+            displayTree(level, recursiveTreeFlag);
             rotateTree();
         }
         else {
