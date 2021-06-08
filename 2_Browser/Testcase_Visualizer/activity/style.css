@@ -19,18 +19,11 @@ body {
 .vis-outline-cont {
     height: 90%;
     width: 100%;
-    /* margin: 1rem; */
-    /* border-radius: 5px; */
-    /* border: 1px solid; */
-    /* display: flex; */
-
 }
 
 .vis-input-cont {
     height: calc( 100% - 3rem );
     width: 100%;
-    /* border-top-right-radius: 5px; */
-    /* border-bottom-right-radius: 5px; */
     background-color: #f5f6fa;
 }
 
@@ -38,10 +31,7 @@ body {
     height: 85%;
     width: 100%;
     border-top-right-radius: 5px;
-    /* background-color: #f5f6fa; */
     position: relative;
-    /* background-color: blueviolet; */
-    /* transform: rotate(180deg); */
 }
 
 .input-cont {
@@ -87,7 +77,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* background-color: #dfe4ea; */
     border-left: 0.1px solid #d1d8e0;
     border-top: 0.1px solid #d1d8e0;
     border-bottom: 0.1px solid #d1d8e0;
@@ -116,7 +105,6 @@ body {
     width: 50%;
     top: 6rem;
     height: calc( 100% - 6rem );
-    /* border: 2px solid blueviolet; */
     position: absolute;
 }
 
@@ -181,7 +169,6 @@ body {
 .tools-cont {
     width: 30rem;
     height: 3rem;
-    /* border: 2px solid #EA2027; */
     border-left: 2px solid black;
     display: flex;
     align-items: center;
@@ -277,7 +264,6 @@ body {
 
 .draw-board {
     position: absolute;
-    /* z-index: 10; */
 }
 
 .def-color {
@@ -301,9 +287,6 @@ body {
 
 /* media container css */
 .media-container {
-    /* width: 100vw; */
-    /* width: 100%; */
-    /* height: 100vh; */
     background-color: #ecf0f1;
 }
 
@@ -318,8 +301,6 @@ body {
 }
 
 .video-player {
-    /* height: 85%;
-    width: 90%; */
     height: 80%;
     width: 80%;
     border-radius: 0.5rem;
@@ -363,7 +344,6 @@ body {
     justify-content: center;
     align-items: center;
     border-radius: 0.3rem;
-    /* box-shadow: 0px 5px 0.7rem; */
     box-shadow: 0.5rem 0.5rem 1rem #ced6e0;
 
 }
@@ -374,11 +354,9 @@ body {
 
 .files-container {
     margin-top: 2rem;
-    /* background-color: lightgreen; */
 }
 
 .file {
-    /* background-color: #c8d6e5; */
     border-right: 0.1px solid #d1d8e0;
     border-bottom: 0.1px solid #d1d8e0;
     box-shadow: 5px 5px 1rem #ced6e0;
@@ -394,12 +372,18 @@ body {
 
 .file-btn {
     position: absolute;
-    right: 40px;
     top: 4px;
     font-size: small;
 }
 .download-btn {
     right: 15px;
+}
+.play-btn {
+    right: 65px;;
+}
+
+.delete-btn {
+    right: 40px;
 }
 
 /* clipboard img css */
@@ -424,7 +408,6 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    /* background-color: rgb(178, 190, 195); */
     background-color: #c8d6e5;
     border-radius: 1rem;
 }
