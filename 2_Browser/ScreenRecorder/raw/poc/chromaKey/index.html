@@ -74,9 +74,9 @@
         function computeFrame() {  // Manipulate video stream with conditions of chroma
             tool1.drawImage(video, 0, 0, c1.width, c1.height);
             let frame = tool1.getImageData(0, 0, c1.width, c1.height);
-            let l = frame.data.length;
+            let len = frame.data.length;
   
-            for (let i = 0; i < l; i++) {
+            for (let i = 0; i < len; i++) {
                 let r = frame.data[i + 0];
                 let g = frame.data[i + 1];
                 let b = frame.data[i + 2];

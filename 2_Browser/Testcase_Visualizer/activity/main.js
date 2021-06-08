@@ -20,6 +20,11 @@ let clearPageBtn = document.querySelector(".clear-page-btn");
 let eraserBtn = document.querySelector(".eraser-btn");
 let eraserFlag = false;
 
+let undoRedoTracker = [];                                                          // Array to keep track of drawings (for undo & redo)
+let track = -1;                                                                    // Undo redo tool for tacking in array 
+let drawBoard = document.querySelector(".draw-board");                            // Init default page of board initially
+undoRedoTracker.push(drawBoard.toDataURL());
+
 let pageFactor = 0;
 
 let activeColor = "#fff200";                                                       // Active & inactive color for functionality btns
@@ -104,6 +109,8 @@ function rotateTree() {                                      // Rotate tree Stru
     if (videoElement.length > 1) {                                        // Counter Rotate video element 
         videoElement[0].style.transform = "rotate(180deg)";
     }
+    let screenShareCanvas = document.querySelector(".screen-share-canvas");
+    if (screenShareCanvas) screenShareCanvas.style.transform = "rotate(180deg)";
 }
 
 function clearTreeStructure() {                                                              // Clear tree to default

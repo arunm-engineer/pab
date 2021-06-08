@@ -50,21 +50,29 @@ streamBtn.addEventListener("click", (e) => {
 
         icon.classList.remove("fa-video");
         icon.classList.add("fa-video-slash"); 
+
+        let screenShareElement = document.createElement("video");                   // Add video element to display
+        screenShareElement.setAttribute("class", "screen-share");
+        screenShareElement.autoplay = true;
+        screenShareElement.width = 250;
+        screenShareElement.height = 130;
+        
+        if (recursiveTreeFlag) screenShareElement.style.transform = "rotate(180deg)";
+        let dsCont = document.querySelector(".ds-cont");
+        dsCont.appendChild(screenShareElement);
+
         if (response === 1) {
-            let screenShareElement = document.createElement("video");
-            screenShareElement.setAttribute("class", "screen-share");
-            screenShareElement.autoplay = true;
-            screenShareElement.width = 250;
-            screenShareElement.height = 130;
-            if (recursiveTreeFlag) screenShareElement.style.transform = "rotate(180deg)";
-            let dsCont = document.querySelector(".ds-cont");
-            dsCont.appendChild(screenShareElement);
-
-
+            
             screenshareStart(screenShareElement);                               // Start screen share stream
         }
         else if (response === 2) {
-
+            let screenShareCanvas = document.createElement("canvas");
+            let tool = screenShareCanvas.getContext("2d");
+            screenShareCanvas.setAttribute("class", "screen-share-canvas");
+            screenShareCanvas.width = 250;
+            screenShareCanvas.height = 130;
+            dsCont.appendChild(screenShareCanvas);
+            screenshareStart(screenShareElement, true, screenShareCanvas, tool);                         // true indicates to display with green screen (chroma)
         }
     }
     else {
@@ -75,7 +83,7 @@ streamBtn.addEventListener("click", (e) => {
     }
 });
 
-function screenshareStart(videoElement) {
+function screenshareStart(videoElement, greenScreen, screenShareCanvas, tool) {
     navigator.mediaDevices.getDisplayMedia({
         video: true
     })
@@ -88,8 +96,43 @@ function screenshareStart(videoElement) {
         })
 
         videoElement.srcObject = stream;
-        let tracks = stream.getTracks();
 
+        if (greenScreen) {                                                          // This part is to add green screen effect in display
+            let tool = screenShareCanvas.getContext("2d");
+            videoElement.addEventListener("play", function() {
+                videoMainpulationTimer();                                       // On video play -> Initiate Chroma manipulation
+            });
+        }
+
+        function videoMainpulationTimer() {                                 // Call timer for repeated chroma manipulation to the video stream
+            if (videoElement.paused || videoElement.ended) {
+                return;
+            }
+
+            computeFrame();
+            setTimeout(function() {
+                videoMainpulationTimer();
+            }, 0)
+        }
+
+        function computeFrame() {  // Manipulate video stream with conditions of chroma
+            tool.drawImage(videoElement, 0, 0, screenShareCanvas.width, screenShareCanvas.height);
+            let frame = tool.getImageData(0, 0, screenShareCanvas.width, screenShareCanvas.height);
+            let len = frame.data.length;
+  
+            for (let i = 0; i < len; i++) {
+                let r = frame.data[i + 0];
+                let g = frame.data[i + 1];
+                let b = frame.data[i + 2];
+                if (r >= 0 && g >= 100 && b >= 50)  // Chroma condition (for standard chroma condition (r > 0 && g > 177 && b > 64))
+                    frame.data[i + 3] = 0;
+            }
+
+            tool.putImageData(frame, 0, 0);
+            return;
+        }
+
+        let tracks = stream.getTracks();
         let [screenTrack] = screenStream.getVideoTracks();
         let [audioTrack] = stream.getAudioTracks();
         let combinedStream = new MediaStream([screenTrack, audioTrack]);            // Since browser compatibility might not have access to screenshare audio, get audio track from another source
@@ -126,6 +169,8 @@ function screenshareStop() {                                                    
     recorder.stop();
     let videoElement = document.querySelector("video");
     videoElement.remove();
+    let screenShareCanvas = document.querySelector(".screen-share-canvas");
+    if (screenShareCanvas) screenShareCanvas.remove();
 }
 
 

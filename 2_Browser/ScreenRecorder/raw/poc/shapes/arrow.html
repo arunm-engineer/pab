@@ -12,53 +12,103 @@
         body {
             margin: 0;
         }
+        .undo {
+            position: absolute;
+            top: 0;
+        }
     </style>
 </head>
 <body>
     <canvas></canvas>
+    <button class="undo">Undo</button>
+    <button class="redo">Redo</button>
     <script>
+        let redoBtn = document.querySelector(".redo");
+        let undoBtn = document.querySelector(".undo");
         let cboard = document.querySelector("canvas");
         cboard.height = window.innerHeight;
         cboard.width = window.innerWidth;
         let tool = cboard.getContext("2d");
 
-        // Draw triangle shape
-        let ox;
-        let oy;
-        document.body.addEventListener("mousedown", function(e) {
-            ox = e.x;
-            oy = e.y;
-        })
-        let nx;
-        let ny;
-        document.body.addEventListener("mouseup", function(e) {
-            nx = e.x;
-            ny = e.y;
+        tool.fillStyle = "black";
+        tool.fillRect(0, 0, cboard.width, cboard.height);
 
-            console.log("old -> ", ox, oy);
-            console.log("new -> ", nx, ny);
+        let arr = [["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwA…IGCw/QIBARsBgZaoSlACBB1YxAJfjJb2jAAAAAElFTkSuQmCC", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABfYA…AAAECBAgQIECAAAECL4EBRBjYqnzlx80AAAAASUVORK5CYII=", "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABfYA…BAgQIECBAgAABAgQIHAIBBbAyE/IBqfEAAAAASUVORK5CYII="]];
+        let track = -1;
+        tool.strokeStyle  ="red";
+        // tool.beginPath();
+        // tool.moveTo(0, 0);
+        // tool.lineTo(50, 50);
+        // tool.stroke();
 
-            let arrowtopx = (ox+nx)/2;
-            let arrowtopy = oy;
-
-            let arrowbottomx = (ox+nx)/2;
-            let arrowbottomy = ny;
-
-            let leftsidepointx = ox;
-            let leftsidepointy = ( ((oy + ny)/2) + (ny) ) / 2;
-
-
-            let rightsidepointx = nx;
-            let rightsidepointy = ( ((oy + ny)/2) + (ny) ) / 2;
-
-            tool.strokeStyle = "red";
+        arr.push(cboard.toDataURL());
+        let mousedown = false;
+        cboard.addEventListener("mousedown", function(e) {
+            mousedown = true;
             tool.beginPath();
-            tool.moveTo(arrowtopx, arrowtopy);
-            tool.lineTo(arrowbottomx, arrowbottomy);
-            tool.lineTo(leftsidepointx, leftsidepointy);
-            tool.moveTo(rightsidepointx, rightsidepointy);
-            tool.lineTo(arrowbottomx, arrowbottomy);
+            tool.moveTo(e.x, e.y);
+
+        })
+        cboard.addEventListener("mousemove", function(e) {
+            if (!mousedown) return;
+            tool.lineTo(e.x, e.y);
             tool.stroke();
+        })
+        cboard.addEventListener("mouseup", function(e) {
+            mousedown = false;
+            arr.push(cboard.toDataURL());
+            track = arr.length-1;
+        })
+
+        undoBtn.addEventListener("click", function(e) {
+            if (track > 0) track--;
+            console.log(track);
+            console.log(arr);
+            let img = new Image();
+            img.src = arr[track];
+            img.onload = (e) => {
+                tool.drawImage(img, 0, 0, cboard.width, cboard.height);
+            }
+        })
+        
+
+        // Draw triangle shape
+        // let ox;
+        // let oy;
+        // document.body.addEventListener("mousedown", function(e) {
+        //     ox = e.x;
+        //     oy = e.y;
+        // })
+        // let nx;
+        // let ny;
+        // document.body.addEventListener("mouseup", function(e) {
+        //     nx = e.x;
+        //     ny = e.y;
+
+        //     console.log("old -> ", ox, oy);
+        //     console.log("new -> ", nx, ny);
+
+        //     let arrowtopx = (ox+nx)/2;
+        //     let arrowtopy = oy;
+
+        //     let arrowbottomx = (ox+nx)/2;
+        //     let arrowbottomy = ny;
+
+        //     let leftsidepointx = ox;
+        //     let leftsidepointy = ( ((oy + ny)/2) + (ny) ) / 2;
+
+
+        //     let rightsidepointx = nx;
+        //     let rightsidepointy = ( ((oy + ny)/2) + (ny) ) / 2;
+
+        //     tool.strokeStyle = "red";
+        //     tool.beginPath();
+        //     tool.moveTo(arrowtopx, arrowtopy);
+        //     tool.lineTo(arrowbottomx, arrowbottomy);
+        //     tool.lineTo(leftsidepointx, leftsidepointy);
+        //     tool.moveTo(rightsidepointx, rightsidepointy);
+        //     tool.lineTo(arrowbottomx, arrowbottomy);
+        //     tool.stroke();
 
             // tool.beginPath();
             // tool.moveTo(leftsidepointx, leftsidepointy);
@@ -128,7 +178,7 @@
             // drawBox.appendChild(shapeCanvas);
             // document.body.appendChild(drawBox);
             
-        })
+        // })
     </script>
 </body>
 </html>

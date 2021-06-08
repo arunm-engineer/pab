@@ -28,7 +28,28 @@
     });
     drawBoard.addEventListener("mouseup", (e) => {
         mouseDown = false;
+        undoRedoTracker.push(drawBoard.toDataURL());
+        track = undoRedoTracker.length-1;
     });
+
+    let undoBtn = document.querySelector(".undo-btn");
+    let redoBtn = document.querySelector(".redo-btn");
+
+    undoBtn.addEventListener("click", (e) => {
+        if (track > 0) track--;
+        console.log(track);
+        console.log(undoRedoTracker);
+        let img = new Image();
+        img.src = undoRedoTracker[track];
+        img.onload = (e) => {tool.drawImage(img, 0, 0, drawBoard.width, drawBoard.height)};         // Draw previously stored image on undo
+    })
+
+    redoBtn.addEventListener("click", (e) => {
+        if (track < undoRedoTracker.length-1) track++;
+        let img = new Image();
+        img.src = undoRedoTracker[track];
+        img.onload = (e) => {tool.drawImage(img, 0, 0, drawBoard.width, drawBoard.height)};         // Draw previously stored image on redo
+    })
 
     
 })();

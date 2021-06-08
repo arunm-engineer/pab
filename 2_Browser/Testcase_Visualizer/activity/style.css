@@ -280,31 +280,7 @@ body {
     /* z-index: 10; */
 }
 
-.rotate-tree-btn {
-    background-color: #f5f6fa;
-}
-
-.recursive-tree-btn {
-    background-color: #f5f6fa;
-}
-
-.clear-page-btn {
-    background-color: #f5f6fa;
-}
-
-.expand-btn {
-    background-color: #f5f6fa;
-}
-
-.snip-btn {
-    background-color: #f5f6fa;
-}
-
-.stream-btn {
-    background-color: #f5f6fa;
-}
-
-.eraser-btn {
+.def-color {
     background-color: #f5f6fa;
 }
 
@@ -312,6 +288,14 @@ body {
     position: absolute;
     top: 0;
     right: 0;
+}
+.screen-share-canvas {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-image: url("imgSource/background.jpg");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
 }
 
 
