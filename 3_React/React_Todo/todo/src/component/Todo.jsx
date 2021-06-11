@@ -1,14 +1,13 @@
 // react snippet
 // rcc
 import React, { Component } from 'react'
-import TaskList from './TaskList';
-
+import TaskList from './TaskList'
+import InputContainer from './InputContainer'
 
 export default class Todo extends Component {
 
     state = {
-        taskList: [],
-        currTask: ""
+        taskList: []
     }
 
     // Use arrow functions to avoid confusion of "this" keyword
@@ -24,16 +23,10 @@ export default class Todo extends Component {
 
     }
 
-    HandleCurrTask = (e) => {
-        let newTaskValue = e.target.value;
-        this.setState({
-            currTask: newTaskValue
-        })
-    }
-
-    AddTask = () => {
-        let newTask = this.state.currTask;
-        let tempTaskListArray = [...this.state.taskList, { task: newTask, id: this.state.taskList.length }];  //Short-hand to copy all array elements(soread operator)
+    AddTask = (newTask) => {
+        let tempTaskListArray = this.state.taskList.map((taskObj, idx) => {return {task: taskObj.task, id: idx} });
+        tempTaskListArray.push({task: newTask, id: this.state.taskList.length});
+        // let tempTaskListArray = [...this.state.taskList, { task: newTask, id: this.state.taskList.length }];  //Short-hand to copy all array elements(soread operator)
         this.setState({
             taskList: tempTaskListArray,
             currTask: ""
@@ -43,11 +36,7 @@ export default class Todo extends Component {
     render() {
         return (
             <div>
-                <div className="input-container">
-                    <input type="text" value={this.state.currTask} 
-                    onChange={this.HandleCurrTask} />
-                    <button onClick={this.AddTask} >Submit</button>
-                </div>
+                <InputContainer AddTask={this.AddTask}></InputContainer>
                 <TaskList taskList={this.state.taskList} deleteTask={this.DeleteTask}></TaskList>
             </div>
         )
