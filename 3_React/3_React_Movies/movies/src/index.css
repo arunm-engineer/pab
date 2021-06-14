@@ -15,3 +15,7 @@ code {
 input[type="number"] {
   width: 4rem;
 }
+
+.new-form-input-number > input{
+  width: 100%;
+}
