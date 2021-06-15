@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
-// import { getMovies } from '../temp/MovieService'
 import Pagination from './Pagination'
-import MovieList from './Movie'
+import MovieList from './MovieList'
 import Genres from './Genres'
 import MoviesHeader from './MoviesHeader'
+import { Link } from 'react-router-dom'
+
 
 export default class MoviesPage extends Component {
     state = {
-        moviesList: [],
+        moviesList: this.props.moviesList,
         currSearchText: "",
         limit: 4,
         activePage: 1,
@@ -85,14 +86,8 @@ export default class MoviesPage extends Component {
 
     }
     componentDidMount() {
-        let moviesListFetchP = fetch("https://react-backend101.herokuapp.com/movies");  // Get movies from backend
-        moviesListFetchP.then((responseP) => {
-            responseP.json().then((response) => {
-                this.setState({
-                    moviesList: response.movies
-                })
-            })
-
+        this.setState({
+            moviesList: this.props.moviesList
         })
     }
 
@@ -124,14 +119,21 @@ export default class MoviesPage extends Component {
         let displayMovies = requestedMovies.slice(startIdx, endIdx);
 
         return (
+            
             <div className="row">
-                <div className="col-3">
+                <div className="col-3 mt-5">
                     <Genres activeGenre={this.state.activeGenre} handleGenreActiveness={this.handleGenreActiveness}></Genres>
                 </div>
-                <div className="col-9">
+
+                <div className="col-9 mt-5">
                     {/* <button className="btn btn-primary">New</button> */}
-                    <input type="search" onChange={this.setCurrentText} value={this.state.currSearchText}/>
-                    <input onChange={this.mapLimit} value={this.state.limit} className="limit" type="number" placeholder="Limit.."/>
+                    <button type="button" className="btn btn-dark">
+                        <Link to='/movies/new' style={{ textDecoration: 'none',color: "white" }}>New</Link>
+                    </button>
+                    <div>
+                        <input type="search" onChange={this.setCurrentText} value={this.state.currSearchText}/>
+                        <input onChange={this.mapLimit} value={this.state.limit} className="limit ml-5" type="number" placeholder="Limit.."/>
+                    </div>
                     <table className="table">
                         <thead>
                             <MoviesHeader sortRate={this.sortRate} sortStock={this.sortStock}></MoviesHeader>

@@ -1,13 +1,18 @@
 import logo from './logo.svg';
 import './App.css';
-import MoviesPage from './components/MoviesPage'
-import New from './components/New'
+import Routing from './components/Routing'
+import Hooks from './Hooks'  
 
 function App() {
   return (
     <div>
-      <New/>
-      <MoviesPage/>
+      {/* Experiment part */}
+      <Hooks/>    
+
+      
+      {/* <Routing/> */}
+      {/* <New/>, */}
+      {/* <MoviesPage/> */}
     </div>
   );
 }
