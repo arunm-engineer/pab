@@ -6,13 +6,14 @@ import Hooks from './Hooks'
 function App() {
   return (
     <div>
-      {/* Experiment part */}
-      <Hooks/>    
-
-      
-      {/* <Routing/> */}
+      <Routing/>
       {/* <New/>, */}
       {/* <MoviesPage/> */}
+
+
+      {/* Experiment part */}
+      {/* <Hooks/>     */}
+
     </div>
   );
 }

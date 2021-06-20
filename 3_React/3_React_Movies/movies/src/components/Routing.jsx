@@ -42,7 +42,8 @@ export default class Routing extends Component {
                     }}></Route>
                     <Redirect rxact from='/login' to='/'></Redirect>
                     <Redirect exact from='/home' to='/'></Redirect>
-                    <Route exact path='/' render={() => {
+                    <Route exact path='/' render={(props) => {
+                        console.log(props);      // Has props of location, history, match
                         return <MoviesPage updateMoviesList={this.updateMoviesList} moviesList={this.state.moviesList}></MoviesPage>
                     }}></Route>
                 </Switch>

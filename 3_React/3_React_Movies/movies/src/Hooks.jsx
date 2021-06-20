@@ -16,7 +16,7 @@ export default function Hooks() {
     // useEffect(fun, []);
 
     // Everytime @ update, like componeneDidUpdate
-    // useEffect(fun, [time]);
+    useEffect(fun, [time]);
     return (
         <div>
             <button onClick={()=>{setCount(count+1)}}>+</button>            

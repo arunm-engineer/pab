@@ -1,0 +1,575 @@
+* {
+    box-sizing: border-box;
+}
+html {
+    scroll-behavior: smooth;
+}
+body {
+    margin: 0;
+}
+.header-cont {
+    height: 5rem;
+    /* background-color: lightblue; */
+    display: flex;
+    align-items: center;
+}
+.header-name {
+    margin-left: 6rem;
+    /* background-color: pink; */
+    display: flex;
+    font-size: 1.2rem;
+    font-family: 'PT Sans Narrow', sans-serif;
+    font-weight: 600;
+}
+.navigators-cont {
+    display: flex;
+    margin-left: 5rem;
+    /* background-color: lightgreen; */
+    gap: 3rem;
+    font-family: 'PT Sans Narrow', sans-serif;
+    font-size: 1rem;
+    color: #2f3640;
+}
+.navigator > a {
+    text-decoration: none;
+    color: #4b4b4b;
+}
+.navigator > a:hover {
+    color: #c44569cc;
+    cursor: pointer;
+}
+
+/* folders css */
+
+/* Education css */
+.education-cont {
+    /* background-color: lightblue; */
+    height: calc( 100vh - 5rem );
+}
+.education-cont {
+    display: flex;
+}
+.education-about-cont {
+    /* background-color: yellow; */
+    height: 100%;
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.education-box-cont {
+    width: 90%;
+    height: 80%;
+    /* background-color: lightblue; */
+    border: none;
+}
+.education-header-cont {
+    /* background-color: pink; */
+    font-family: 'Cantora One', sans-serif;
+    font-size: 3rem;
+    letter-spacing: 2px;
+    margin-left: 3rem;
+    /* color: #19162B; */
+    color: #c44569cc;
+}
+.edu-cards-cont {
+    /* background-color: blueviolet; */
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    color: #19162B;
+}
+.edu-card {
+    /* position: absolute; */
+    height: 13rem;
+    width: 100%;
+    /* background-color: aliceblue; */
+    border-radius: 10px;
+    display: flex;
+}
+.edu-title-box {
+    width: 30%;
+    height: 100%;
+    /* background-color: pink; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+}
+.edu-title {
+    /* background-color: lightblue; */
+    text-align: center;
+    font-family: 'Cantora One', sans-serif;
+    font-size: x-large;
+    letter-spacing: 1px;
+}
+.edu-title > p {
+    margin: 0;
+    color: #c44569cc;
+    font-size: 2.5rem;
+    
+}
+.edu-info-box {
+    width: 70%;
+    height: 100%;
+    /* background-color: yellow; */
+    display: flex;
+    align-items: center;
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    letter-spacing: 1px;
+}
+.edu-details-cont {
+    width: 100%;   
+    height: 80%;
+    border-radius: 10px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
+
+}
+.edu-name {
+    height: 7rem;
+    /* background-color: blueviolet; */
+    padding-left: 2rem;    
+    padding-top: 1rem;    
+    font-size: x-large;
+}
+.edu-name > p {
+    margin-top: 1.3rem;
+    margin-bottom: 0.8rem;
+}
+.tag-box {
+    display: flex;
+    gap: 1.5rem;
+    font-size: large;
+}
+.tag {
+    /* border: 2px solid red; */
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    border-radius: 3px;
+    width: 6rem;
+    height: 2rem;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: linear-gradient(to top, #feada6 0%, #f5efef 100%);
+}
+.edu-place {
+    height: calc( 100% - 7rem );
+    /* background-color: aqua; */
+    padding-left: 2rem;
+    display: flex;
+    align-items: center;
+    font-size: xx-large;
+}
+.programmer-img-cont {
+    /* background-color: orange; */
+    height: 100%;
+    width: 50%;
+}
+.folder-page-img {
+    width: 100%;
+    height: 35rem;
+}
+
+
+/* Projects css */
+.projects-cont {
+    /* height: 130vh; */
+    /* background-color: lightpink; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #19162B;
+}
+.projects-box-cont {
+    width: 95%;
+    height: 100%;
+    /* background-color: lightblue; */
+}
+.projects-header-cont {
+    font-family: 'Cantora One', sans-serif;
+    font-size: 3rem;
+    letter-spacing: 2px;
+    margin-left: 3rem;
+    margin-top: 5rem;
+    /* color: #19162B; */
+    color: #c44569cc;
+    /* background-color: yellow; */
+}
+.projects-body-cont {
+    /* background-color: lightgreen; */
+    width: 100%;
+    height: calc( 100% - 4rem );
+}
+
+.img-project-section-cont {
+    /* background-color: aqua; */
+    /* height: 60rem; */
+    width: 95%;
+    /* display: flex; */
+}
+.programmer-img-container {
+    width: 35rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* height: 30rem; */
+}
+.spreadsheet-img {
+    width: 100%;
+    /* height: 30rem; */
+}
+.excel-project-box {
+    display: flex;
+    /* background-color: blueviolet; */
+}
+.inner-project-section-cont {
+    /* background-color: lightgreen; */
+    width: calc( 100% - 35rem );
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+.treehouse-project {
+    width: 70%;
+    /* height: 28rem; */
+    /* background-color: grey; */
+    margin: 3rem;
+    position: relative;
+}
+.excel-project {
+    width: 90%;
+    /* background-color: chartreuse; */
+    position: relative;
+}
+.combined-project-cont {
+    width: 100%;
+    /* height: 45%; */
+    /* background-color: rgb(146, 127, 255); */
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+}
+.todo-project {
+    width: 55%;
+    position: relative;
+    /* background-color: tomato; */
+}
+.jobready-project {
+    /* background-color: violet; */
+    width: 40%;
+    position: relative;
+}
+
+
+/* project css */
+.project-name-cont {
+    height: 4rem;
+    /* background-color:lightblue; */
+    display: flex;
+    align-items: center;
+    font-family: 'Cantora One', sans-serif;
+    font-size: xx-large;
+    letter-spacing: 1px;
+    padding-left: 5rem;
+}
+.project-desc-cont {
+    /* height: calc( 100% - 5rem - 4rem ); */
+    /* margin-top: 0.7rem; */
+    padding-left: 2.5rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    padding-right: 1.5rem;
+    line-height: 1.5;
+    font-family: 'Philosopher', sans-serif;
+    word-spacing: 3px;
+    font-size: 1.1rem;
+}
+.project-desc-cont > p {
+    margin: 0;
+}
+.project-info-cont {
+    height: 5rem;
+    /* background-color: yellow; */
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.tech-stack-cont {
+    width: 12rem;
+    height: 3rem;
+    /* background-color: violet; */
+    margin-left: 2.5rem;
+    display: flex;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px;
+    animation-name: icon-list-pop-out;
+    animation-duration: 0.4s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+}
+.tech-stack-list {
+    display: flex;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    /* background-color: #96fbc4; */
+}
+.tech-stack-icon {
+    width: 3rem;
+    height: 100%;
+    /* background-color: #96fbc4; */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-origin: #f1f2f6;
+}
+.icon {
+    height: 100%;
+    /* background-color: #96fbc4; */
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+}
+.icon-list-pop-out {
+    animation-name: icon-list-pop-out;
+    animation-duration: 0.4s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+}
+.icon-list-pop-in {
+    animation-name: icon-list-pop-in;
+    animation-duration: 0.4s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+}
+@keyframes icon-list-pop-out {
+    0% {
+        width: 2.5rem;
+    }
+    100% {
+        width: 12rem;
+    }
+}
+@keyframes icon-list-pop-in {
+    0% {
+        width: 12rem;
+    }
+    100% {
+        width: 2.5rem;
+    }
+}
+.icon-pop-out {
+    animation-name: icon-pop-out;
+    animation-duration: 0.4s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+}
+.icon-pop-in {
+    animation-name: icon-pop-in;
+    animation-duration: 0.4s;
+    animation-timing-function: ease-out;
+    animation-fill-mode: forwards;
+}
+@keyframes icon-pop-out {
+    0% {
+        width: 0;
+        opacity: 0;
+    }
+    100% {
+        width: 3rem;
+        opacity: 1;
+    }
+}
+@keyframes icon-pop-in {
+    0% {
+        width: 3rem;
+        opacity: 1;
+    }
+    100% {
+        width: 0;
+        opacity: 0;
+    }
+}
+
+.github-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    /* background-color: lightblue; */
+    justify-self: flex-end;
+    position: absolute;
+    right: 5%;
+    transition: transform 0.2s ease-out;
+}
+.github-icon:hover {
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.tech-stack-logo {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+.tech-logo {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.bg-hover {
+    bottom: 0;
+    right: 0;
+    z-index: -1;
+    position: absolute;
+}
+.treehouse-hover {
+    background-image: linear-gradient(-225deg, #B6CEE8 0%, #F578DC 100%);
+}
+.excel-hover {
+    background-image: linear-gradient(to top, #96fbc4 0%, #f9f586 100%);
+}
+.todo-hover {
+    background-image: linear-gradient(to top, #88d3ce 0%, #6e45e2 100%);
+}
+.jobready-hover {
+    background-image: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
+}
+.bg-animation-in {
+    animation-name: project-bg-change-in;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+}
+@keyframes project-bg-change-in {
+    0% {
+        width: 0%;
+        height: 0%;
+    }
+    100% {
+        width: 100%;
+        height: 100%;
+    }
+}
+.bg-animation-out {
+    animation-name: project-bg-change-out;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+}
+@keyframes project-bg-change-out {
+    0% {
+        width: 100%;
+        height: 100%;
+    }
+    100% {
+        width: 0%;
+        height: 0%;
+    }
+}
+
+
+/* Notables css */
+.notables-cont {
+    /* height: 100vh; */
+    /* background-color: lightgreen; */
+    display: flex;
+    justify-content: center;
+}
+.notables-box-cont {
+    width: 95%;
+    height: 100%;
+    /* background-color: #6e45e2;  */
+}
+.notables-header-cont {
+    font-family: 'Cantora One', sans-serif;
+    font-size: 3rem;
+    letter-spacing: 2px;
+    margin-left: 3rem;
+    margin-top: 4rem;
+    /* color: #19162B; */
+    color: #c44569cc;
+    /* background-color: yellow; */
+}
+.notables-display-cont {
+    width: 100%;
+    height: calc( 100% - 8rem );
+    /* background-color: #96fbc4; */
+    position: relative;
+    margin-top: 1rem;
+    /* display: flex; */
+}
+.notable {
+    /* height: 17rem; */
+    width: 25%;
+    /* background-color: blueviolet; */
+    position: absolute;
+    color: #19162B;
+}
+.notable-1 {
+    top: 30%;
+    left: 7%;
+    /* background-image: linear-gradient(120deg, #a6c0fe 0%, #f68084 100%); */
+    background-image: linear-gradient(to top, #a8edea 0%, #fed6e3 100%);
+}
+.notable-2 {
+    /* width: 100%; */
+    width: 72%;
+    /* top: 10%; */
+    /* left: 33.5%; */
+    position: relative;
+    background-image: linear-gradient(to top, #fddb92 0%, #d1fdff 100%);
+}
+.notable-3 {
+    width: 70%;
+    /* width: 100%; */
+    /* top: 49%; */
+    /* left: 43%; */
+    position: relative;
+    left: 30%;
+    margin-top: 1.5rem;
+    background-image: linear-gradient(-225deg, #2CD8D5 0%, #C5C1FF 56%, #FFBAC3 100%);
+
+}
+.notable-4 {
+    top: 35%;
+    left: 69.5%;
+    background-image: linear-gradient(-225deg, #FFE29F 0%, #FFA99F 48%, #FF719A 100%);
+}
+.notable-section-header {
+    width: 100%;
+    height: 4rem;
+    /* background-color: #f6d365; */
+    font-family: 'Cantora One', sans-serif;
+    font-size: xx-large;
+    display: flex;
+    align-items: center;
+    padding-left: 1.5rem;
+}
+.notable-section-body {
+    width: 100%;
+    /* height: calc( 100% - 4rem ); */
+    /* background-color: chartreuse; */
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    font-size: x-large;
+    padding: 1.5rem;
+    letter-spacing: 0.5px;
+    word-spacing: 1px;
+}
+.notable-section-body > p {
+    margin: 0;
+}
+.center-notables {
+    /* background-color: pink; */
+    position: relative;
+    width: 34.5%;
+    left: 33.5%;
+    top: 10%;
+}
+
+.notable-tags {
+    margin-top: 1rem;
+}
+.highlight-word {
+    color: #c44569cc;
+    font-size: xx-large;
+}
