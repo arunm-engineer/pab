@@ -99,26 +99,6 @@ body {
     background-color: #ED4C67;
     cursor: pointer;
 }
-.color-pops-1 {
-    position: absolute;
-    top: 11rem;
-    left: 2rem;
-    width: 8rem;
-    height: 5rem;
-    background-color: #c44569;
-    filter: blur(7.5rem);
-    border-radius: 50%;
-}
-.color-pops-2 {
-    position: absolute;
-    top: 70vh;
-    left: 40vw;
-    width: 8rem;
-    height: 8rem;
-    background-color: #c44569;
-    filter: blur(8.5rem);
-    border-radius: 50%;
-}
 
 @media only screen and (max-width: 850px) {
     .name-container {
