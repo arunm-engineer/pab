@@ -23,7 +23,8 @@ body {
 }
 .main-page-body-container {
     /* background-color: lightgreen; */
-    height: calc( 100vh - 3rem );
+    /* height: calc( 100vh - 3rem ); */
+    height: 100vh;
     display: flex;
 }
 .main-page-about-container {
@@ -39,16 +40,18 @@ body {
     justify-content: center; */
 }
 .main-page-img {
-    width: 100%;
-    height: 40rem;
+    width: 120%;
+    /* height: 40rem; */
     position: absolute;
     right: -5rem;
+    object-fit: contain;
 }
 .personal-info-container {
     /* background-color: lightblue; */
     position: absolute;
     top: 23vh;
     left: 6vw;
+    z-index: 1;
     /* margin-left: 6rem; */
     /* margin-top: calc(); */
 }
@@ -115,4 +118,16 @@ body {
     background-color: #c44569;
     filter: blur(8.5rem);
     border-radius: 50%;
+}
+
+@media only screen and (max-width: 850px) {
+    .name-container {
+        font-size: 1.5rem;
+    }
+    .name {
+        font-size: 3rem;
+    }
+    .header-name {
+        margin-left: 3rem;
+    }
 }

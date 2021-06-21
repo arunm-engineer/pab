@@ -6,6 +6,10 @@ let treeGitIcon = document.querySelector(".tree-git-icon");
 let excelGitIcon = document.querySelector(".excel-git-icon");
 let todoGitIcon = document.querySelector(".todo-git-icon");
 let automationGitIcon = document.querySelector(".automation-git-icon");
+let mailContactIcon = document.querySelector(".mail-contact-icon");
+let githubContactIcon = document.querySelector(".github-contact-icon");
+let linkedinContactIcon = document.querySelector(".linkedin-contact-icon");
+let resumeContactIcon = document.querySelector(".resume-contact-icon");
 
 for (let i = 0;i < allProjects.length;i++) {
     allProjects[i].addEventListener("mouseenter", e => {
@@ -62,6 +66,35 @@ automationGitIcon.addEventListener("click", e => {
     let a = document.createElement("a");
     a.href = "https://github.com/arun496/pab_pep/tree/main/1_JS/5_JobReady";
     a.target = "_blank";
+    a.click();
+    a.remove();
+})
+
+mailContactIcon.addEventListener("click", e => {
+    let a = document.createElement("a");
+    a.href = "https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=arun496.in@gmail.com";
+    a.target = "_blank";
+    a.click();
+    a.remove();
+})
+linkedinContactIcon.addEventListener("click", e => {
+    let a = document.createElement("a");
+    a.href = "https://www.linkedin.com/in/arun-m496/";
+    a.target = "_blank";
+    a.click();
+    a.remove();
+})
+githubContactIcon.addEventListener("click", e => {
+    let a = document.createElement("a");
+    a.href = "https://github.com/arun496";
+    a.target = "_blank";
+    a.click();
+    a.remove();
+})
+resumeContactIcon.addEventListener("click", e => {
+    let a = document.createElement("a");
+    a.href = "./views/Arun_M.pdf";
+    a.download = "Arun_M";
     a.click();
     a.remove();
 })
