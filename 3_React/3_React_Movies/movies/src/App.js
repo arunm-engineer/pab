@@ -1,12 +1,14 @@
 import logo from './logo.svg';
 import './App.css';
-import Routing from './components/Routing'
-import Hooks from './Hooks'  
+import Routing from './components/Routing';
+import Hooks from './Hooks';
+import { Test } from './Test';
 
 function App() {
   return (
     <div>
-      <Routing/>
+      {/* <Routing/> */}
+
       {/* <New/>, */}
       {/* <MoviesPage/> */}
 
@@ -14,6 +16,8 @@ function App() {
       {/* Experiment part */}
       {/* <Hooks/>     */}
 
+      {/* React Test */}
+      {/* <Test/> */}
     </div>
   );
 }

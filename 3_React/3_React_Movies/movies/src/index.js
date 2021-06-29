@@ -2,13 +2,21 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 
+// General:
+// Route path must be a subpath of URL path to match
 ReactDOM.render(
-  <BrowserRouter>
+  <Router>
     <App />
-  </BrowserRouter>
+
+    {/* Testing with plane routes */}
+    {/* <Route exact path="/loginoo" component={Feed}></Route>
+    <Route path="/loginoo/rum" component={Login}></Route>
+    <Route path="/loginoo/some" component={Some}></Route>
+    <Route path="/loginoo/rum/some" component={Signup}></Route> */}
+  </Router>
   ,
   document.getElementById('root')
 );
