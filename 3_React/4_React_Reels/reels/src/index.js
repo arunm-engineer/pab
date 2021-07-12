@@ -4,10 +4,12 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import Material from './Material';
+import InterObserver from './IntersectionPOC/InterObserver';
 
 ReactDOM.render(
     <App />,
     // <Material/>,
+    // <InterObserver />,
   document.getElementById('root')
 );
 
