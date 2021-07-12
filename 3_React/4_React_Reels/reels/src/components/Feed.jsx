@@ -244,7 +244,6 @@ export default function Feed() {
         // Set state to current Video obj of comments
         setCommentVideoObj(videoObj);
 
-
         // Get all comments in recent timely order from firestore comments collection
         let unsubscribe = await database.comments.orderBy("createdAt", "desc").onSnapshot(async snapshot => {
             let comments = snapshot.docs.map(doc => doc.data());
