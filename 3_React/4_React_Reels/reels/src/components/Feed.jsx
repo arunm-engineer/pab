@@ -89,6 +89,7 @@ export default function Feed() {
     const [likeAction, setLikeAction] = useState(false);
     const [commentVideoObj, setCommentVideoObj] = useState(null);
     const [postComments, setPostComments] = useState([]);
+    const [commentUnsubscribeFirestore, setcommentUnsubscribeFirestore] = useState(null);
     const { signout, currentUser } = useContext(AuthContext);
 
     const handleSignOut = async (e) => {
@@ -252,7 +253,8 @@ export default function Feed() {
             let commentsDataArrFromFirestore = [];
             for (let i = 0;i < comments.length;i++) {
                 let {profileImageURL, description, username, puid} = comments[i];
-                commentsDataArrFromFirestore.push({profileImageURL, description, username, puid});
+                let cuid = snapshot.docs[i].id;
+                commentsDataArrFromFirestore.push({profileImageURL, description, username, puid, cuid});
             }
 
             // Filter the comments of the current post
@@ -263,18 +265,14 @@ export default function Feed() {
             // Set Received comments for further dispaly in comments feed
             console.log(commentsDataArrFromFirestore);
             setPostComments(commentsDataArrFromFirestore);
-
         })
-
     }
 
     
     return (
         pageLoading == true ? <div>Loading...</div> :
         <> 
-            <AppBar className={classes.appBar}
-                position="fixed"
-                color="white">
+            <AppBar className={classes.appBar} position="fixed" color="default">
                 <Toolbar
                     className={classes.toolBar}
                     variant="dense">
@@ -335,7 +333,7 @@ export default function Feed() {
 function Video(props) {
     return (
         <>
-            <video loop autoPlay muted="true" id={props.id}>
+            <video loop autoPlay muted={true} id={props.id}>
                 <source src={props.src} type="video/mp4"></source>
             </video>
         </>

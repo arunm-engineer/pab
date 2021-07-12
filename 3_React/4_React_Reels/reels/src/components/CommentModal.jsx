@@ -108,7 +108,7 @@ export default function CommentModal({commentVideoObj, postComments, setCommentV
                 <div className={classes.commentSectionBody}>
                     {
                         postComments.map((commentObj) => {
-                            return <Comments commentObj={commentObj} />
+                            return <Comments key={commentObj.cuid} commentObj={commentObj} />
                         })
                     }
                 </div>

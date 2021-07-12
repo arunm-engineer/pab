@@ -10,7 +10,7 @@ export default function CommentVideo({commentVideoObj}) {
             justifyContent: "flex-end",
             alignItems: "center",
         }}>
-            <video width="288" autoPlay loop muted="true" src={commentVideoObj.videoUrl} ></video>
+            <video width="288" autoPlay loop muted={true} src={commentVideoObj.videoUrl} ></video>
         </div>
     )
 }
