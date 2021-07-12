@@ -33,3 +33,4 @@ function PrivateRoute({privateComponent: Component, ...restProps}) {
 }
 
 export default App;
+
