@@ -1,35 +1,57 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
-import Cart from './Cart';
-import Home from './Home';
-import Product from './Product';
-import { Provider } from 'react-redux';
-import store from '../ShoppingStore';
+import { BrowserRouter as Router, Switch, Route, Redirect, useParams } from 'react-router-dom';
+import CartPage from './CartPage';
+import HomePage from './HomePage';
+import ProductPage from './ProductPage';
 import NavBar from './NavBar';
 import { makeStyles } from '@material-ui/core';
+import { connect } from 'react-redux';
 
-export default function Ecommerce() {
-
+function Ecommerce(props) {
     const useStyles = makeStyles({
         contentPage: {
             marginTop: "7rem"
         }
     })
 
+    const { Product } = props;
     const classes = useStyles();
 
     return (
-        <Provider store={store}>
+        <Router>
             <NavBar></NavBar>
             <div className={classes.contentPage}>
-                <Router>
                     <Switch>
-                        <Route path='/cart' component={Cart}></Route>
-                        <Route path='/product' component={Product}></Route>
-                        <Route path='/' component={Home}></Route>
+                        <Route path='/cart' component={CartPage}></Route>
+                        <Route path='/product/:id'><MapProductComponent Product={Product}/></Route>
+                        <Route path='/product' component={ProductPage}></Route>
+                        <Route path='/' component={HomePage}></Route>
                     </Switch>
-                </Router>
             </div>
-        </Provider>
+        </Router>
     )
 }
+
+function MapProductComponent(props) {
+    const { id } = useParams();
+    const { Product } = props;
+    console.log(props);
+
+    const productDetails = Product[id];
+    if (productDetails) return <ProductPage ProductDetails={productDetails}/>
+    else return <Redirect to='/' />
+}
+
+const mapStateToProps = store => {
+    return store;
+}
+
+const mapDispatchToProps = (dispatch)  => {
+    return {
+        addItem: (item) => {
+            return dispatch({type: "add_item", selectedItem: item});
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Ecommerce);

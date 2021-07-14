@@ -36,7 +36,7 @@ export const products = [
         image: book
     },
 ]
-export const coupons = {
+export const couponCollections = {
     SAVE10: {
         name: 'SAVE10',
         discount: 10
@@ -46,7 +46,7 @@ export const coupons = {
         discount: 20
     },
     SAVE15: {
-        name: 'ABCD',
+        name: 'SAVE15',
         discount: 15
     }
 }
