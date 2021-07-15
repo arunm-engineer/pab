@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect, useRef } from 'react'
 import { AuthContext } from '../Contexts/AuthProvider';
 import { AppBar, makeStyles, Toolbar, Avatar, Container, IconButton } from '@material-ui/core';
 import ExploreIcon from '@material-ui/icons/Explore';
@@ -55,9 +55,9 @@ export default function Feed() {
             flexDirection: "column",
             alignItems: "center",
             marginTop: "3rem",
-            gap: "8rem"
+            gap: "7rem"
         },
-        likeIcon : {
+        likeIcon: {
             position: "absolute",
             bottom: "0.5rem",
             left: "0.5rem",
@@ -89,7 +89,8 @@ export default function Feed() {
     const [likeAction, setLikeAction] = useState(false);
     const [commentVideoObj, setCommentVideoObj] = useState(null);
     const [postComments, setPostComments] = useState([]);
-    const [commentUnsubscribeFirestore, setcommentUnsubscribeFirestore] = useState(null);
+    const [lastVisiblePost, setLastVisiblePost] = useState();
+    const [isPostsDBEmpty, setIsPostsDBEmpty] = useState(false);
     const { signout, currentUser } = useContext(AuthContext);
 
     const handleSignOut = async (e) => {
@@ -111,21 +112,21 @@ export default function Feed() {
         if (file != null) console.log(e.target.files[0]);
 
         // If file size is too large then don't upload 
-        if (file.size / (1024*1024) > 20) {
+        if (file.size / (1024 * 1024) > 20) {
             alert('Your file size is too large');
             return;
         }
 
         console.log('Before upload start');
-        
+
         // 1. Upload
         const uploadFileTask = storage.ref(`/posts/${uuid()}`).put(file);
         setLoading(true);
-        
+
         console.log('After upload start');
 
-         // On upload do update all entities in firestore
-         uploadFileTask.on('state_changed', progressFn, errorFn, successFn);
+        // On upload do update all entities in firestore
+        uploadFileTask.on('state_changed', progressFn, errorFn, successFn);
 
         function progressFn(snapshot) {
             //This callback is for providing the progress
@@ -139,27 +140,27 @@ export default function Feed() {
         }
         function successFn() {
             uploadFileTask.snapshot.ref.getDownloadURL()
-            .then(async (url) => {
-                // 2. Put new document of uploaded post in Post collection in firestore
-                // auid -> uid of the author who uploaded the post
-                let postObjStructure = {
-                    comments: [],
-                    likes: [],
-                    url,
-                    auid: currentUser.uid,
-                    createdAt: database.getUserTimeStamp()
-                }
+                .then(async (url) => {
+                    // 2. Put new document of uploaded post in Post collection in firestore
+                    // auid -> uid of the author who uploaded the post
+                    let postObjStructure = {
+                        comments: [],
+                        likes: [],
+                        url,
+                        auid: currentUser.uid,
+                        createdAt: database.getUserTimeStamp()
+                    }
 
-                // Also add Post obj in Post collection in firestore 
-                let postObj = await database.posts.add(postObjStructure);
-                // 3. Update PostObj uid in author(current user's) collection in firestore in his all posts array
-                await database.users.doc(currentUser.uid).update({
-                    postIds: [...user.postIds, postObj.id]
+                    // Also add Post obj in Post collection in firestore 
+                    let postObj = await database.posts.add(postObjStructure);
+                    // 3. Update PostObj uid in author(current user's) collection in firestore in his all posts array
+                    await database.users.doc(currentUser.uid).update({
+                        postIds: [...user.postIds, postObj.id]
+                    })
+
+                    console.log(postObj);
+                    setLoading(false);
                 })
-
-                console.log(postObj);
-                setLoading(false);
-            })
         }
     }
 
@@ -183,33 +184,141 @@ export default function Feed() {
         setPageLoading(false);
     }, [])
 
+    // Last visible post is to keep track of last received doc, and fetch back next batch of data from firestore (Infinite scrolling)
+    async function fetchPostsInBatches() {
+        // snapshot objects to be unsubscribed to avoid memory leaks
+        let unsubscribe =
+        await database.posts
+            .orderBy("createdAt", "desc")
+            .startAfter(lastVisiblePost)
+            .limit(1)
+            .get()
+            .then(async snapshot => {
+                console.log(snapshot.docs.length, videos);
+                if (snapshot.docs.length === 0) {
+                    setIsPostsDBEmpty(true);
+                    return;
+                }
+                let curVideos = snapshot.docs.map(doc => doc.data());
+                setLastVisiblePost(snapshot.docs[snapshot.docs.length - 1]);
+
+                // Extract videosURL from post collection and user's data from user collection
+                // ProfileImg of the author of the post(video)
+                let videosDataArrFromFireStore = [];
+                for (let i = 0; i < curVideos.length; i++) {
+                    let { url: videoUrl, auid, likes } = curVideos[i];
+                    let puid = snapshot.docs[i].id;
+                    let userObject = await database.users.doc(auid).get();
+                    let { profileImageURL: userProfileImageURL, username } = userObject.data();
+
+                    // For likes, check if current user has liked the post
+                    videosDataArrFromFireStore.push({ videoUrl, userProfileImageURL, username, puid, liked: likes.includes(currentUser.uid) });
+                }
+
+                // Set Received videos for further dispaly in feed
+                setVideos([...videos, ...videosDataArrFromFireStore]);
+                console.log(videosDataArrFromFireStore);
+            })
+    }
+
     // Get all posts to display in feed
     useEffect(async () => {
-        // snapshot objects to be unsubscribed to avoid memory leaks
-        let unsubscribe = await database.posts.orderBy("createdAt", "desc").onSnapshot(async snapshot => {
-            console.log(snapshot);
-            let videos = snapshot.docs.map(doc => doc.data());
-
-            // Extract videosURL from post collection and user's data from user collection
-            // ProfileImg of the author of the post(video)
-            let videosDataArrFromFireStore = [];
-            for (let i = 0;i < videos.length;i++) {
-                let { url: videoUrl, auid, likes } = videos[i];
-                let puid = snapshot.docs[i].id;
-                let userObject = await database.users.doc(auid).get();
-                let { profileImageURL: userProfileImageURL, username } = userObject.data();
-
-                // For likes, check if current user has liked the post
-                videosDataArrFromFireStore.push({ videoUrl, userProfileImageURL, username, puid, liked: likes.includes(currentUser.uid) });
-            }
-
-            // Set Received videos for further dispaly in feed
-            setVideos(videosDataArrFromFireStore);
-        })
-
         // Since snapshot is realtime we receive from unsubscribe function which has to be returned during cleanup
+        let unsubscribe =
+            await database.posts
+                .orderBy("createdAt", "desc")
+                .limit(2)
+                .get()
+                .then(async snapshot => {
+                    console.log(snapshot);
+                    let videos = snapshot.docs.map(doc => doc.data());
+
+                    setLastVisiblePost(snapshot.docs[snapshot.docs.length - 1]);
+
+                    // Extract videosURL from post collection and user's data from user collection
+                    // ProfileImg of the author of the post(video)
+                    let videosDataArrFromFireStore = [];
+                    for (let i = 0; i < videos.length; i++) {
+                        let { url: videoUrl, auid, likes } = videos[i];
+                        let puid = snapshot.docs[i].id;
+                        let userObject = await database.users.doc(auid).get();
+                        let { profileImageURL: userProfileImageURL, username } = userObject.data();
+
+                        // For likes, check if current user has liked the post
+                        videosDataArrFromFireStore.push({ videoUrl, userProfileImageURL, username, puid, liked: likes.includes(currentUser.uid) });
+                    }
+                    // Set Received videos for further dispaly in feed
+                    setVideos(videosDataArrFromFireStore);
+                })
         return unsubscribe;
     }, [])
+
+
+    // Intersection observer to manage video play/pause when post intersects
+    // Intersection observer also used for smooth scrolling of posts
+    // Intersection observer to fetch post data in batches (infinite scrolling)
+    let scrollAndVideoActionObserver;
+    let infiniteScrollObserver;
+    useEffect(() => {
+        let allPosts = document.querySelectorAll("video");
+
+        let scrollAndVideoActionConditionObject = {
+            root: null,
+            rootMargin: "0px",
+            threshold: "0.6"
+        }
+        let infiniteScrollConditionObject = {
+            root: null,
+            rootMargin: "0px",
+            threshold: "1.0"
+        }
+
+        function scrollAndVideoActionCallback(entries) {
+            entries.forEach(entry => {
+                let post = entry.target;
+                // Initially play all the post videos, 
+                // Then analyse if the post video intersects, if it doesn't then we need to pause it
+                post.play().then(() => {
+                    if (entry.isIntersecting === false) post.pause();
+                })
+            })
+            entries.forEach(entry => {
+                let post = entry.target;
+                if (entry.isIntersecting) {
+                    let postDimensions = post.getBoundingClientRect();
+                    window.scrollBy({
+                        top: postDimensions.top,
+                        left: postDimensions.left,
+                        behavior: 'smooth'
+                    })
+                }
+            })
+        }
+        function infiniteScrollCallback(entries) {
+            entries.forEach(entry => {
+                let post = entry.target;
+                if (entry.isIntersecting) {
+                    console.log('loading...', post);
+                    if (!isPostsDBEmpty) {
+                        fetchPostsInBatches();
+                    }
+                    console.log(entry.isIntersecting);
+                    infiniteScrollObserver.unobserve(post);
+                }
+            })
+        }
+
+        if (scrollAndVideoActionObserver) scrollAndVideoActionObserver.disconnect();
+        if (infiniteScrollObserver) infiniteScrollObserver.disonnect();
+        scrollAndVideoActionObserver = new IntersectionObserver(scrollAndVideoActionCallback, scrollAndVideoActionConditionObject);
+        infiniteScrollObserver = new IntersectionObserver(infiniteScrollCallback, infiniteScrollConditionObject);
+        console.log(allPosts.length, allPosts, videos);
+        allPosts.forEach((post, idx) => {
+            scrollAndVideoActionObserver.observe(post);
+            if (idx === allPosts.length - 1) infiniteScrollObserver.observe(post);
+        })
+    }, [videos])
+
 
     const handleLiked = async (puid, liked) => {
         console.log(puid);
@@ -251,10 +360,10 @@ export default function Feed() {
 
             // Store all required data to display for comments in an object and push in an array
             let commentsDataArrFromFirestore = [];
-            for (let i = 0;i < comments.length;i++) {
-                let {profileImageURL, description, username, puid} = comments[i];
+            for (let i = 0; i < comments.length; i++) {
+                let { profileImageURL, description, username, puid } = comments[i];
                 let cuid = snapshot.docs[i].id;
-                commentsDataArrFromFirestore.push({profileImageURL, description, username, puid, cuid});
+                commentsDataArrFromFirestore.push({ profileImageURL, description, username, puid, cuid });
             }
 
             // Filter the comments of the current post
@@ -268,74 +377,79 @@ export default function Feed() {
         })
     }
 
-    
+
     return (
         pageLoading == true ? <div>Loading...</div> :
-        <> 
-            <AppBar className={classes.appBar} position="fixed" color="default">
-                <Toolbar
-                    className={classes.toolBar}
-                    variant="dense">
-                    <img height="100%" width="150vw" src="https://www.logo.wine/a/logo/Instagram/Instagram-Wordmark-Black-Logo.wine.svg" />
-                    <Container className={classes.iconContainer}>
-                        <IconButton className={classes.iconButton}><HomeIcon /></IconButton>
-                        <IconButton onClick={handleSignOut} disabled={loading} className={classes.iconButton}><ExploreIcon /></IconButton>
-                        <IconButton>
-                            <Avatar alt="Profile" style={{ height: "1.5rem", width: "1.5rem" }} src={user.profileImageURL} />
-                        </IconButton>
-                    </Container>
-                </Toolbar>
-            </AppBar>
+            <>
+                <AppBar className={classes.appBar} position="fixed" color="default">
+                    <Toolbar
+                        className={classes.toolBar}
+                        variant="dense">
+                        <img height="100%" width="150vw" src="https://www.logo.wine/a/logo/Instagram/Instagram-Wordmark-Black-Logo.wine.svg" />
+                        <Container className={classes.iconContainer}>
+                            <IconButton className={classes.iconButton}><HomeIcon /></IconButton>
+                            <IconButton onClick={handleSignOut} disabled={loading} className={classes.iconButton}><ExploreIcon /></IconButton>
+                            <IconButton>
+                                <Avatar alt="Profile" style={{ height: "1.5rem", width: "1.5rem" }} src={user.profileImageURL} />
+                            </IconButton>
+                        </Container>
+                    </Toolbar>
+                </AppBar>
 
-            <Container className={classes.feedContainer}>
-                <div>
-                    <div className="uploadImage">
-                        <div className={classes.root}>
-                            <input accept="file" className={classes.input} id="icon-button-file" type="file"
-                                onChange={handleInputFile}
-                            />
-                            <label style={{ paddingLeft: "0" }} htmlFor="icon-button-file">
-                                <Button variant="outlined" color="secondary" component="span" disabled={loading} endIcon={<PhotoCamera />}>
-                                    Upload
-                                </Button>
-                            </label>
+                <Container className={classes.feedContainer}>
+                    <div>
+                        <div className="uploadImage">
+                            <div className={classes.root}>
+                                <input accept="file" className={classes.input} id="icon-button-file" type="file"
+                                    onChange={handleInputFile}
+                                />
+                                <label style={{ paddingLeft: "0" }} htmlFor="icon-button-file">
+                                    <Button variant="outlined" color="secondary" component="span" disabled={loading} endIcon={<PhotoCamera />}>
+                                        Upload
+                                    </Button>
+                                </label>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className={classes.reelsContainer}>
-                    {videos.map((videoObj, idx) => {
-                        return ( 
-                            <div className={classes.videoContainer} key={videoObj.puid}>
-                                <Video
-                                src={videoObj.videoUrl}
-                                id={idx}
-                                userName={videoObj.username}>
-                                </Video>
-                                <LikeIcon 
-                                    className={[classes.likeIcon, videoObj.liked ? classes.liked : classes.unliked]}
-                                    onClick={() => handleLiked(videoObj.puid, videoObj.liked)}
-                                />
-                                <CommentIcon
-                                    className={[classes.commentIcon, classes.unliked]}
-                                    onClick={() => {handleComment(videoObj)}}
-                                />
-                            </div>
-                        )
-                    })}
-                </div>
-            </Container>
-            
-            <CommentModal commentVideoObj={commentVideoObj} postComments={postComments} setCommentVideoObj={setCommentVideoObj}/>
-        </>
+                    <div className={classes.reelsContainer}>
+                        {videos.map((videoObj, idx) => {
+                            return (
+                                <div className={classes.videoContainer} key={videoObj.puid}>
+                                    <Video
+                                        src={videoObj.videoUrl}
+                                        id={idx}
+                                        userName={videoObj.username}>
+                                    </Video>
+                                    <LikeIcon
+                                        className={[classes.likeIcon, videoObj.liked ? classes.liked : classes.unliked]}
+                                        onClick={() => handleLiked(videoObj.puid, videoObj.liked)}
+                                    />
+                                    <CommentIcon
+                                        className={[classes.commentIcon, classes.unliked]}
+                                        onClick={() => { handleComment(videoObj) }}
+                                    />
+                                </div>
+                            )
+                        })}
+                    </div>
+                </Container>
+
+                <CommentModal commentVideoObj={commentVideoObj} postComments={postComments} setCommentVideoObj={setCommentVideoObj} />
+            </>
     );
 }
 
 function Video(props) {
     return (
         <>
-            <video loop autoPlay muted={true} id={props.id}>
+            <video loop onClick={handlePostSound} muted={true} id={props.id}>
                 <source src={props.src} type="video/mp4"></source>
             </video>
         </>
     )
+}
+
+function handlePostSound(e) {
+    e.target.muted = !e.target.muted;
+    console.log(e.target.muted);
 }

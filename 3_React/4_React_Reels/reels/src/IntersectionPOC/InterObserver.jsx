@@ -22,9 +22,9 @@ function InterObserver() {
 
             // }
             
-            child.play().then(function(){
+            child.play().then(function() {
                 if (entry.isIntersecting == false) {
-                  child.pause();
+                    child.pause();
                 }  
             })
         })
