@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { makeStyles, Grid, Avatar, Typography, IconButton } from '@material-ui/core';
+import { makeStyles, Grid, Avatar, Typography, IconButton, Hidden } from '@material-ui/core';
 import OptionsIcon from '@material-ui/icons/MoreHoriz';
 import Comments from './Comments';
 import CommentEditor from './CommentEditor';
@@ -7,7 +7,7 @@ import CommentVideo from './CommentVideo';
 import ClearIcon from '@material-ui/icons/Clear';
 import { database } from '../firebase';
 
-export default function CommentModal({commentVideoObj, postComments, setCommentVideoObj}) {
+export default function CommentModal({ commentVideoObj, postComments, setCommentVideoObj, setLoading }) {
     const useStyles = makeStyles({
         mainContainer: {
             backgroundColor: "white",
@@ -78,42 +78,44 @@ export default function CommentModal({commentVideoObj, postComments, setCommentV
             paddingTop: "0.5rem",
             '&::-webkit-scrollbar': {
                 width: '0'
-              },
+            },
         },
-        
+
     })
 
     const classes = useStyles();
 
     return (
         !commentVideoObj ? null :
-        <Grid container className={classes.mainContainer}>
-            <Grid item xs={"hide"} xs={1} sm={4} md={4} lg={3} className={classes.videoSection}>
-                <CommentVideo commentVideoObj={commentVideoObj}></CommentVideo>
-            </Grid>
-            <Grid item xs={5} sm={5} md={4} lg={3} className={classes.commentSection}>
-                <div className={classes.commentSectionHeader}>
-                    <div className={classes.avatarSection}>
-                        <Avatar alt="Remy Sharp" src={commentVideoObj.userProfileImageURL} className={classes.avatarIcon} />
-                        <Typography variant="subtitle1" className={classes.profileName}>me_arunparihar</Typography>
+            <Grid container className={classes.mainContainer}>
+                <Hidden xsDown smDown>
+                    <Grid item xs={"hide"} xs={1} sm={4} md={4} lg={3} className={classes.videoSection}>
+                        <CommentVideo commentVideoObj={commentVideoObj}></CommentVideo>
+                    </Grid>
+                </Hidden>
+                <Grid item xs={10} sm={8} md={4} lg={3} className={classes.commentSection}>
+                    <div className={classes.commentSectionHeader}>
+                        <div className={classes.avatarSection}>
+                            <Avatar alt="Remy Sharp" src={commentVideoObj.userProfileImageURL} className={classes.avatarIcon} />
+                            <Typography variant="subtitle1" className={classes.profileName}>me_arunparihar</Typography>
 
+                        </div>
+                        <div className={classes.optionsSection}>
+                            <IconButton onClick={() => { setCommentVideoObj(null) }}>
+                                {/* <OptionsIcon className={classes.optionsIcon}></OptionsIcon> */}
+                                <ClearIcon className={classes.optionsIcon}></ClearIcon>
+                            </IconButton>
+                        </div>
                     </div>
-                    <div className={classes.optionsSection}>
-                        <IconButton onClick={() => {setCommentVideoObj(null)}}>
-                            {/* <OptionsIcon className={classes.optionsIcon}></OptionsIcon> */}
-                            <ClearIcon className={classes.optionsIcon}></ClearIcon>
-                        </IconButton>
+                    <div className={classes.commentSectionBody}>
+                        {
+                            postComments.map((commentObj) => {
+                                return <Comments key={commentObj.cuid} commentObj={commentObj} />
+                            })
+                        }
                     </div>
-                </div>
-                <div className={classes.commentSectionBody}>
-                    {
-                        postComments.map((commentObj) => {
-                            return <Comments key={commentObj.cuid} commentObj={commentObj} />
-                        })
-                    }
-                </div>
-                <CommentEditor commentVideoObj={commentVideoObj} />
+                    <CommentEditor commentVideoObj={commentVideoObj} setLoading={setLoading} />
+                </Grid>
             </Grid>
-        </Grid>
     )
 }

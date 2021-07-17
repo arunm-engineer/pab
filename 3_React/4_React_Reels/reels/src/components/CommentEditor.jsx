@@ -5,7 +5,7 @@ import { AuthContext } from '../Contexts/AuthProvider';
 import { database, firestore } from '../firebase';
 
 
-export default function CommentEditor({commentVideoObj}) {
+export default function CommentEditor({commentVideoObj, setLoading}) {
 
     const useStyles = makeStyles({
         commentSectionWriter: {
@@ -59,15 +59,18 @@ export default function CommentEditor({commentVideoObj}) {
             createdAt: database.getUserTimeStamp()
         }
 
+
+        setLoading(true);
         // Add the new posted comment doc in firestore comments collection
         let commentObj = await database.comments.add(commentObjStructure);
-
+        
         // Get the post current comments and update doc by merging the new comment into doc
         let postRef = await database.posts.doc(commentVideoObj.puid).get();
         let post = postRef.data();
         await database.posts.doc(commentVideoObj.puid).update({
             comments: [...post.comments, commentObj.id]
         })
+        setLoading(false);
 
         console.log('Comment Success');
         // After post nullify text area of comment

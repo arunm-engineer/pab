@@ -1,8 +1,6 @@
 import React, { useContext, useState, useEffect, useRef } from 'react'
 import { AuthContext } from '../Contexts/AuthProvider';
-import { AppBar, makeStyles, Toolbar, Avatar, Container, IconButton } from '@material-ui/core';
-import ExploreIcon from '@material-ui/icons/Explore';
-import HomeIcon from '@material-ui/icons/Home';
+import { makeStyles, Avatar, Container, CircularProgress } from '@material-ui/core';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import Button from '@material-ui/core/Button';
 import { database, storage } from '../firebase';
@@ -10,32 +8,11 @@ import LikeIcon from '@material-ui/icons/Favorite';
 import CommentIcon from '@material-ui/icons/ChatBubble';
 import CommentModal from './CommentModal';
 import uuid from 'react-uuid';
+import HeaderBar from './HeaderBar';
 
 
 export default function Feed() {
     const useStyles = makeStyles((theme) => ({
-        appBar: {
-            height: "4rem",
-            display: "flex",
-        },
-        toolBar: {
-            display: "flex",
-            justifyContent: "space-between",
-            // backgroundColor: "yellow",
-            width: "80vw",
-            margin: "auto",
-            padding: "0"
-        },
-        iconContainer: {
-            // backgroundColor: "lightgreen",
-            width: "12rem",
-            marginLeft: "0",
-            marginRight: "0"
-        },
-        iconButton: {
-            color: "black",
-            // backgroundColor: "pink"
-        },
         root: {
             '& > *': {
                 margin: theme.spacing(1),
@@ -58,15 +35,9 @@ export default function Feed() {
             gap: "7rem"
         },
         likeIcon: {
-            position: "absolute",
-            bottom: "0.5rem",
-            left: "0.5rem",
             fontSize: "x-large"
         },
         commentIcon: {
-            position: "absolute",
-            bottom: "0.5rem",
-            left: "3rem",
             fontSize: "x-large"
         },
         liked: {
@@ -78,6 +49,18 @@ export default function Feed() {
         videoContainer: {
             position: "relative",
             display: "flex"
+        },
+        circularLoader: {
+            position: "absolute",
+            top: "calc( 100% / 2 )"
+        },
+        videoActionsIconsContainer: {
+            position: "absolute",
+            bottom: "1rem",
+            left: "0.5rem",
+            display: "flex",
+            width: "7rem",
+            justifyContent: "space-around"
         }
     }))
     let classes = useStyles();
@@ -85,24 +68,12 @@ export default function Feed() {
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState();
     const [pageLoading, setPageLoading] = useState(true);
+    const [isLiked, setIsLiked] = useState(false);
     const [videos, setVideos] = useState([]);
-    const [likeAction, setLikeAction] = useState(false);
     const [commentVideoObj, setCommentVideoObj] = useState(null);
     const [postComments, setPostComments] = useState([]);
     const [lastVisiblePost, setLastVisiblePost] = useState();
-    const [isPostsDBEmpty, setIsPostsDBEmpty] = useState(false);
-    const { signout, currentUser } = useContext(AuthContext);
-
-    const handleSignOut = async (e) => {
-        try {
-            setLoading(true);
-            await signout();
-            setLoading(false);
-        } catch (error) {
-            console.log(error);
-            setLoading(false);
-        }
-    }
+    const { currentUser } = useContext(AuthContext);
 
     const handleInputFile = (e) => {
         e.preventDefault();
@@ -110,6 +81,7 @@ export default function Feed() {
         // Get file from html
         let file = e?.target?.files[0];
         if (file != null) console.log(e.target.files[0]);
+        if (!file) return;
 
         // If file size is too large then don't upload 
         if (file.size / (1024 * 1024) > 20) {
@@ -186,51 +158,56 @@ export default function Feed() {
 
     // Last visible post is to keep track of last received doc, and fetch back next batch of data from firestore (Infinite scrolling)
     async function fetchPostsInBatches() {
-        // snapshot objects to be unsubscribed to avoid memory leaks
+        setLoading(true);
+
         let unsubscribe =
-        await database.posts
-            .orderBy("createdAt", "desc")
-            .startAfter(lastVisiblePost)
-            .limit(1)
-            .get()
-            .then(async snapshot => {
-                console.log(snapshot.docs.length, videos);
-                if (snapshot.docs.length === 0) {
-                    setIsPostsDBEmpty(true);
-                    return;
-                }
-                let curVideos = snapshot.docs.map(doc => doc.data());
-                setLastVisiblePost(snapshot.docs[snapshot.docs.length - 1]);
+            await database.posts
+                .orderBy("createdAt", "desc")
+                .startAfter(lastVisiblePost)
+                .limit(1)
+                .onSnapshot(async snapshot => {
+                    console.log(snapshot.docs.length, videos);
+                    if (snapshot.docs.length === 0) {
+                        setLastVisiblePost(null);
+                        setLoading(false);
+                        return;
+                    }
+                    let curVideos = snapshot.docs.map(doc => doc.data());
+                    setLastVisiblePost(snapshot.docs[snapshot.docs.length - 1]);
 
-                // Extract videosURL from post collection and user's data from user collection
-                // ProfileImg of the author of the post(video)
-                let videosDataArrFromFireStore = [];
-                for (let i = 0; i < curVideos.length; i++) {
-                    let { url: videoUrl, auid, likes } = curVideos[i];
-                    let puid = snapshot.docs[i].id;
-                    let userObject = await database.users.doc(auid).get();
-                    let { profileImageURL: userProfileImageURL, username } = userObject.data();
+                    // Extract videosURL from post collection and user's data from user collection
+                    // ProfileImg of the author of the post(video)
+                    let videosDataArrFromFireStore = [];
+                    for (let i = 0; i < curVideos.length; i++) {
+                        let { url: videoUrl, auid, likes } = curVideos[i];
+                        let puid = snapshot.docs[i].id;
+                        let userObject = await database.users.doc(auid).get();
+                        let { profileImageURL: userProfileImageURL, username } = userObject.data();
 
-                    // For likes, check if current user has liked the post
-                    videosDataArrFromFireStore.push({ videoUrl, userProfileImageURL, username, puid, liked: likes.includes(currentUser.uid) });
-                }
+                        // For likes, check if current user has liked the post
+                        videosDataArrFromFireStore.push({ videoUrl, userProfileImageURL, username, puid, liked: likes.includes(currentUser.uid) });
+                    }
 
-                // Set Received videos for further dispaly in feed
-                setVideos([...videos, ...videosDataArrFromFireStore]);
-                console.log(videosDataArrFromFireStore);
-            })
+                    setLoading(false);
+                    // Set Received videos for further dispaly in feed
+                    setVideos([...videos, ...videosDataArrFromFireStore]);
+                    console.log(videosDataArrFromFireStore);
+                })
     }
 
     // Get all posts to display in feed
     useEffect(async () => {
+        console.log('Again');
+        setLoading(true);
+
         // Since snapshot is realtime we receive from unsubscribe function which has to be returned during cleanup
         let unsubscribe =
             await database.posts
                 .orderBy("createdAt", "desc")
-                .limit(2)
-                .get()
-                .then(async snapshot => {
+                .limit(3)
+                .onSnapshot(async snapshot => {
                     console.log(snapshot);
+                    if (lastVisiblePost) return;
                     let videos = snapshot.docs.map(doc => doc.data());
 
                     setLastVisiblePost(snapshot.docs[snapshot.docs.length - 1]);
@@ -247,10 +224,11 @@ export default function Feed() {
                         // For likes, check if current user has liked the post
                         videosDataArrFromFireStore.push({ videoUrl, userProfileImageURL, username, puid, liked: likes.includes(currentUser.uid) });
                     }
+
+                    setLoading(false);
                     // Set Received videos for further dispaly in feed
                     setVideos(videosDataArrFromFireStore);
                 })
-        return unsubscribe;
     }, [])
 
 
@@ -259,7 +237,9 @@ export default function Feed() {
     // Intersection observer to fetch post data in batches (infinite scrolling)
     let scrollAndVideoActionObserver;
     let infiniteScrollObserver;
+
     useEffect(() => {
+        console.log('InterObs');
         let allPosts = document.querySelectorAll("video");
 
         let scrollAndVideoActionConditionObject = {
@@ -296,16 +276,13 @@ export default function Feed() {
         }
         function infiniteScrollCallback(entries) {
             entries.forEach(entry => {
-                let post = entry.target;
                 if (entry.isIntersecting) {
-                    console.log('loading...', post);
-                    if (!isPostsDBEmpty) {
-                        fetchPostsInBatches();
-                    }
-                    console.log(entry.isIntersecting);
-                    infiniteScrollObserver.unobserve(post);
+                    fetchPostsInBatches();
+                    console.log(entry.isIntersecting, entry.target);
+                    infiniteScrollObserver.unobserve(entry.target);
                 }
             })
+            // entries.forEach(entry => infiniteScrollObserver.unobserve(entry.target))
         }
 
         if (scrollAndVideoActionObserver) scrollAndVideoActionObserver.disconnect();
@@ -329,13 +306,14 @@ export default function Feed() {
         // If unliked -> remove user uid who unliked
         let postRef = await database.posts.doc(puid).get();
         let post = postRef.data();
-
+        console.log(videos);
         // Not yet Liked
         if (liked == false) {
             let likes = post.likes;
             database.posts.doc(puid).update({
                 "likes": [...likes, currentUser.uid]
             })
+            setIsLiked(true);
         }
         else {
             let likes = post.likes.filter(likedByUid => {
@@ -344,10 +322,8 @@ export default function Feed() {
             database.posts.doc(puid).update({
                 "likes": likes
             })
+            setIsLiked(false);
         }
-
-        // Change state to have action on UI
-        setLikeAction(!likeAction);
     }
 
     const handleComment = async (videoObj) => {
@@ -377,24 +353,10 @@ export default function Feed() {
         })
     }
 
-
     return (
-        pageLoading == true ? <div>Loading...</div> :
+        pageLoading == true ? <CircularProgress color="secondary" className={classes.circularLoader} /> :
             <>
-                <AppBar className={classes.appBar} position="fixed" color="default">
-                    <Toolbar
-                        className={classes.toolBar}
-                        variant="dense">
-                        <img height="100%" width="150vw" src="https://www.logo.wine/a/logo/Instagram/Instagram-Wordmark-Black-Logo.wine.svg" />
-                        <Container className={classes.iconContainer}>
-                            <IconButton className={classes.iconButton}><HomeIcon /></IconButton>
-                            <IconButton onClick={handleSignOut} disabled={loading} className={classes.iconButton}><ExploreIcon /></IconButton>
-                            <IconButton>
-                                <Avatar alt="Profile" style={{ height: "1.5rem", width: "1.5rem" }} src={user.profileImageURL} />
-                            </IconButton>
-                        </Container>
-                    </Toolbar>
-                </AppBar>
+                <HeaderBar loading={loading} setLoading={setLoading} user={user}></HeaderBar>
 
                 <Container className={classes.feedContainer}>
                     <div>
@@ -412,29 +374,32 @@ export default function Feed() {
                         </div>
                     </div>
                     <div className={classes.reelsContainer}>
-                        {videos.map((videoObj, idx) => {
+                        {videos.map((videoObj) => {
                             return (
                                 <div className={classes.videoContainer} key={videoObj.puid}>
                                     <Video
                                         src={videoObj.videoUrl}
-                                        id={idx}
+                                        id={videoObj.puid}
                                         userName={videoObj.username}>
                                     </Video>
-                                    <LikeIcon
-                                        className={[classes.likeIcon, videoObj.liked ? classes.liked : classes.unliked]}
-                                        onClick={() => handleLiked(videoObj.puid, videoObj.liked)}
-                                    />
-                                    <CommentIcon
-                                        className={[classes.commentIcon, classes.unliked]}
-                                        onClick={() => { handleComment(videoObj) }}
-                                    />
+                                    <div className={classes.videoActionsIconsContainer}>
+                                        <Avatar alt="Profile" style={{ height: "1.5rem", width: "1.5rem" }} src={videoObj.userProfileImageURL} />
+                                        <LikeIcon
+                                            className={[classes.likeIcon, isLiked || videoObj.liked ? classes.liked : classes.unliked]}
+                                            onClick={() => handleLiked(videoObj.puid, videoObj.liked)}
+                                        />
+                                        <CommentIcon
+                                            className={[classes.commentIcon, classes.unliked]}
+                                            onClick={() => { handleComment(videoObj) }}
+                                        />
+                                    </div>
                                 </div>
                             )
                         })}
                     </div>
                 </Container>
 
-                <CommentModal commentVideoObj={commentVideoObj} postComments={postComments} setCommentVideoObj={setCommentVideoObj} />
+                <CommentModal commentVideoObj={commentVideoObj} postComments={postComments} setCommentVideoObj={setCommentVideoObj} setLoading={setLoading} />
             </>
     );
 }
@@ -442,7 +407,12 @@ export default function Feed() {
 function Video(props) {
     return (
         <>
-            <video loop onClick={handlePostSound} muted={true} id={props.id}>
+            <video 
+            loop 
+            onClick={handlePostSound}
+            muted={true} 
+            id={props.id}
+            style={{minHeight: "100%"}}>
                 <source src={props.src} type="video/mp4"></source>
             </video>
         </>
@@ -451,5 +421,4 @@ function Video(props) {
 
 function handlePostSound(e) {
     e.target.muted = !e.target.muted;
-    console.log(e.target.muted);
 }
