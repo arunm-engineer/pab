@@ -1,8 +1,7 @@
-import React, { useContext, useState, useEffect, useRef } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { AuthContext } from '../Contexts/AuthProvider';
-import { makeStyles, Avatar, Container, CircularProgress } from '@material-ui/core';
+import { makeStyles, Avatar, Container, CircularProgress, Modal, Backdrop, Fade, Button, TextField } from '@material-ui/core';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
-import Button from '@material-ui/core/Button';
 import { database, storage } from '../firebase';
 import LikeIcon from '@material-ui/icons/Favorite';
 import CommentIcon from '@material-ui/icons/ChatBubble';
@@ -55,17 +54,41 @@ export default function Feed() {
             top: "calc( 100% / 2 )"
         },
         videoActionsIconsContainer: {
-            position: "absolute",
-            bottom: "1rem",
-            left: "0.5rem",
             display: "flex",
             width: "7rem",
             justifyContent: "space-around"
+        },
+        modal: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        paper: {
+            backgroundColor: theme.palette.background.paper,
+            boxShadow: theme.shadows[5],
+            padding: theme.spacing(2, 4, 3),
+            width: "30vw",
+            height: "35vh",
+            borderRadius: "10px",
+            textAlign: "center",
+            outline: "none",
+        },
+        videoDescriptionSection: {
+            position: "absolute",
+            bottom: "1rem",
+            left: "0.5rem",
+            minHeight: "5rem",
+            // backgroundColor: "lightgreen",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-around",
+            // gap: "1rem",
         }
     }))
     let classes = useStyles();
 
     const [loading, setLoading] = useState(false);
+    const [uploadFile, setUploadFile] = useState(null);
     const [user, setUser] = useState();
     const [pageLoading, setPageLoading] = useState(true);
     const [isLiked, setIsLiked] = useState(false);
@@ -74,6 +97,19 @@ export default function Feed() {
     const [postComments, setPostComments] = useState([]);
     const [lastVisiblePost, setLastVisiblePost] = useState();
     const { currentUser } = useContext(AuthContext);
+    const [open, setOpen] = useState(false);
+    const [videoDescription, setVideoDescription] = useState("");
+
+    // For Video description Modal - open and close 
+    const handleOpen = () => {
+        console.log('Opened');
+        setOpen(true);
+    };
+    const handleClose = () => {
+        console.log('closed');
+        setOpen(false);
+        uploadNewPostInFirestore();
+    };
 
     const handleInputFile = (e) => {
         e.preventDefault();
@@ -81,18 +117,26 @@ export default function Feed() {
         // Get file from html
         let file = e?.target?.files[0];
         if (file != null) console.log(e.target.files[0]);
-        if (!file) return;
+        if (!file) {
+            setUploadFile(null);
+            return;
+        }
 
         // If file size is too large then don't upload 
         if (file.size / (1024 * 1024) > 20) {
             alert('Your file size is too large');
+            setUploadFile(null);
             return;
         }
 
+        setUploadFile(file);
+        handleOpen();
         console.log('Before upload start');
+    }
 
+    const uploadNewPostInFirestore = () => {
         // 1. Upload
-        const uploadFileTask = storage.ref(`/posts/${uuid()}`).put(file);
+        const uploadFileTask = storage.ref(`/posts/${uuid()}`).put(uploadFile);
         setLoading(true);
 
         console.log('After upload start');
@@ -108,6 +152,7 @@ export default function Feed() {
         function errorFn() {
             console.log('Some error occured while video uploading...');
             setLoading(false);
+            setVideoDescription("");
             return;
         }
         function successFn() {
@@ -120,7 +165,8 @@ export default function Feed() {
                         likes: [],
                         url,
                         auid: currentUser.uid,
-                        createdAt: database.getUserTimeStamp()
+                        createdAt: database.getUserTimeStamp(),
+                        videoDescription,
                     }
 
                     // Also add Post obj in Post collection in firestore 
@@ -132,6 +178,7 @@ export default function Feed() {
 
                     console.log(postObj);
                     setLoading(false);
+                    setVideoDescription("");
                 })
         }
     }
@@ -179,13 +226,20 @@ export default function Feed() {
                     // ProfileImg of the author of the post(video)
                     let videosDataArrFromFireStore = [];
                     for (let i = 0; i < curVideos.length; i++) {
-                        let { url: videoUrl, auid, likes } = curVideos[i];
+                        let { url: videoUrl, auid, likes, videoDescription } = curVideos[i];
                         let puid = snapshot.docs[i].id;
                         let userObject = await database.users.doc(auid).get();
                         let { profileImageURL: userProfileImageURL, username } = userObject.data();
 
                         // For likes, check if current user has liked the post
-                        videosDataArrFromFireStore.push({ videoUrl, userProfileImageURL, username, puid, liked: likes.includes(currentUser.uid) });
+                        videosDataArrFromFireStore.push({
+                            videoUrl,
+                            userProfileImageURL,
+                            username,
+                            puid,
+                            liked: likes.includes(currentUser.uid),
+                            videoDescription,
+                        });
                     }
 
                     setLoading(false);
@@ -216,13 +270,20 @@ export default function Feed() {
                     // ProfileImg of the author of the post(video)
                     let videosDataArrFromFireStore = [];
                     for (let i = 0; i < videos.length; i++) {
-                        let { url: videoUrl, auid, likes } = videos[i];
+                        let { url: videoUrl, auid, likes, videoDescription } = videos[i];
                         let puid = snapshot.docs[i].id;
                         let userObject = await database.users.doc(auid).get();
                         let { profileImageURL: userProfileImageURL, username } = userObject.data();
 
                         // For likes, check if current user has liked the post
-                        videosDataArrFromFireStore.push({ videoUrl, userProfileImageURL, username, puid, liked: likes.includes(currentUser.uid) });
+                        videosDataArrFromFireStore.push({
+                            videoUrl,
+                            userProfileImageURL,
+                            username,
+                            puid,
+                            liked: likes.includes(currentUser.uid),
+                            videoDescription
+                        });
                     }
 
                     setLoading(false);
@@ -245,7 +306,7 @@ export default function Feed() {
         let scrollAndVideoActionConditionObject = {
             root: null,
             rootMargin: "0px",
-            threshold: "0.6"
+            threshold: "0.5"
         }
         let infiniteScrollConditionObject = {
             root: null,
@@ -353,11 +414,50 @@ export default function Feed() {
         })
     }
 
+
+
     return (
         pageLoading == true ? <CircularProgress color="secondary" className={classes.circularLoader} /> :
             <>
                 <HeaderBar loading={loading} setLoading={setLoading} user={user}></HeaderBar>
-
+                <Modal
+                    aria-labelledby="transition-modal-title"
+                    aria-describedby="transition-modal-description"
+                    className={classes.modal}
+                    open={open}
+                    onClose={handleClose}
+                    closeAfterTransition
+                    BackdropComponent={Backdrop}
+                    BackdropProps={{
+                        timeout: 500,
+                    }}
+                >
+                    <Fade in={open}>
+                        <div className={classes.paper}>
+                            <h2
+                                style={{
+                                    fontFamily: "Quicksand, sans-serif",
+                                }} >Bio-Description</h2>
+                            <div>
+                                <TextField
+                                    id="outlined-basic"
+                                    label="Put on that Bio.."
+                                    variant="outlined"
+                                    type="text"
+                                    fullWidth
+                                    color="secondary"
+                                    style={{ marginBottom: "2rem" }}
+                                    value={videoDescription}
+                                    onChange={(e) => setVideoDescription(e.target.value)} />
+                            </div>
+                            <Button
+                                id="smash_btn"
+                                variant="outlined"
+                                color="secondary"
+                                onClick={handleClose}>Smash</Button>
+                        </div>
+                    </Fade>
+                </Modal>
                 <Container className={classes.feedContainer}>
                     <div>
                         <div className="uploadImage">
@@ -382,16 +482,35 @@ export default function Feed() {
                                         id={videoObj.puid}
                                         userName={videoObj.username}>
                                     </Video>
-                                    <div className={classes.videoActionsIconsContainer}>
-                                        <Avatar alt="Profile" style={{ height: "1.5rem", width: "1.5rem" }} src={videoObj.userProfileImageURL} />
-                                        <LikeIcon
-                                            className={[classes.likeIcon, isLiked || videoObj.liked ? classes.liked : classes.unliked]}
-                                            onClick={() => handleLiked(videoObj.puid, videoObj.liked)}
-                                        />
-                                        <CommentIcon
-                                            className={[classes.commentIcon, classes.unliked]}
-                                            onClick={() => { handleComment(videoObj) }}
-                                        />
+                                    <div className={classes.videoDescriptionSection}>
+                                        <div 
+                                        style={{ 
+                                            padding: "0.5rem", 
+                                            color: "#ffffff",
+                                            fontFamily: "Quicksand, sans-serif",
+                                        }}>
+                                            <span
+                                                style={{
+                                                    color: "#26de81",
+                                                    backgroundColor: "#4b4b4b",
+                                                    padding: "4px 8px",
+                                                    borderRadius: "5px",
+                                                    fontWeight: "bold",
+                                                    fontSize: "small",
+                                                }}><s>@{videoObj.username}</s></span>
+                                                &emsp;{videoObj.videoDescription}
+                                        </div>
+                                        <div className={classes.videoActionsIconsContainer}>
+                                            <Avatar alt="Profile" style={{ height: "1.5rem", width: "1.5rem" }} src={videoObj.userProfileImageURL} />
+                                            <LikeIcon
+                                                className={[classes.likeIcon, videoObj.liked ? classes.liked : classes.unliked]}
+                                                onClick={() => handleLiked(videoObj.puid, videoObj.liked)}
+                                            />
+                                            <CommentIcon
+                                                className={[classes.commentIcon, classes.unliked]}
+                                                onClick={() => { handleComment(videoObj) }}
+                                            />
+                                        </div>
                                     </div>
                                 </div>
                             )
@@ -407,13 +526,13 @@ export default function Feed() {
 function Video(props) {
     return (
         <>
-            <video 
-            loop 
-            onClick={handlePostSound}
-            muted={true} 
-            id={props.id}
-            style={{minHeight: "100%"}}>
-                <source src={props.src} type="video/mp4"></source>
+            <video
+                loop
+                onClick={handlePostSound}
+                muted={true}
+                id={props.id}
+                style={{ minHeight: "100%" }}
+                src={props.src}>
             </video>
         </>
     )
@@ -421,4 +540,7 @@ function Video(props) {
 
 function handlePostSound(e) {
     e.target.muted = !e.target.muted;
+}
+function print() {
+    console.log('Hello');
 }

@@ -23,6 +23,7 @@ export default function Signup(props) {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [userBio, setUserBio] = useState("");
     const [loader, setLoader] = useState(false);
     const [error, setError] = useState("");
     const [file, setFile] = useState(null);
@@ -71,7 +72,8 @@ export default function Signup(props) {
                     username,
                     createdAt: database.getUserTimeStamp(),
                     profileImageURL: downloadFileURL,
-                    postIds: []
+                    postIds: [],
+                    userBio
                 })
 
                 setLoader(false);
@@ -143,6 +145,19 @@ export default function Signup(props) {
                                     fullWidth={true}
                                     size="small"
                                     onChange={(e) => { setUsername(e.target.value) }}
+                                />
+                            </Grid>
+                            <Grid
+                                item xs={12} sm={12} md={12} lg={12}>
+                                <TextField
+                                    id="outlined-username-input"
+                                    label="Bio"
+                                    type="text"
+                                    variant="outlined"
+                                    value={userBio}
+                                    fullWidth={true}
+                                    size="small"
+                                    onChange={(e) => { setUserBio(e.target.value) }}
                                 />
                             </Grid>
                             <Grid
