@@ -102,11 +102,11 @@ export default function Feed() {
 
     // For Video description Modal - open and close 
     const handleOpen = () => {
-        console.log('Opened');
+        // console.log('Opened');
         setOpen(true);
     };
     const handleClose = () => {
-        console.log('closed');
+        // console.log('closed');
         setOpen(false);
         uploadNewPostInFirestore();
     };
@@ -116,7 +116,7 @@ export default function Feed() {
 
         // Get file from html
         let file = e?.target?.files[0];
-        if (file != null) console.log(e.target.files[0]);
+        // if (file != null) console.log(e.target.files[0]);
         if (!file) {
             setUploadFile(null);
             return;
@@ -131,7 +131,6 @@ export default function Feed() {
 
         setUploadFile(file);
         handleOpen();
-        console.log('Before upload start');
     }
 
     const uploadNewPostInFirestore = () => {
@@ -139,15 +138,13 @@ export default function Feed() {
         const uploadFileTask = storage.ref(`/posts/${uuid()}`).put(uploadFile);
         setLoading(true);
 
-        console.log('After upload start');
-
         // On upload do update all entities in firestore
         uploadFileTask.on('state_changed', progressFn, errorFn, successFn);
 
         function progressFn(snapshot) {
             //This callback is for providing the progress
             const progress = snapshot.bytesTransferred / snapshot.totalBytes;
-            console.log(progress)
+            // console.log(progress)
         }
         function errorFn() {
             console.log('Some error occured while video uploading...');
@@ -172,11 +169,12 @@ export default function Feed() {
                     // Also add Post obj in Post collection in firestore 
                     let postObj = await database.posts.add(postObjStructure);
                     // 3. Update PostObj uid in author(current user's) collection in firestore in his all posts array
+                    let updatedUserPosts = user.postIds;
+                    updatedUserPosts.push(postObj.id);
                     await database.users.doc(currentUser.uid).update({
-                        postIds: [...user.postIds, postObj.id]
+                        postIds: updatedUserPosts
                     })
 
-                    console.log(postObj);
                     setLoading(false);
                     setVideoDescription("");
                 })
@@ -185,7 +183,7 @@ export default function Feed() {
 
     // Get currentuser Data
     useEffect(async () => {
-        console.log(currentUser.uid);
+        // console.log(currentUser.uid);
         // Get user data (how get a document from a collection in firebase 
         // auth user doen't contains any other data besides email ,password , uid
         //  you need to get the complete document from  the firstore using either of email or uid 
@@ -211,9 +209,8 @@ export default function Feed() {
             await database.posts
                 .orderBy("createdAt", "desc")
                 .startAfter(lastVisiblePost)
-                .limit(1)
+                .limit(2)
                 .onSnapshot(async snapshot => {
-                    console.log(snapshot.docs.length, videos);
                     if (snapshot.docs.length === 0) {
                         setLastVisiblePost(null);
                         setLoading(false);
@@ -245,13 +242,11 @@ export default function Feed() {
                     setLoading(false);
                     // Set Received videos for further dispaly in feed
                     setVideos([...videos, ...videosDataArrFromFireStore]);
-                    console.log(videosDataArrFromFireStore);
                 })
     }
 
     // Get all posts to display in feed
     useEffect(async () => {
-        console.log('Again');
         setLoading(true);
 
         // Since snapshot is realtime we receive from unsubscribe function which has to be returned during cleanup
@@ -260,7 +255,6 @@ export default function Feed() {
                 .orderBy("createdAt", "desc")
                 .limit(3)
                 .onSnapshot(async snapshot => {
-                    console.log(snapshot);
                     if (lastVisiblePost) return;
                     let videos = snapshot.docs.map(doc => doc.data());
 
@@ -290,6 +284,8 @@ export default function Feed() {
                     // Set Received videos for further dispaly in feed
                     setVideos(videosDataArrFromFireStore);
                 })
+
+        return unsubscribe;
     }, [])
 
 
@@ -300,7 +296,6 @@ export default function Feed() {
     let infiniteScrollObserver;
 
     useEffect(() => {
-        console.log('InterObs');
         let allPosts = document.querySelectorAll("video");
 
         let scrollAndVideoActionConditionObject = {
@@ -339,7 +334,6 @@ export default function Feed() {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     fetchPostsInBatches();
-                    console.log(entry.isIntersecting, entry.target);
                     infiniteScrollObserver.unobserve(entry.target);
                 }
             })
@@ -350,7 +344,6 @@ export default function Feed() {
         if (infiniteScrollObserver) infiniteScrollObserver.disonnect();
         scrollAndVideoActionObserver = new IntersectionObserver(scrollAndVideoActionCallback, scrollAndVideoActionConditionObject);
         infiniteScrollObserver = new IntersectionObserver(infiniteScrollCallback, infiniteScrollConditionObject);
-        console.log(allPosts.length, allPosts, videos);
         allPosts.forEach((post, idx) => {
             scrollAndVideoActionObserver.observe(post);
             if (idx === allPosts.length - 1) infiniteScrollObserver.observe(post);
@@ -359,7 +352,6 @@ export default function Feed() {
 
 
     const handleLiked = async (puid, liked) => {
-        console.log(puid);
 
         // Get clicked post
         // Find liked or unliked
@@ -367,7 +359,6 @@ export default function Feed() {
         // If unliked -> remove user uid who unliked
         let postRef = await database.posts.doc(puid).get();
         let post = postRef.data();
-        console.log(videos);
         // Not yet Liked
         if (liked == false) {
             let likes = post.likes;
@@ -483,12 +474,12 @@ export default function Feed() {
                                         userName={videoObj.username}>
                                     </Video>
                                     <div className={classes.videoDescriptionSection}>
-                                        <div 
-                                        style={{ 
-                                            padding: "0.5rem", 
-                                            color: "#ffffff",
-                                            fontFamily: "Quicksand, sans-serif",
-                                        }}>
+                                        <div
+                                            style={{
+                                                padding: "0.5rem",
+                                                color: "#ffffff",
+                                                fontFamily: "Quicksand, sans-serif",
+                                            }}>
                                             <span
                                                 style={{
                                                     color: "#26de81",
@@ -498,7 +489,7 @@ export default function Feed() {
                                                     fontWeight: "bold",
                                                     fontSize: "small",
                                                 }}><s>@{videoObj.username}</s></span>
-                                                &emsp;{videoObj.videoDescription}
+                                            &emsp;{videoObj.videoDescription}
                                         </div>
                                         <div className={classes.videoActionsIconsContainer}>
                                             <Avatar alt="Profile" style={{ height: "1.5rem", width: "1.5rem" }} src={videoObj.userProfileImageURL} />
@@ -527,12 +518,11 @@ function Video(props) {
     return (
         <>
             <video
-                loop
                 onClick={handlePostSound}
                 muted={true}
                 id={props.id}
-                style={{ minHeight: "100%" }}
-                src={props.src}>
+                src={props.src}
+                onEnded={onVideoEnd}>
             </video>
         </>
     )
@@ -541,6 +531,16 @@ function Video(props) {
 function handlePostSound(e) {
     e.target.muted = !e.target.muted;
 }
-function print() {
-    console.log('Hello');
+
+function onVideoEnd(e) {
+    let nextVideoSiblingParent = e.target.parentElement.nextSibling;
+    if (nextVideoSiblingParent) {
+        let videoDimensions = nextVideoSiblingParent.children[0].getBoundingClientRect();
+        window.scrollBy({
+            top: videoDimensions.top,
+            left: videoDimensions.left,
+            behavior: 'smooth'
+        })
+    }
+    
 }

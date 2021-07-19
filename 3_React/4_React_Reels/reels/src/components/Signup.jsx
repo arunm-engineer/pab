@@ -34,7 +34,7 @@ export default function Signup(props) {
         let file = e?.target?.files[0];
 
         if (file) {
-            console.log(file);
+            // console.log(file);
             setFile(file);
         }
     }
@@ -57,7 +57,7 @@ export default function Signup(props) {
 
             function progressTrackFn(snapshot) {
                 let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log(progress);
+                // console.log(progress);
             }
             function errorFn(error) {
                 setError(error);

@@ -47,9 +47,6 @@ export default function CommentEditor({commentVideoObj, setLoading}) {
     }
 
     const handleCommentPost = async () => {
-        console.log('Comment Initiated');
-        console.log(commentVideoObj);
-
         // Create structure of comment fields entity
         let commentObjStructure = {
             puid: commentVideoObj.puid,
@@ -72,7 +69,7 @@ export default function CommentEditor({commentVideoObj, setLoading}) {
         })
         setLoading(false);
 
-        console.log('Comment Success');
+        // console.log('Comment Success');
         // After post nullify text area of comment
         setComment("");
     }

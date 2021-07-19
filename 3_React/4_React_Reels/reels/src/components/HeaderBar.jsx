@@ -2,10 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { AppBar, makeStyles, Toolbar, Avatar, Container, IconButton, LinearProgress, Menu, MenuItem, Fade } from '@material-ui/core';
 import { AuthContext } from '../Contexts/AuthProvider';
 import HomeIcon from '@material-ui/icons/Home';
-// import ExploreIcon from '@material-ui/icons/Explore';
 import { Link } from "react-router-dom";
-import { database } from '../firebase';
-
 
 export default function HeaderBar({loading, setLoading, user}) {
     const useStyles = makeStyles((theme) => ({
@@ -69,7 +66,6 @@ export default function HeaderBar({loading, setLoading, user}) {
                                 <HomeIcon onClick={() => { window.scrollTo(0, 0) }} />
                             </Link>
                         </IconButton>
-                        {/* <IconButton onClick={handleSignOut} disabled={loading} className={classes.iconButton}><ExploreIcon /></IconButton> */}
                         <IconButton onClick={handleAnchorElClick}>
                             <Avatar alt="Profile" style={{ height: "1.5rem", width: "1.5rem" }} src={user?.profileImageURL} />
                         </IconButton>

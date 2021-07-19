@@ -25,7 +25,7 @@ export default function Comments({commentObj}) {
 
     const classes = useStyles();
 
-    const [comment, setComment] = useState('😂😝Heloo asdfgh dfghjk sdfg tyuio fghjk ghjk dfghj');
+    const [comment, setComment] = useState("");
 
     return (
         <div className={classes.commentBox}>

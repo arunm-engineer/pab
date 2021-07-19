@@ -80,7 +80,6 @@ function Profile() {
         let unsubscribe =
             await database.posts
                 .onSnapshot(async snapshot => {
-                    console.log(snapshot);
                     let videos = snapshot.docs.map(doc => doc.data());
 
                     // Extract videosURL from post collection and user's data from user collection
@@ -109,6 +108,7 @@ function Profile() {
     }, [])
 
     return (
+        
         pageLoading == true ? <CircularProgress color="secondary" className={classes.circularLoader} /> :
             <Container style={{ backgroundColor: "", width: "60vw", marginTop: "5rem" }}>
                 <HeaderBar loading={loading} setLoading={setLoading} user={user}></HeaderBar>
@@ -134,7 +134,6 @@ function Profile() {
                     {
                         // <h1>Hello</h1>
                         videos.map(videoObj => {
-                            console.log(videoObj);
                             return (
                                 <div className={classes.videoContainer}>
                                     <Video
