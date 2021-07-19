@@ -10,6 +10,7 @@ import Feed from './components/Feed';
 
 function App() {
   return (
+
     <AuthProvider>
       <Router>
         <Switch>
@@ -20,6 +21,7 @@ function App() {
         </Switch>
       </Router>
     </AuthProvider>
+    
   );
 }
 
