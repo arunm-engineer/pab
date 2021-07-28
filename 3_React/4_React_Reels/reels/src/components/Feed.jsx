@@ -400,7 +400,7 @@ export default function Feed() {
             })
 
             // Set Received comments for further dispaly in comments feed
-            console.log(commentsDataArrFromFirestore);
+            // console.log(commentsDataArrFromFirestore);
             setPostComments(commentsDataArrFromFirestore);
         })
     }

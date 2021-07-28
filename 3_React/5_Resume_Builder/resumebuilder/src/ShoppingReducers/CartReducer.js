@@ -32,9 +32,9 @@ function processToAddItems(items, newItem) {
     })
 
     if (findItem) return { items, totalPrice };
+    
     newItem.quantity = 1;
     items = [...items, newItem];
-
     let totalPrice = getTotalPrice(items);
     return { items, totalPrice };
 }
