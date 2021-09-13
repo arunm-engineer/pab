@@ -1,20 +1,34 @@
 import React,{useState,useEffect} from "react";
 import {NavLink} from "react-router-dom";
 // import update from 'immutability-helper';
-import {fieldCd, skinCodes}  from '../../constants/typeCodes';
-// import * as contactActions from '../../actions/contactActions';
 // import { bindActionCreators } from 'redux';
-// import { withRouter } from "react-router-dom";
+import {fieldCd, skinCodes}  from '../../constants/typeCodes';
+import * as actionTypes from '../../redux/actionTypes';
+import { withRouter } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import ResumePreview from './resumePreview'
-// import { connect } from "react-redux";
+import ResumePreview from './resumePreview';
+import { connect } from "react-redux";
 
 function Contact(props) {
+   console.log('Contact');
+   console.log(props);
    let history = useHistory();
-
+   let initialFormState = {
+       [fieldCd.FirstName]: "",
+       [fieldCd.LastName]: "",
+       [fieldCd.ProfSummary]: "",
+       [fieldCd.Email]: "",
+       [fieldCd.Phone]: "",
+       [fieldCd.Profession]: "",
+       [fieldCd.Street]: "",
+       [fieldCd.City]: "",
+       [fieldCd.State]: "",
+       [fieldCd.Country]: "",
+       [fieldCd.ZipCode]: "",
+   }
    // We set an object to map details of the skin through contact object
 
-   const [contact,setContact]= useState(props.contactSection);
+   const [contact,setContact]= useState(initialFormState);
 //    useEffect(() => {
 //        if(!props.document || !props.document.id || !props.document.skinCd)
 //        {
@@ -31,15 +45,23 @@ function Contact(props) {
         setContact({...contact,[key]:val})
     }
     const onSubmit= async()=>{
-        // if(props.contactSection!=null){
-        //     props.updateContact(props.document.id,contact);
-        // }
-        // else{
-        //     props.addContact(props.document.id,contact);
-        // }
+        let keys = Object.keys(contact);
+        if (keys.length === 0) {
+            props.setContact(contact);
+        }
+        else {
+            props.setContact(contact);
+        }
 
         history.push('/education');
     }
+
+    useEffect(() => {
+        let keys = Object.keys(props.contact);
+        if (keys.length !== 0) {
+            setContact(props.contact);
+        }
+    }, [])
 
 
     // Retrieves data if the specified object and the specified key exists,
@@ -142,6 +164,31 @@ function Contact(props) {
     );
 }
 
+const mapStateToProps = (store) => {
+    let StoreObj = {
+        contact: store.contact,
+        document: store.document,
+    }
+    return StoreObj;
+}
 
-export default Contact
+const mapDispatchToProps = (dispatch) => {
+    return {
+        setContact: (contactObject) => {
+            dispatch({
+                type: actionTypes.SET_CONTACT,
+                payload: contactObject,
+            })
+
+        },
+        updateContact: (contactObject) => {
+            dispatch({
+                type: actionTypes.UPDATE_CONTACT,
+                payload: contactObject,
+            })
+        }
+    }
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Contact));
 
