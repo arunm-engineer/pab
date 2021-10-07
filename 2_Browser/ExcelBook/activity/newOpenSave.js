@@ -28,7 +28,6 @@ openFile.addEventListener("click", function() {  // Open file
     inputFile.type = "file";
     inputFile.click();
 
-
     inputFile.addEventListener("change", function() {
         let fr = new FileReader();  // Let's read file content asynchronously
 

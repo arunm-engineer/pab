@@ -1,9 +1,12 @@
 let graphComponentsMatrix = [];
 
+// The relation of these two loops remains the same representing the cells of current sheets row and cols
 for (let i = 0;i < rows;i++) {
     let row = [];
     for (let j = 0;j < cols;j++) {
-        row.push([]);
+        // Why to push array in row, since this one node(current [i][j]) may have more than one P-C (Parent-Child) relations as a set
+        // The set stores child's address interms of child rid, cid [crid, ccid]
+        row.push([]); 
     }
     graphComponentsMatrix.push(row);
 }

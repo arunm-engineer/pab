@@ -120,7 +120,6 @@ function createTicket(task, color, ticketID) {  //Create new tickets
     handleTicketColor(ticket, id);
     handleTicketLock(ticket, id);
     handleTicketRemoval(ticket);
-
 }
 
 function handleTicketLock(ticket, id) {  //Manage ticket locks for ticket task editing

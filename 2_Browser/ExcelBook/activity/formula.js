@@ -74,7 +74,6 @@ tracePath.addEventListener("click", async function() {
     tracePath.style.backgroundColor = "#2ed573";
     let tracePathP = await tracePathColor(activeAddress, 0);
     tracePath.style.backgroundColor = "rgb(223, 230, 233)";
-
 });
 
 function addChildToParentInGraphComponent(formula, activeAddress) {
@@ -190,7 +189,6 @@ function updateChildrenCells(parentAddress) {  // Update every children value ( 
         let evaluatedValue = evaluateFormula(childFormula);
         setUpdatedCellUIAndProp(evaluatedValue, childFormula, rid, cid);
         updateChildrenCells(childAddress);
-
     }
 }
 

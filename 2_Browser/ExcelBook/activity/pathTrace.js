@@ -61,7 +61,7 @@ async function cyclicDFSTracePath(graphComponentsMatrix, srcr, srcc, graphVisite
     graphVisited[srcr][srcc] = true;
     dfsVisited[srcr][srcc] = true;
 
-    console.log(`${String.fromCharCode(65 + srcc)}${srcr+1}`);
+    // console.log(`${String.fromCharCode(65 + srcc)}${srcr+1}`);
 
     let cell = grid.querySelector(`.cell[rid="${srcr}"][cid="${srcc}"]`);
     cell.style.backgroundColor = "lightblue";

@@ -143,10 +143,7 @@ function setCellUIProperties(cell) {   //Set to default properties values on ind
                 cellProp.align = "right";
                 break;
         }
-
     });
-
-
 }
 
 
@@ -344,7 +341,7 @@ function createNewSheetDB() {
                 align : "center",
                 fontSizeVal : "14",
                 fontFamilyVal : "sans-serif",
-                color : "#000000",  
+                color : "#000000",
                 BGcolor : "#000000",  // Marking black as primary color for identification in two-way binding
                 value : "",
                 formula : "",
@@ -436,7 +433,6 @@ for(let i = 0;i < allAlignBtn.length;i++) {   // Update cell alignment property
                 cellProp.align = "right";
                 break;
         }
-
     });
 }
 
@@ -492,6 +488,3 @@ function getRIDCIDfromAddress(address) {   // Get current cell row id, col id wh
     let rid = Number(address.slice(1)) - 1;
     return {rid, cid};
 }
-
-
-
