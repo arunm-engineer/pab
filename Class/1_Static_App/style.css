@@ -1,0 +1,31 @@
+* {
+    box-sizing: border-box;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.topics-section {
+    display: flex;
+    width: 30vw;
+    justify-content: space-around;
+}
+.topic:hover {
+    color: lightcoral;
+    cursor: pointer;
+}
+.content-section {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+}
+footer {
+    background-color: black;
+    color: white;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
